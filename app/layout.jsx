@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
         <header>
           <Navbar />
         </header>
-        <main className="flex-grow px-4 py-2 bg-neutral-800">{children}</main>
+        <main className="flex-grow px-4 py-2 ">{children}</main>
         <Footer />
       </body>
     </html>
