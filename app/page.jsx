@@ -2,12 +2,12 @@ import Link from "next/link";
 
 const HomePage = () => {
   return (
-    <main className="flex flex-col items-center justify-between ">
+    <div className="flex flex-col gap-8 items-center mt-[20vh] flex-grow">
       <h2>Witaj na stronie do nauki angielskich słówek</h2>
-      <Link href="/zestawy" className="btn btn-xl btn-primary my-4">
+      <Link href="/zestawy" className="btn btn-xl btn-info">
         Rozpocznij
       </Link>
-    </main>
+    </div>
   );
 };
 

@@ -32,7 +32,7 @@ const WordSetsPage = async () => {
           <Link
             href={`/zestawy/${normalizeString(item.name)}`}
             key={item.name}
-            className="bg-success/20 p-2 px-4 rounded-md w-fit text-center cursor-pointer hover:bg-primary transition-colors"
+            className="bg-info/20 hover:bg-info/40 p-2 px-4 rounded-md w-fit text-center cursor-pointer transition-colors"
           >
             <h3 className="font-semibold text-xl">{item.name}</h3>
             <p>{item.words.length} słówek</p>

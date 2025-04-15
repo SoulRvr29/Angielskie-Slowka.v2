@@ -7,7 +7,7 @@
   display: inline-block;
   position: relative;
   box-sizing: border-box;
-  animation: rotation 2s linear infinite;
+  animation: rotation 2s linear infinite, fadeIn 1s linear forwards;
 }
 .loader::after {
   opacity: 0.4;
@@ -24,7 +24,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  animation: rotationBack 1s linear infinite;
+  animation: rotationBack 1s linear infinite, fadeIn 1s linear forwards;
   transform-origin: center center;
 }
 
@@ -42,5 +42,13 @@
   }
   100% {
     transform: rotate(-360deg);
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

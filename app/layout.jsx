@@ -1,4 +1,5 @@
 import "./globals.css";
+import "@/assets/styles/spinner.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
@@ -14,7 +15,7 @@ export default function RootLayout({ children }) {
         <header>
           <Navbar />
         </header>
-        <main className="flex-grow px-4 py-2 ">{children}</main>
+        <main className="flex-grow flex flex-col px-4 py-2">{children}</main>
         <Footer />
       </body>
     </html>
