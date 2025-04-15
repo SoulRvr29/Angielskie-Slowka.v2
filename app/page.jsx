@@ -1,14 +1,14 @@
 import Link from "next/link";
 
-export default function Home() {
+const HomePage = () => {
   return (
     <main className="flex flex-col items-center justify-between ">
-      <h2 className="mt-2 mb-4">
-        Witaj na stronie do nauki angielskich słówek
-      </h2>
-      <Link href="/sets" className="btn btn-xl btn-primary">
-        Wybierz zestaw
+      <h2>Witaj na stronie do nauki angielskich słówek</h2>
+      <Link href="/zestawy" className="btn btn-xl btn-primary my-4">
+        Rozpocznij
       </Link>
     </main>
   );
-}
+};
+
+export default HomePage;

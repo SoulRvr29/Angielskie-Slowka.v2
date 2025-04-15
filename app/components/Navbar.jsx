@@ -9,7 +9,7 @@ const Navbar = () => {
   const pathname = usePathname();
   console.log(pathname);
   return (
-    <nav className=" flex justify-between w-full max-md:flex-col bg-base-300">
+    <nav className=" flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-success/20">
       <h1 className="absolute top-1 max-md:top-0 max-md:pb-2 max-md:relative text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold mt-1 max-md:underline">
         Angielskie Słówka<span className="text-sm opacity-50">.v2</span>
       </h1>
@@ -20,17 +20,17 @@ const Navbar = () => {
           </Link>
           <Link
             className={`${
-              pathname === "/sets" && "btn-success"
+              pathname === "/zestawy" && "btn-success"
             } btn btn-xs btn-soft`}
-            href="/sets"
+            href="/zestawy"
           >
             zestawy
           </Link>
           <Link
             className={`${
-              pathname === "/sitesettings" && "btn-success"
+              pathname === "/ustawienia" && "btn-success"
             } btn btn-xs btn-soft`}
-            href="/sitesettings"
+            href="/ustawienia"
           >
             ustawienia
           </Link>
