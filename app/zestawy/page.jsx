@@ -8,7 +8,8 @@ async function fetchWordSets() {
     }
     return res.json();
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching word sets:", error);
+    return []; // Return an empty array as fallback
   }
 }
 
@@ -28,16 +29,20 @@ const WordSetsPage = async () => {
     <div>
       <h2>Wybierz zestaw</h2>
       <div className="flex justify-center gap-4">
-        {wordSets.map((item) => (
-          <Link
-            href={`/zestawy/${normalizeString(item.name)}`}
-            key={item.name}
-            className="bg-info/20 hover:bg-info/40 p-2 px-4 rounded-md w-fit text-center cursor-pointer transition-colors"
-          >
-            <h3 className="font-semibold text-xl">{item.name}</h3>
-            <p>{item.words.length} słówek</p>
-          </Link>
-        ))}
+        {wordSets.length > 0 ? (
+          wordSets.map((item) => (
+            <Link
+              href={`/zestawy/${normalizeString(item.name)}`}
+              key={item.name}
+              className="bg-info/20 hover:bg-info/40 p-2 px-4 rounded-md w-fit text-center cursor-pointer transition-colors"
+            >
+              <h3 className="font-semibold text-xl">{item.name}</h3>
+              <p>{item.words.length} słówek</p>
+            </Link>
+          ))
+        ) : (
+          <div>Brak dostępnych zestawów</div>
+        )}
       </div>
     </div>
   );
