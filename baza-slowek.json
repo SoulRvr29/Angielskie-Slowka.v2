@@ -1,0 +1,87 @@
+[
+  {
+    "nazwa": "zestaw1",
+    "slowka": [
+      {
+        "id": 0,
+        "word": "akceptować",
+        "translation": "to accept"
+      },
+      {
+        "id": 1,
+        "word": "analizować",
+        "translation": "to analyze"
+      },
+      {
+        "id": 2,
+        "word": "badać",
+        "translation": "to study/to research"
+      }
+    ]
+  },
+  {
+    "nazwa": "zestaw2",
+    "slowka": [
+      {
+        "id": 0,
+        "word": "argument",
+        "translation": "argument"
+      },
+      {
+        "id": 1,
+        "word": "aspekt",
+        "translation": "aspect"
+      },
+      {
+        "id": 2,
+        "word": "atmosfera",
+        "translation": "atmosphere"
+      }
+    ]
+  },
+  {
+    "nazwa": "zestaw3",
+    "slowka": [
+      {
+        "id": 0,
+        "word": "aktualny",
+        "translation": "current"
+      },
+      {
+        "id": 1,
+        "word": "ważny",
+        "translation": "important"
+      },
+      {
+        "id": 0,
+        "word": "argument",
+        "translation": "argument"
+      },
+      {
+        "id": 1,
+        "word": "aspekt",
+        "translation": "aspect"
+      },
+      {
+        "id": 2,
+        "word": "atmosfera",
+        "translation": "atmosphere"
+      },
+      {
+        "id": 0,
+        "word": "argument",
+        "translation": "argument"
+      },
+      {
+        "id": 1,
+        "word": "aspekt",
+        "translation": "aspect"
+      },
+      {
+        "id": 2,
+        "word": "atmosfera",
+        "translation": "atmosphere"
+      }
+    ]
+  }
+]
