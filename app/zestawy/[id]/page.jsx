@@ -24,7 +24,9 @@ const Set = () => {
   useEffect(() => {
     const fetchWords = async () => {
       try {
-        const res = await fetch("/api/zestawy");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`
+        );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
