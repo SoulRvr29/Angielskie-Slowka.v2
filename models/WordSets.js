@@ -7,6 +7,10 @@ const ZestawSchema = new Schema(
       unique: [true, "Zestaw o tej nazwie już istnieje"],
       required: [true, "Nazwa wymagana"],
     },
+    category: {
+      type: String,
+      required: [true, "Nazwa kategorii wymagana"],
+    },
     words: [
       {
         english: {

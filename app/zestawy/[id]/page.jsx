@@ -57,8 +57,8 @@ const Set = () => {
         <FaArrowLeft />
         wróć do zestawów
       </Link>
-      <div className="flex flex-col border w-fit overflow-hidden min-w-lg rounded-md border-info/50">
-        <div className="bg-info/50 w-full font-semibold text-lg px-2 flex justify-between">
+      <div className="flex flex-col border w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-md border-accent/50 bg-accent-content/10">
+        <div className="bg-accent/50 w-full font-semibold text-lg px-2 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
           <div>{wordsSet.words.length} słówek</div>
         </div>
