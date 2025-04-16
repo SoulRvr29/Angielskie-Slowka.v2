@@ -1,7 +1,6 @@
 "use client";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-// import bazaSlowek from "@/baza-slowek.json";
 import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
 

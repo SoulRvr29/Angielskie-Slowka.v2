@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import { FaCaretSquareDown, FaCaretSquareUp } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const Category = ({ category, wordSets }) => {
-  const [isOpen, setIsOpen] = useState(true);
+const Category = ({ category, wordSets, collapseAll }) => {
+  const [isOpen, setIsOpen] = useState(collapseAll);
 
   const normalizeString = (str) => {
     return str
@@ -16,8 +16,12 @@ const Category = ({ category, wordSets }) => {
       .replace(/Ł/g, "L");
   };
 
+  useEffect(() => {
+    setIsOpen(collapseAll);
+  }, [collapseAll]);
+
   return (
-    <div className="bg-base-300 overflow-clip rounded-md flex flex-col">
+    <div className="bg-base-300 overflow-clip rounded-md max-sm:rounded-none flex flex-col">
       <div className="flex items-center justify-between gap-2 bg-primary/50 px-2 text-xl">
         <div className="flex gap-2">
           <h3 className="font-semibold">{category}</h3>
@@ -45,7 +49,7 @@ const Category = ({ category, wordSets }) => {
                 <Link
                   href={`/zestawy/${normalizeString(wordSet.name)}`}
                   key={wordSet.name}
-                  className="bg-primary/30 hover:bg-primary/40 p-2 px-4 rounded-md text-center cursor-pointer transition-colors max-sm:w-full"
+                  className="bg-base-content/10 hover:bg-primary/40 p-2 px-4 rounded-md  cursor-pointer transition-colors max-sm:w-full"
                 >
                   <h3 className="font-semibold text-xl">{wordSet.name}</h3>
                   <p>{wordSet.words.length} słówek</p>
