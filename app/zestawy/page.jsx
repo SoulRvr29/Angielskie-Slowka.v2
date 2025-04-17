@@ -41,10 +41,10 @@ const WordSetsPage = () => {
   const categories = getCategories(wordSets);
 
   return (
-    <div>
-      <h2>Wybierz zestaw</h2>
-      <div className="flex flex-col gap-4 ">
-        <div className="flex justify-between">
+    <div className="flex flex-col gap-2">
+      <h2 className="text-primary border-b pb-2">Wybierz zestaw</h2>
+      <div className="flex flex-col gap-6 ">
+        <div className="flex justify-between ">
           <button className="btn btn-outline btn-info btn-sm">
             <Link href="zestawy/wlasne"> Własne zestawy</Link>
           </button>

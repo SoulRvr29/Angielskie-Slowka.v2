@@ -21,9 +21,9 @@ const Category = ({ category, wordSets, collapseAll }) => {
   }, [collapseAll]);
 
   return (
-    <div className="bg-base-300 overflow-clip rounded-md max-sm:rounded-none flex flex-col">
+    <div className=" border-2 bg-primary/10 border-primary/40 overflow-clip rounded-md max-sm:rounded-none flex flex-col">
       <div className="flex items-center justify-between gap-2 bg-primary/50 px-2 text-xl">
-        <div className="flex gap-2">
+        <div className="flex gap-2 pb-1">
           <h3 className="font-semibold">{category}</h3>
           <p className="text-base">
             ({wordSets.filter((item) => item.category === category).length})
@@ -49,10 +49,10 @@ const Category = ({ category, wordSets, collapseAll }) => {
                 <Link
                   href={`/zestawy/${normalizeString(wordSet.name)}`}
                   key={wordSet.name}
-                  className="bg-base-content/10 hover:bg-primary/40 p-2 px-4 rounded-md  cursor-pointer transition-colors max-sm:w-full"
+                  className="bg-primary/10 border border-primary/40 hover:bg-primary/40 p-2 px-4 rounded-md  cursor-pointer transition-colors max-sm:w-full"
                 >
-                  <h3 className="font-semibold text-xl">{wordSet.name}</h3>
-                  <p>{wordSet.words.length} słówek</p>
+                  <h3 className="font-semibold ">{wordSet.name}</h3>
+                  <p className="text-sm">{wordSet.words.length} słówek</p>
                 </Link>
               ))
           ) : (
