@@ -36,6 +36,9 @@ const MojeZestawyPage = () => {
   if (!wordSets) {
     return (
       <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
+        <p className="text-info animate-pulse delayFadeIn">
+          Pobieranie zestawów
+        </p>
         <span className="loader"></span>
       </div>
     );
@@ -45,13 +48,13 @@ const MojeZestawyPage = () => {
   return (
     <div>
       <div className="flex flex-col gap-4 ">
-        <div className="flex justify-between border-b mb-4 ">
+        <div className="flex justify-between border-b mb-4 max-sm:px-2">
           <h2 className="">Moje zestawy</h2>
           <button className="btn btn-outline btn-info btn-sm">
             <Link href="/zestawy"> Publiczne zestawy</Link>
           </button>
         </div>
-        <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full">
+        <div className="flex flex-col max-sm:gap-2 gap-6 max-w-2xl mx-auto w-full">
           {categories.map((category) => (
             <Category
               key={category}

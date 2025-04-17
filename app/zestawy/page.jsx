@@ -33,7 +33,10 @@ const WordSetsPage = () => {
 
   if (!wordSets) {
     return (
-      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
+      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30 flex flex-col gap-4">
+        <p className="text-info animate-pulse delayFadeIn">
+          Pobieranie zestawów
+        </p>
         <span className="loader"></span>
       </div>
     );
@@ -42,13 +45,13 @@ const WordSetsPage = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between border-b mb-4 ">
+      <div className="flex justify-between border-b mb-4 max-sm:px-2">
         <h2 className="">Publiczne zestawy</h2>
         <button className="btn btn-outline btn-info btn-sm">
           <Link href="zestawy/wlasne"> Własne zestawy</Link>
         </button>
       </div>
-      <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full">
+      <div className="flex flex-col gap-6 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {categories.map((category) => (
           <Category
             key={category}

@@ -13,6 +13,16 @@ body {
   text-shadow: 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
-  cursor: pointer;
+.delayFadeIn {
+  opacity: 0;
+  animation: fadeIn 1s 1s forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }

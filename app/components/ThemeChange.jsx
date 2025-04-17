@@ -1,18 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { themeChange } from "theme-change";
-import { MdLightMode, MdDarkMode } from "react-icons/md";
 
 function ThemeChange() {
-  const [actualTheme, setActualTheme] = useState(null);
-
   useEffect(() => {
     themeChange(false);
     // 👆 false parameter is required for react project
     const savedTheme = localStorage.getItem("theme") || "dark";
     document.documentElement.setAttribute("data-theme", savedTheme);
-    setActualTheme(savedTheme);
   }, []);
 
   return (
@@ -22,9 +18,7 @@ function ThemeChange() {
         type="checkbox"
         data-toggle-theme="dark,light"
         data-act-class="ACTIVECLASS"
-        onClick={() => {
-          setActualTheme(document.documentElement.getAttribute("data-theme"));
-        }}
+        onClick={() => document.documentElement.getAttribute("data-theme")}
       />
 
       {/* sun icon */}
