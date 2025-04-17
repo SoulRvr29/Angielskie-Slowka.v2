@@ -3,8 +3,13 @@ import Link from "next/link";
 import { FaCaretSquareDown, FaCaretSquareUp } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
-const Category = ({ category, wordSets, collapseAll }) => {
-  const [isOpen, setIsOpen] = useState(collapseAll);
+const Category = ({
+  category,
+  wordSets,
+  actualCategory,
+  setActualCategory,
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
 
   const normalizeString = (str) => {
     return str
@@ -17,31 +22,35 @@ const Category = ({ category, wordSets, collapseAll }) => {
   };
 
   useEffect(() => {
-    setIsOpen(collapseAll);
-  }, [collapseAll]);
+    if (actualCategory === category) setIsOpen(true);
+    else setIsOpen(false);
+  }, [actualCategory]);
 
   return (
-    <div className=" border-2 bg-primary/10 border-primary/40 overflow-clip rounded-md max-sm:rounded-none flex flex-col">
-      <div className="flex items-center justify-between gap-2 bg-primary/50 px-2 text-xl">
-        <div className="flex gap-2 pb-1">
+    <div
+      className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${
+        isOpen ? "border-secondary/50" : "border-primary/50"
+      }`}
+    >
+      <div
+        onClick={() => {
+          if (isOpen) setActualCategory(null);
+          else setActualCategory(category);
+        }}
+        className={`flex cursor-pointer items-center justify-between gap-2 px-2 text-xl ${
+          isOpen ? "bg-secondary/50" : "bg-primary/50"
+        }`}
+      >
+        <div className="flex gap-2 pb-1 items-center">
           <h3 className="font-semibold">{category}</h3>
-          <p className="text-base">
-            ({wordSets.filter((item) => item.category === category).length})
+          <p className="border-2 border-base-content font-semibold rounded-full size-5 text-sm flex justify-center items-center">
+            {wordSets.filter((item) => item.category === category).length}
           </p>
         </div>
-        {!isOpen ? (
-          <button onClick={() => setIsOpen((prev) => !prev)}>
-            {" "}
-            <FaCaretSquareDown />
-          </button>
-        ) : (
-          <button onClick={() => setIsOpen((prev) => !prev)}>
-            <FaCaretSquareUp />
-          </button>
-        )}
+        {!isOpen ? <FaCaretSquareDown /> : <FaCaretSquareUp />}
       </div>
       {isOpen && (
-        <div className="flex flex-wrap gap-4 p-4">
+        <div className="flex flex-col flex-wrap gap-2 p-2">
           {wordSets.length > 0 ? (
             wordSets
               .filter((wordSet) => wordSet.category === category)
@@ -49,10 +58,9 @@ const Category = ({ category, wordSets, collapseAll }) => {
                 <Link
                   href={`/zestawy/${normalizeString(wordSet.name)}`}
                   key={wordSet.name}
-                  className="bg-primary/10 border border-primary/40 hover:bg-primary/40 p-2 px-4 rounded-md  cursor-pointer transition-colors max-sm:w-full"
+                  className="flex gap-2 w-fit hover:underline"
                 >
-                  <h3 className="font-semibold ">{wordSet.name}</h3>
-                  <p className="text-sm">{wordSet.words.length} słówek</p>
+                  <h3 className="">{wordSet.name}</h3>
                 </Link>
               ))
           ) : (

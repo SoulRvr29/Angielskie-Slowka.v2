@@ -1,5 +1,5 @@
 "use client";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -19,6 +19,7 @@ const Set = () => {
 
   const pathname = usePathname();
   const actualPath = pathname.split("/")[2];
+  const router = useRouter();
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -52,10 +53,13 @@ const Set = () => {
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-      <Link href="/zestawy" className="my-2 gap-2 items-center btn btn-sm">
+      <button
+        onClick={() => router.back()}
+        className="my-2 gap-2 items-center btn btn-sm"
+      >
         <FaArrowLeft />
         wróć do zestawów
-      </Link>
+      </button>
       <div className="flex flex-col border w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-md border-primary/50 bg-primary/10">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>

@@ -9,7 +9,7 @@ const getCategories = (data) => {
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
-  const [collapseAll, setCollapseAll] = useState(true);
+  const [actualCategory, setActualCategory] = useState(null);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -42,25 +42,20 @@ const WordSetsPage = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <h2 className="text-primary border-b pb-2">Wybierz zestaw</h2>
-      <div className="flex flex-col gap-6 ">
-        <div className="flex justify-between ">
-          <button className="btn btn-outline btn-info btn-sm">
-            <Link href="zestawy/wlasne"> Własne zestawy</Link>
-          </button>
-          <button
-            onClick={() => setCollapseAll((prev) => !prev)}
-            className="btn btn-sm"
-          >
-            {!collapseAll ? "rozwiń kategorie" : "zwiń kategorie"}
-          </button>
-        </div>
+      <div className="flex justify-between border-b mb-4 ">
+        <h2 className="">Publiczne zestawy</h2>
+        <button className="btn btn-outline btn-info btn-sm">
+          <Link href="zestawy/wlasne"> Własne zestawy</Link>
+        </button>
+      </div>
+      <div className="flex flex-col gap-6 max-w-2xl mx-auto w-full">
         {categories.map((category) => (
           <Category
             key={category}
             category={category}
-            collapseAll={collapseAll}
             wordSets={wordSets}
+            actualCategory={actualCategory}
+            setActualCategory={setActualCategory}
           />
         ))}
       </div>
