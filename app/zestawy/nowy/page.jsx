@@ -1,7 +1,7 @@
 "use client";
 import { useSearchParams, useRouter } from "next/navigation";
 import { FaArrowLeft, FaArrowDown } from "react-icons/fa";
-import TableRow from "@/app/components/TableRow";
+import FormRow from "@/app/components/FormRow";
 import { useState } from "react";
 
 const NowyZestawPage = () => {
@@ -65,7 +65,7 @@ const NowyZestawPage = () => {
             </thead>
             <tbody>
               {formData.map((row, index) => (
-                <TableRow
+                <FormRow
                   key={index}
                   index={index}
                   formData={formData}

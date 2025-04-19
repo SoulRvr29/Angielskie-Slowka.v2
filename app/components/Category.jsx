@@ -68,7 +68,7 @@ const Category = ({
         </div>
       </div>
       {isOpen && (
-        <div className="flex flex-col flex-wrap gap-2 py-2">
+        <div className="flex flex-col flex-wrap gap-2 pt-2">
           {/* <div className="flex justify-between bg-secondary/20 px-3 border-b-2 border-secondary/20">
             <div>Nazwa zestawu:</div>
             <div>Słówek:</div>
@@ -93,7 +93,7 @@ const Category = ({
           )}
           <button>
             <Link
-              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 pt-2"
+              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1"
               href={{
                 pathname: "/zestawy/nowy",
                 query: { category: category },

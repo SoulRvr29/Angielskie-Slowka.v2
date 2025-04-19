@@ -2,6 +2,7 @@
 import Category from "../components/Category";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import AddCategory from "../components/AddCategory";
 
 const getCategories = (data) => {
   return [...new Set(data.map((item) => item.category).sort())];
@@ -10,7 +11,6 @@ const getCategories = (data) => {
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [actualCategory, setActualCategory] = useState(null);
-  const [addCategory, setAddCategory] = useState(false);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -66,36 +66,7 @@ const WordSetsPage = () => {
             setActualCategory={setActualCategory}
           />
         ))}
-        {addCategory ? (
-          <form
-            className=" max-w-2xl mx-auto w-full flex flex-col gap-4"
-            onSubmit={(e) => e.preventDefault()}
-          >
-            <input
-              type="text"
-              name="nowaKategoria"
-              className="input w-full"
-              autoFocus
-            />
-            <button
-              type="submit"
-              onClick={(e) => {
-                setAddCategory(false);
-                newCategoryHandler(e.target.parentElement[0].value);
-              }}
-              className="btn btn-outline btn-secondary btn-sm text-base "
-            >
-              Dodaj kategorię
-            </button>
-          </form>
-        ) : (
-          <button
-            onClick={() => setAddCategory(true)}
-            className="btn btn-outline btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
-          >
-            Nowa kategoria
-          </button>
-        )}
+        <AddCategory newCategoryHandler={newCategoryHandler} />
       </div>
     </div>
   );
