@@ -1,7 +1,7 @@
 "use client";
 import Category from "../../components/Category";
 import { useEffect, useState } from "react";
-import Link from "next/link";
+import SubNav from "../../components/SubNav";
 import { FaArrowLeft } from "react-icons/fa";
 
 const getCategories = (data) => {
@@ -49,14 +49,7 @@ const MojeZestawyPage = () => {
   return (
     <div>
       <div className="flex flex-col gap-4 ">
-        <div className="flex justify-between border-b border-info text-info mb-4 max-sm:px-2">
-          <h2 className="">Moje zestawy</h2>
-          <div className="flex gap-4">
-            <button className="btn btn-outline btn-info btn-sm">
-              <Link href="/zestawy"> Publiczne zestawy</Link>
-            </button>
-          </div>
-        </div>
+        <SubNav title="Moje zestawy" text="Publiczne zestawy" link="/zestawy" />
         <div className="flex flex-col max-sm:gap-2 gap-6 max-w-2xl mx-auto w-full">
           {categories.map((category) => (
             <Category

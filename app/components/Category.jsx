@@ -37,23 +37,25 @@ const Category = ({
       }`}
     >
       <div
-        className={`flex  items-center justify-between gap-2 px-3 text-xl ${
+        onClick={() => {
+          if (isOpen) setActualCategory(null);
+          else setActualCategory(category);
+        }}
+        className={`flex  items-center justify-between gap-2 px-3 text-xl cursor-pointer ${
           isOpen ? "bg-secondary/50" : "bg-primary/30"
         }`}
       >
-        <div className="flex gap-2 pb-1 items-center">
-          <h3
-            className="font-semibold cursor-pointer"
-            onClick={() => {
-              if (isOpen) setActualCategory(null);
-              else setActualCategory(category);
-            }}
-          >
-            {category}
-          </h3>
-          {/* <p className="border-2 border-base-content font-semibold rounded-full size-5 text-sm flex justify-center items-center">
-            {wordSets.filter((item) => item.category === category).length}
-          </p> */}
+        <div
+          onClick={() => {
+            if (isOpen) setActualCategory(null);
+            else setActualCategory(category);
+          }}
+          className="flex gap-2 pb-1 items-center"
+        >
+          <h3 className="font-semibold cursor-pointer">{category}</h3>
+          <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
+            ({wordSets.filter((item) => item.category === category).length})
+          </p>
         </div>
         <div className="flex gap-4">
           <div
@@ -79,7 +81,9 @@ const Category = ({
               .map((wordSet) => (
                 <div key={wordSet.name} className="flex justify-between px-2 ">
                   <Link
-                    href={`/zestawy/${normalizeString(wordSet.name)}`}
+                    href={`/zestawy/${normalizeString(
+                      wordSet.category
+                    )}-${normalizeString(wordSet.name)}`}
                     className="flex gap-2 w-fit hover:underline justify-between"
                   >
                     {wordSet.name}

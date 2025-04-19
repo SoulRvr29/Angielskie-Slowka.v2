@@ -3,6 +3,7 @@ import Category from "../components/Category";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import AddCategory from "../components/AddCategory";
+import SubNav from "../components/SubNav";
 
 const getCategories = (data) => {
   return [...new Set(data.map((item) => item.category).sort())];
@@ -50,12 +51,11 @@ const WordSetsPage = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between border-b border-info text-info mb-4 max-sm:px-2">
-        <h2 className="">Publiczne zestawy</h2>
-        <button className="btn btn-outline btn-info btn-sm">
-          <Link href="zestawy/wlasne"> Własne zestawy</Link>
-        </button>
-      </div>
+      <SubNav
+        title="Publiczne zestawy"
+        text="Moje zestawy"
+        link="/zestawy/wlasne"
+      />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {categories.map((category) => (
           <Category

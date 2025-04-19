@@ -3,6 +3,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { FaArrowLeft, FaArrowDown } from "react-icons/fa";
 import FormRow from "@/app/components/FormRow";
 import { useState } from "react";
+import SubNav from "@/app/components/SubNav";
 
 const NowyZestawPage = () => {
   const searchParams = useSearchParams();
@@ -30,13 +31,11 @@ const NowyZestawPage = () => {
 
   return (
     <div>
-      <button
-        onClick={() => router.back()}
-        className="my-2 gap-2 items-center btn btn-sm"
-      >
-        <FaArrowLeft />
-        wróć do zestawów
-      </button>
+      <SubNav
+        title={`Kategoria: ${category}`}
+        text="wróć do zestawów"
+        link="/zestawy"
+      />
 
       <div>
         <form
@@ -46,7 +45,6 @@ const NowyZestawPage = () => {
             handleForm(e);
           }}
         >
-          <h2 className="text-secondary">Kategoria: {category}</h2>
           <div className="flex flex-col mx-auto px-2">
             <label className="max-sm:text-base font-semibold text-sm opacity-70 pb-2">
               Nazwa zestawu:{" "}

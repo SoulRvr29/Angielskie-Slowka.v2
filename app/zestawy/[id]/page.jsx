@@ -31,7 +31,7 @@ const Set = () => {
         }
         const data = await res.json();
         const set = data.find(
-          (item) => normalizeString(item.name) === actualPath
+          (item) => normalizeString(item.name) === actualPath.split("-")[1]
         );
         setWordsSet(set);
       } catch (error) {
@@ -49,6 +49,14 @@ const Set = () => {
       </div>
     );
   }
+
+  const deleteHandler = () => {
+    const path = actualPath.split("-");
+    console.log({
+      category: path[0],
+      set: path[1],
+    });
+  };
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
@@ -72,6 +80,9 @@ const Set = () => {
           ))}
         </div>
       </div>
+      <button onClick={deleteHandler} className="btn btn-error">
+        Usuń zestaw
+      </button>
     </div>
   );
 };
