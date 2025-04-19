@@ -1,6 +1,10 @@
 "use client";
 import Link from "next/link";
-import { FaCaretSquareDown, FaCaretSquareUp } from "react-icons/fa";
+import {
+  FaCaretSquareDown,
+  FaCaretSquareUp,
+  FaPlusSquare,
+} from "react-icons/fa";
 import { useState, useEffect } from "react";
 
 const Category = ({
@@ -29,43 +33,75 @@ const Category = ({
   return (
     <div
       className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${
-        isOpen ? "border-secondary/50" : "border-primary/50"
+        isOpen ? "border-secondary/50" : "border-primary/30"
       }`}
     >
       <div
-        onClick={() => {
-          if (isOpen) setActualCategory(null);
-          else setActualCategory(category);
-        }}
-        className={`flex cursor-pointer items-center justify-between gap-2 px-2 text-xl ${
-          isOpen ? "bg-secondary/50" : "bg-primary/50"
+        className={`flex  items-center justify-between gap-2 px-3 text-xl ${
+          isOpen ? "bg-secondary/50" : "bg-primary/30"
         }`}
       >
         <div className="flex gap-2 pb-1 items-center">
-          <h3 className="font-semibold">{category}</h3>
-          <p className="border-2 border-base-content font-semibold rounded-full size-5 text-sm flex justify-center items-center">
+          <h3
+            className="font-semibold cursor-pointer"
+            onClick={() => {
+              if (isOpen) setActualCategory(null);
+              else setActualCategory(category);
+            }}
+          >
+            {category}
+          </h3>
+          {/* <p className="border-2 border-base-content font-semibold rounded-full size-5 text-sm flex justify-center items-center">
             {wordSets.filter((item) => item.category === category).length}
-          </p>
+          </p> */}
         </div>
-        {!isOpen ? <FaCaretSquareDown /> : <FaCaretSquareUp />}
+        <div className="flex gap-4">
+          <div
+            className="cursor-pointer"
+            onClick={() => {
+              if (isOpen) setActualCategory(null);
+              else setActualCategory(category);
+            }}
+          >
+            {!isOpen ? <FaCaretSquareDown /> : <FaCaretSquareUp />}
+          </div>
+        </div>
       </div>
       {isOpen && (
-        <div className="flex flex-col flex-wrap gap-2 p-2">
+        <div className="flex flex-col flex-wrap gap-2 py-2">
+          {/* <div className="flex justify-between bg-secondary/20 px-3 border-b-2 border-secondary/20">
+            <div>Nazwa zestawu:</div>
+            <div>Słówek:</div>
+          </div> */}
           {wordSets.length > 0 ? (
             wordSets
               .filter((wordSet) => wordSet.category === category)
               .map((wordSet) => (
-                <Link
-                  href={`/zestawy/${normalizeString(wordSet.name)}`}
-                  key={wordSet.name}
-                  className="flex gap-2 w-fit hover:underline"
-                >
-                  <h3 className="">{wordSet.name}</h3>
-                </Link>
+                <div key={wordSet.name} className="flex justify-between px-2 ">
+                  <Link
+                    href={`/zestawy/${normalizeString(wordSet.name)}`}
+                    className="flex gap-2 w-fit hover:underline justify-between"
+                  >
+                    {wordSet.name}
+                  </Link>
+
+                  <p>{wordSet.words.length}</p>
+                </div>
               ))
           ) : (
             <div>Brak dostępnych zestawów</div>
           )}
+          <button>
+            <Link
+              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 pt-2"
+              href={{
+                pathname: "/zestawy/nowy",
+                query: { category: category },
+              }}
+            >
+              <FaPlusSquare title="dodaj zestaw" /> <p>Dodaj nowy zestaw</p>
+            </Link>
+          </button>
         </div>
       )}
     </div>

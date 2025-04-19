@@ -11,6 +11,7 @@ const getCategories = (data) => {
 const MojeZestawyPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [actualCategory, setActualCategory] = useState(null);
+  const [addCategory, setAddCategory] = useState(false);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -48,11 +49,13 @@ const MojeZestawyPage = () => {
   return (
     <div>
       <div className="flex flex-col gap-4 ">
-        <div className="flex justify-between border-b mb-4 max-sm:px-2">
+        <div className="flex justify-between border-b border-info text-info mb-4 max-sm:px-2">
           <h2 className="">Moje zestawy</h2>
-          <button className="btn btn-outline btn-info btn-sm">
-            <Link href="/zestawy"> Publiczne zestawy</Link>
-          </button>
+          <div className="flex gap-4">
+            <button className="btn btn-outline btn-info btn-sm">
+              <Link href="/zestawy"> Publiczne zestawy</Link>
+            </button>
+          </div>
         </div>
         <div className="flex flex-col max-sm:gap-2 gap-6 max-w-2xl mx-auto w-full">
           {categories.map((category) => (
@@ -65,6 +68,36 @@ const MojeZestawyPage = () => {
             />
           ))}
         </div>
+        {addCategory ? (
+          <form
+            className=" max-w-2xl mx-auto w-full flex flex-col gap-4"
+            onSubmit={(e) => {
+              e.preventDefault();
+              console.log(e);
+            }}
+          >
+            <input
+              type="text"
+              name="nowaKategoria"
+              className="input w-full"
+              autoFocus
+            />
+            <button
+              type="submit"
+              onClick={() => setAddCategory(false)}
+              className="btn btn-outline btn-secondary btn-sm text-base "
+            >
+              Dodaj kategorię
+            </button>
+          </form>
+        ) : (
+          <button
+            onClick={() => setAddCategory(true)}
+            className="btn btn-outline btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
+          >
+            Nowa kategoria
+          </button>
+        )}
       </div>
     </div>
   );

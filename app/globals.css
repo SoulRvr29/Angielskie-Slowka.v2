@@ -1,6 +1,6 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: dark, light;
+  themes: dark, emerald;
 }
 
 h2 {
@@ -25,4 +25,8 @@ body {
   100% {
     opacity: 1;
   }
+}
+
+button {
+  cursor: pointer;
 }

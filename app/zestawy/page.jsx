@@ -10,6 +10,7 @@ const getCategories = (data) => {
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [actualCategory, setActualCategory] = useState(null);
+  const [addCategory, setAddCategory] = useState(false);
 
   useEffect(() => {
     const fetchWords = async () => {
@@ -43,15 +44,19 @@ const WordSetsPage = () => {
   }
   const categories = getCategories(wordSets);
 
+  const newCategoryHandler = (name) => {
+    console.log(name);
+  };
+
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between border-b mb-4 max-sm:px-2">
+      <div className="flex justify-between border-b border-info text-info mb-4 max-sm:px-2">
         <h2 className="">Publiczne zestawy</h2>
         <button className="btn btn-outline btn-info btn-sm">
           <Link href="zestawy/wlasne"> Własne zestawy</Link>
         </button>
       </div>
-      <div className="flex flex-col gap-6 max-sm:gap-2 max-w-2xl mx-auto w-full">
+      <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {categories.map((category) => (
           <Category
             key={category}
@@ -61,6 +66,36 @@ const WordSetsPage = () => {
             setActualCategory={setActualCategory}
           />
         ))}
+        {addCategory ? (
+          <form
+            className=" max-w-2xl mx-auto w-full flex flex-col gap-4"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <input
+              type="text"
+              name="nowaKategoria"
+              className="input w-full"
+              autoFocus
+            />
+            <button
+              type="submit"
+              onClick={(e) => {
+                setAddCategory(false);
+                newCategoryHandler(e.target.parentElement[0].value);
+              }}
+              className="btn btn-outline btn-secondary btn-sm text-base "
+            >
+              Dodaj kategorię
+            </button>
+          </form>
+        ) : (
+          <button
+            onClick={() => setAddCategory(true)}
+            className="btn btn-outline btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
+          >
+            Nowa kategoria
+          </button>
+        )}
       </div>
     </div>
   );

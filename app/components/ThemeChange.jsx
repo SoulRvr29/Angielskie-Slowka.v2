@@ -16,7 +16,7 @@ function ThemeChange() {
       {/* this hidden checkbox controls the state */}
       <input
         type="checkbox"
-        data-toggle-theme="dark,light"
+        data-toggle-theme="dark,emerald"
         data-act-class="ACTIVECLASS"
         onClick={() => document.documentElement.getAttribute("data-theme")}
       />

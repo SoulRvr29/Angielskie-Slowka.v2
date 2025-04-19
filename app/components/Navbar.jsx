@@ -11,7 +11,7 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className=" flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-success/20">
+    <nav className=" flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-10">
       <Link href="/">
         <h1 className="absolute top-1 max-md:top-0 max-md:pb-2 max-md:relative text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold mt-1">
           Angielskie Słówka<span className="text-sm text-primary">.v2</span>
@@ -47,7 +47,7 @@ const Navbar = () => {
       </label>
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="fixed top-11 left-0 bg-black/50 w-screen h-screen">
+        <div className="fixed top-11 left-0 bg-black/50 w-screen h-screen z-10">
           <div
             className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-secondary"
             onClick={() => setIsMenuOpen(false)}
