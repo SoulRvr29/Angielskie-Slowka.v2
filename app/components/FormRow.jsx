@@ -14,8 +14,8 @@ const TableRow = ({ index, formData, setFormData, deleteRow }) => {
   return (
     <>
       <tr>
-        <th className="max-sm:p-2 text-center">{index + 1}</th>
-        <td className="max-sm:p-0 max-sm:pb-2">
+        <th className="text-center p-2">{index + 1}</th>
+        <td className="max-sm:py-2 p-0">
           <input
             onChange={(e) => {
               updateForm("ang", e.target.value);
@@ -27,7 +27,7 @@ const TableRow = ({ index, formData, setFormData, deleteRow }) => {
             className="input"
           />
         </td>
-        <td className="max-sm:p-0 max-sm:pb-2 max-sm:px-2">
+        <td className="max-sm:py-2 max-sm:px-2 ">
           <input
             onChange={(e) => {
               updateForm("pl", e.target.value);
@@ -39,9 +39,9 @@ const TableRow = ({ index, formData, setFormData, deleteRow }) => {
             className="input"
           />
         </td>
-        <td>
+        <td className="p-0 max-sm:pr-2 ">
           <FaWindowClose
-            className="btn btn-xs btn-square"
+            className="btn btn-xs btn-square hover:text-error"
             onClick={() => {
               if (formData.length > 1) deleteRow(index);
             }}

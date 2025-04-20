@@ -89,7 +89,7 @@ const Category = ({
                     {wordSet.name}
                   </Link>
 
-                  <p>{wordSet.words.length}</p>
+                  {/* <p>{wordSet.words.length}</p> */}
                 </div>
               ))
           ) : (

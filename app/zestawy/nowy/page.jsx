@@ -45,11 +45,11 @@ const NowyZestawPage = () => {
             handleForm(e);
           }}
         >
-          <div className="flex flex-col mx-auto px-2">
+          <div className="flex flex-col pl-10">
             <label className="max-sm:text-base font-semibold text-sm opacity-70 pb-2">
-              Nazwa zestawu:{" "}
+              Nazwa zestawu
             </label>
-            <input type="text" className="input max-w-50" required />
+            <input type="text" className="input max-w-58" required />
           </div>
 
           <table className="table">
@@ -73,11 +73,11 @@ const NowyZestawPage = () => {
               ))}
             </tbody>
           </table>
-          <div className="flex justify-between ">
-            <div onClick={() => addNewRow()} className="btn ">
+          <div className="flex justify-between px-2">
+            <div onClick={() => addNewRow()} className="btn">
               <FaArrowDown /> dodaj
             </div>
-            <button type="submit" className="btn btn-outline btn-secondary ">
+            <button type="submit" className="btn btn-outline btn-success ">
               Stwórz zestaw
             </button>
           </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FaHome, FaInfoCircle } from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -49,13 +50,13 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="fixed top-11 left-0 bg-black/50 w-screen h-screen z-10">
           <div
-            className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-secondary"
+            className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-info"
             onClick={() => setIsMenuOpen(false)}
           >
             <Link
               className={`${
                 pathname === "/zestawy" && "btn-success"
-              } border-b-2  border-b-secondary py-2`}
+              } border-b-2  border-b-info py-2`}
               href="/zestawy"
             >
               zestawy
@@ -63,7 +64,7 @@ const Navbar = () => {
             <Link
               className={`${
                 pathname === "/ustawienia" && "btn-success"
-              } border-b-2  border-b-secondary py-2`}
+              } border-b-2  border-b-info py-2`}
               href="/ustawienia"
             >
               ustawienia
@@ -76,7 +77,7 @@ const Navbar = () => {
       )}
       {/* Desktop menu */}
       <div className="flex justify-between items-center w-full p-3 max-md:p-2 max-sm:hidden">
-        <div className="flex gap-4 items-center font-semibold ">
+        <div className="flex gap-3 items-center font-semibold ">
           <Link href="/" className="flex items-center gap-2">
             <FaHome className={`${pathname === "/" ? "fill-success" : ""}`} />
           </Link>
@@ -88,17 +89,23 @@ const Navbar = () => {
           >
             zestawy
           </Link>
-          <Link
+          {/* <Link
             className={`${
               pathname === "/ustawienia" && "btn-success"
             } btn btn-xs btn-soft`}
             href="/ustawienia"
           >
             ustawienia
-          </Link>
+          </Link> */}
         </div>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-3 items-center">
           <ThemeChange />
+          <Link
+            href="ustawienia"
+            className={`${pathname === "/ustawienia" && "text-success"} `}
+          >
+            <FaGear />
+          </Link>
           <Link href="/about">
             <FaInfoCircle
               className={`${pathname === "/about" ? "fill-success" : ""}`}

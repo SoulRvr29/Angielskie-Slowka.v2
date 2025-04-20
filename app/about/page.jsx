@@ -1,4 +1,4 @@
 const AboutPage = () => {
-  return <div>O stronie</div>;
+  return <p>Strona do nauki angielskich słówek metodą fiszek.</p>;
 };
 export default AboutPage;
