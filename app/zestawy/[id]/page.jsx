@@ -2,19 +2,10 @@
 import { usePathname, useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import normalizeString from "@/utils/normalizeString";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
-
-  const normalizeString = (str) => {
-    return str
-      .split(" ")
-      .join("_")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/ł/g, "l")
-      .replace(/Ł/g, "L");
-  };
 
   const pathname = usePathname();
   const actualPath = pathname.split("/")[2];
@@ -50,11 +41,9 @@ const Set = () => {
     );
   }
 
-  const deleteHandler = () => {
-    const path = actualPath.split("-");
+  const deleteHandler = async () => {
     console.log({
-      category: path[0],
-      set: path[1],
+      id: wordsSet["_id"],
     });
   };
 
