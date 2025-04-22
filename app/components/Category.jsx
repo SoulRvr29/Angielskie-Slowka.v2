@@ -15,16 +15,6 @@ const Category = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const normalizeString = (str) => {
-    return str
-      .split(" ")
-      .join("_")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/ł/g, "l")
-      .replace(/Ł/g, "L");
-  };
-
   useEffect(() => {
     if (actualCategory === category) setIsOpen(true);
     else setIsOpen(false);
@@ -81,9 +71,7 @@ const Category = ({
               .map((wordSet) => (
                 <div key={wordSet.name} className="flex justify-between px-2 ">
                   <Link
-                    href={`/zestawy/${normalizeString(
-                      wordSet.category
-                    )}-${normalizeString(wordSet.name)}`}
+                    href={`/zestawy/${wordSet["_id"]}`}
                     className="flex gap-2 w-fit hover:underline justify-between"
                   >
                     {wordSet.name}

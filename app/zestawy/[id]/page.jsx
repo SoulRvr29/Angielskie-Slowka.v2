@@ -1,37 +1,32 @@
 "use client";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import normalizeString from "@/utils/normalizeString";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
-
-  const pathname = usePathname();
-  const actualPath = pathname.split("/")[2];
   const router = useRouter();
+  const { id } = useParams();
 
   useEffect(() => {
-    const fetchWords = async () => {
+    const fetchWords = async (id) => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
         );
+        console.log(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`);
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        const set = data.find(
-          (item) => normalizeString(item.name) === actualPath.split("-")[1]
-        );
-        setWordsSet(set);
+        setWordsSet(data);
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchWords();
-  }, [actualPath]);
+    fetchWords(id);
+  }, []);
 
   if (!wordsSet) {
     return (
