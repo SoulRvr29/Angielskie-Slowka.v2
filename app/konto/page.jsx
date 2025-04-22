@@ -21,7 +21,7 @@ const LogowaniePage = () => {
           <label className="label">Hasło</label>
           <input type="password" className="input" placeholder="••••••••" />
 
-          <button className="btn btn-neutral mt-4">Login</button>
+          <button className="btn btn-neutral mt-4">Gotowe</button>
         </fieldset>
       ) : (
         <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 mx-auto">
@@ -42,7 +42,7 @@ const LogowaniePage = () => {
           <label className="label">Powtórz hasło</label>
           <input type="password" className="input" placeholder="••••••••" />
 
-          <button className="btn btn-neutral mt-4">Login</button>
+          <button className="btn btn-neutral mt-4">Gotowe</button>
         </fieldset>
       )}
       {loginOrRegister ? (

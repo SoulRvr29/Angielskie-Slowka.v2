@@ -97,7 +97,7 @@ const Category = ({
           )}
           <button>
             <Link
-              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1"
+              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/10 hover:bg-secondary/20"
               href={{
                 pathname: "/zestawy/nowy",
                 query: { category: category },

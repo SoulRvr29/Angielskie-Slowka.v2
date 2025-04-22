@@ -89,6 +89,14 @@ const Navbar = () => {
           >
             zestawy
           </Link>
+          <Link
+            className={`${
+              pathname === "/konto" && "btn-success"
+            } btn btn-xs btn-soft`}
+            href="/konto"
+          >
+            logowanie
+          </Link>
           {/* <Link
             className={`${
               pathname === "/ustawienia" && "btn-success"

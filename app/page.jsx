@@ -7,7 +7,7 @@ const HomePage = () => {
       <Link href="/zestawy" className="btn btn-xl btn-info">
         Rozpocznij
       </Link>
-      <Link href="/logowanie" className="btn btn-xl ">
+      <Link href="/konto" className="btn ">
         Logowanie
       </Link>
     </div>
