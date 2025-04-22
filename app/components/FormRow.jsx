@@ -18,24 +18,24 @@ const TableRow = ({ index, formData, setFormData, deleteRow }) => {
         <td className="max-sm:py-2 p-0">
           <input
             onChange={(e) => {
-              updateForm("ang", e.target.value);
+              updateForm("english", e.target.value);
             }}
-            value={formData[index].ang}
+            value={formData[index].english}
             type="text"
             required
-            id={"ang" + index}
+            id={"english" + index}
             className="input"
           />
         </td>
         <td className="max-sm:py-2 max-sm:px-2 ">
           <input
             onChange={(e) => {
-              updateForm("pl", e.target.value);
+              updateForm("polish", e.target.value);
             }}
-            value={formData[index].pl}
+            value={formData[index].polish}
             type="text"
             required
-            id={"pl" + index}
+            id={"polish" + index}
             className="input"
           />
         </td>

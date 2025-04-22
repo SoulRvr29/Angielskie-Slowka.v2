@@ -10,13 +10,13 @@ const NowyZestawPage = () => {
   const category = searchParams.get("category");
   const router = useRouter();
   const [formData, setFormData] = useState([
-    { ang: "", pl: "" },
-    { ang: "", pl: "" },
-    { ang: "", pl: "" },
+    { english: "", polish: "" },
+    { english: "", polish: "" },
+    { english: "", polish: "" },
   ]);
 
   const addNewRow = () => {
-    setFormData([...formData, { ang: "", pl: "" }]);
+    setFormData([...formData, { english: "", polish: "" }]);
     console.log(formData);
   };
 
@@ -27,6 +27,41 @@ const NowyZestawPage = () => {
 
   const handleForm = (e) => {
     console.log({ name: e.target[0].value, data: formData });
+    const createWordSet = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: e.target[0].value,
+              category: category,
+              words: formData,
+            }),
+          }
+        );
+        console.log(
+          JSON.stringify({
+            name: e.target[0].value,
+            category: category,
+            words: formData,
+          })
+        );
+        if (!res.ok) {
+          throw new Error("Failed to create word set");
+        }
+        const data = await res.json();
+        console.log("Word set created:", data);
+        router.push("/zestawy");
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    createWordSet();
   };
 
   return (
