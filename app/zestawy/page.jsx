@@ -1,7 +1,6 @@
 "use client";
 import Category from "../components/Category";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import AddCategory from "../components/AddCategory";
 import SubNav from "../components/SubNav";
 
@@ -35,7 +34,7 @@ const WordSetsPage = () => {
 
   if (!wordSets) {
     return (
-      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30 flex flex-col gap-4">
+      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30 flex-col gap-4">
         <p className="text-info animate-pulse delayFadeIn">
           Pobieranie zestawów
         </p>

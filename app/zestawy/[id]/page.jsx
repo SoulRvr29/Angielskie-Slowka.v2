@@ -10,6 +10,7 @@ const Set = () => {
 
   useEffect(() => {
     const fetchWords = async (id) => {
+      if (!id) return;
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
@@ -40,6 +41,21 @@ const Set = () => {
     console.log({
       id: wordsSet["_id"],
     });
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      router.back();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
