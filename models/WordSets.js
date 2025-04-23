@@ -1,30 +1,34 @@
 import { Schema, model, models } from "mongoose";
 
-const ZestawSchema = new Schema(
+const WordSchema = new Schema({
+  english: {
+    type: String,
+    required: [true, "Dodaj słówko"],
+  },
+  polish: {
+    type: String,
+    required: [true, "Dodaj słówko"],
+  },
+});
+
+const SetSchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "Nazwa zestawu wymagana"],
+  },
+  words: [WordSchema],
+});
+
+const WordSetsSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Nazwa wymagana"],
-    },
     category: {
       type: String,
       required: [true, "Nazwa kategorii wymagana"],
     },
-    words: [
-      {
-        english: {
-          type: String,
-          required: [true, "Dodaj słówko"],
-        },
-        polish: {
-          type: String,
-          required: [true, "Dodaj słówko"],
-        },
-      },
-    ],
+    sets: [SetSchema],
   },
   { collection: "word_sets" }
 );
 
-const WordSets = models.WordSets || model("WordSets", ZestawSchema);
+const WordSets = models.WordSets || model("WordSets", WordSetsSchema);
 export default WordSets;

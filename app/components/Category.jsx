@@ -7,12 +7,7 @@ import {
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 
-const Category = ({
-  category,
-  wordSets,
-  actualCategory,
-  setActualCategory,
-}) => {
+const Category = ({ category, sets, actualCategory, setActualCategory }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -20,6 +15,7 @@ const Category = ({
     else setIsOpen(false);
   }, [actualCategory]);
 
+  console.log(sets);
   return (
     <div
       className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${
@@ -44,7 +40,7 @@ const Category = ({
         >
           <h3 className="font-semibold cursor-pointer">{category}</h3>
           <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
-            ({wordSets.filter((item) => item.category === category).length})
+            ({sets.length})
           </p>
         </div>
         <div className="flex gap-4">
@@ -65,21 +61,19 @@ const Category = ({
             <div>Nazwa zestawu:</div>
             <div>Słówek:</div>
           </div> */}
-          {wordSets.length > 0 ? (
-            wordSets
-              .filter((wordSet) => wordSet.category === category)
-              .map((wordSet) => (
-                <div key={wordSet.name} className="flex justify-between">
-                  <Link
-                    href={`/zestawy/${wordSet["_id"]}`}
-                    className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2"
-                  >
-                    {wordSet.name}
-                  </Link>
+          {sets.length > 0 ? (
+            sets.map((item) => (
+              <div key={item.name} className="flex justify-between">
+                <Link
+                  href={`/zestawy/${item["_id"]}`}
+                  className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2"
+                >
+                  {item.name}
+                </Link>
 
-                  {/* <p>{wordSet.words.length}</p> */}
-                </div>
-              ))
+                {/* <p>{item.words.length}</p> */}
+              </div>
+            ))
           ) : (
             <div>Brak dostępnych zestawów</div>
           )}

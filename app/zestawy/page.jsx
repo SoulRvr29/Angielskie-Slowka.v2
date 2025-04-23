@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import AddCategory from "../components/AddCategory";
 import SubNav from "../components/SubNav";
 
-const getCategories = (data) => {
-  return [...new Set(data.map((item) => item.category).sort())];
-};
+// const getCategories = (data) => {
+//   return [...new Set(data.map((item) => item.category).sort())];
+// };
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
@@ -42,12 +42,12 @@ const WordSetsPage = () => {
       </div>
     );
   }
-  const categories = getCategories(wordSets);
+  // const categories = getCategories(wordSets);
 
   const newCategoryHandler = (name) => {
     console.log(name);
   };
-
+  // console.log(wordSets);
   return (
     <div className="flex flex-col gap-2">
       <SubNav
@@ -56,11 +56,11 @@ const WordSetsPage = () => {
         link="/zestawy/wlasne"
       />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
-        {categories.map((category) => (
+        {wordSets.map((item) => (
           <Category
-            key={category}
-            category={category}
-            wordSets={wordSets}
+            key={item.id}
+            category={item.category}
+            sets={item.sets}
             actualCategory={actualCategory}
             setActualCategory={setActualCategory}
           />
