@@ -10,7 +10,6 @@ const ZestawUserSchema = new Schema(
       {
         name: {
           type: String,
-          unique: [true, "Zestaw o tej nazwie już istnieje"],
           required: [true, "Nazwa wymagana"],
         },
         category: {
@@ -21,12 +20,10 @@ const ZestawUserSchema = new Schema(
           {
             english: {
               type: String,
-              unique: [true, "To słówko już istnieje"],
               required: [true, "Dodaj słówko"],
             },
             polish: {
               type: String,
-              unique: [true, "To słówko już istnieje"],
               required: [true, "Dodaj słówko"],
             },
           },
