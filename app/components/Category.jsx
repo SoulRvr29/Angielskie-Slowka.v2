@@ -69,10 +69,10 @@ const Category = ({
             wordSets
               .filter((wordSet) => wordSet.category === category)
               .map((wordSet) => (
-                <div key={wordSet.name} className="flex justify-between px-2 ">
+                <div key={wordSet.name} className="flex justify-between">
                   <Link
                     href={`/zestawy/${wordSet["_id"]}`}
-                    className="flex gap-2 w-fit hover:underline justify-between"
+                    className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2"
                   >
                     {wordSet.name}
                   </Link>

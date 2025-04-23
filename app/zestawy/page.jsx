@@ -34,7 +34,7 @@ const WordSetsPage = () => {
 
   if (!wordSets) {
     return (
-      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30 flex-col gap-4">
+      <div className="fixed top-0 left-0 w-full h-full items-center justify-center bg-base-300/30 flex-col gap-4">
         <p className="text-info animate-pulse delayFadeIn">
           Pobieranie zestawów
         </p>

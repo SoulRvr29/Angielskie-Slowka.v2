@@ -2,6 +2,7 @@
 import { useRouter, useParams } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
@@ -31,13 +32,16 @@ const Set = () => {
 
   if (!wordsSet) {
     return (
-      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
+      <div className="fixed top-0 left-0 w-full h-full items-center justify-center bg-base-300/30">
         <span className="loader"></span>
       </div>
     );
   }
 
   const deleteHandler = async () => {
+    const result = confirm("Potwierdź usunięcie");
+    if (!result) return;
+
     console.log({
       id: wordsSet["_id"],
     });
@@ -70,19 +74,27 @@ const Set = () => {
       <div className="flex flex-col border w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-md border-primary/50 bg-primary/10">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
-          <div>{wordsSet.words.length} słówek</div>
+          <div>słówek: {wordsSet.words.length}</div>
         </div>
         <div className="px-4 py-2">
-          {wordsSet.words.map((item) => (
-            <div key={item.english}>
+          {wordsSet.words.map((item, index) => (
+            <div key={index}>
               <span>{item.english}</span> - <span>{item.polish}</span>
             </div>
           ))}
         </div>
       </div>
-      <button onClick={deleteHandler} className="btn btn-error">
-        Usuń zestaw
-      </button>
+      <div className="flex gap-4">
+        <Link
+          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
+          className="btn btn-info"
+        >
+          Edytuj
+        </Link>
+        <button onClick={deleteHandler} className="btn btn-error">
+          Usuń
+        </button>
+      </div>
     </div>
   );
 };
