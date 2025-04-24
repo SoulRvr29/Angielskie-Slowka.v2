@@ -4,13 +4,27 @@ import {
   FaCaretSquareDown,
   FaCaretSquareUp,
   FaPlusSquare,
+  FaTrashAlt,
+  FaEdit,
+  FaCheck,
 } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 
-const Category = ({ category, sets, actualCategory, setActualCategory }) => {
+const Category = ({
+  category,
+  sets,
+  actualCategory,
+  setActualCategory,
+  deleteCategoryHandler,
+  editCategoryHandler,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState(category);
 
   useEffect(() => {
+    setIsEdit(false);
+    setNewCategoryName(category);
     if (actualCategory === category) setIsOpen(true);
     else setIsOpen(false);
   }, [actualCategory]);
@@ -27,7 +41,7 @@ const Category = ({ category, sets, actualCategory, setActualCategory }) => {
           if (isOpen) setActualCategory(null);
           else setActualCategory(category);
         }}
-        className={`flex  items-center justify-between gap-2 px-3 text-xl cursor-pointer ${
+        className={`flex flex-wrap  items-center justify-between gap-2 px-3 text-xl max-sm:text-lg cursor-pointer  ${
           isOpen ? "bg-secondary/50" : "bg-primary/30"
         }`}
       >
@@ -38,7 +52,34 @@ const Category = ({ category, sets, actualCategory, setActualCategory }) => {
           }}
           className="flex gap-2 pb-1 items-center"
         >
-          <h3 className="font-semibold cursor-pointer">{category}</h3>
+          {isEdit ? (
+            <form
+              className="flex items-center gap-2 relative"
+              onSubmit={(e) => {
+                e.preventDefault();
+                editCategoryHandler({
+                  category: category,
+                  newName: newCategoryName,
+                });
+                setIsEdit(false);
+              }}
+            >
+              <input
+                type="text"
+                id="categoryName"
+                className="border w-50 rounded-sm pl-2 -ml-2 pr-8 "
+                autoFocus
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+              />
+              <button type="submit" className=" size-5 absolute right-2">
+                <FaCheck />
+              </button>
+            </form>
+          ) : (
+            <h3 className="font-semibold cursor-pointer">{category}</h3>
+          )}
           <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
             ({sets.length})
           </p>
@@ -51,7 +92,36 @@ const Category = ({ category, sets, actualCategory, setActualCategory }) => {
               else setActualCategory(category);
             }}
           >
-            {!isOpen ? <FaCaretSquareDown /> : <FaCaretSquareUp />}
+            {!isOpen ? (
+              <FaCaretSquareDown
+                className="hover:scale-110 transition-transform"
+                title="rozwiń"
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <FaEdit
+                  className="hover:scale-110 transition-transform"
+                  title="zmień nazwę"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsEdit((prev) => !prev);
+                  }}
+                />
+                <FaTrashAlt
+                  title="usuń kategrię"
+                  className="hover:scale-110 transition-transform"
+                  size={18}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteCategoryHandler(category);
+                  }}
+                />
+                <FaCaretSquareUp
+                  className="hover:scale-110 transition-transform"
+                  title="zwiń"
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -75,7 +145,7 @@ const Category = ({ category, sets, actualCategory, setActualCategory }) => {
               </div>
             ))
           ) : (
-            <div>Brak dostępnych zestawów</div>
+            <div className="px-2 opacity-50">Brak zestawów</div>
           )}
           <button>
             <Link

@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const AddCategory = ({ newCategoryHandler }) => {
+const AddCategory = ({ addCategoryHandler }) => {
   const [addCategory, setAddCategory] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   return (
@@ -11,8 +11,7 @@ const AddCategory = ({ newCategoryHandler }) => {
           onSubmit={(e) => {
             e.preventDefault();
             setAddCategory(false);
-            newCategoryHandler(categoryName);
-            f;
+            addCategoryHandler(categoryName);
           }}
           className=" max-w-2xl mx-auto w-full flex flex-col gap-4 px-2"
         >
@@ -27,7 +26,7 @@ const AddCategory = ({ newCategoryHandler }) => {
             <button
               onClick={() => {
                 setAddCategory(false);
-                newCategoryHandler(categoryName);
+                addCategoryHandler(categoryName);
               }}
               className="btn btn-outline btn-success btn-sm text-base "
             >
