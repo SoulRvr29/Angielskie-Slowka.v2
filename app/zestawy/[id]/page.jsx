@@ -21,7 +21,8 @@ const Set = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        setWordsSet(data);
+        console.log(data.sets[0]);
+        setWordsSet(data.sets[0]);
       } catch (error) {
         console.error(error);
       }
@@ -65,7 +66,7 @@ const Set = () => {
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
       <button
-        onClick={() => router.back()}
+        onClick={() => router.push("/zestawy")}
         className="my-2 gap-2 items-center btn btn-sm"
       >
         <FaArrowLeft />

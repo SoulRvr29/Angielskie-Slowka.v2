@@ -9,11 +9,7 @@ const NowyZestawPage = () => {
   const searchParams = useSearchParams();
   const category = searchParams.get("category");
   const router = useRouter();
-  const [formData, setFormData] = useState([
-    { english: "", polish: "" },
-    { english: "", polish: "" },
-    { english: "", polish: "" },
-  ]);
+  const [formData, setFormData] = useState([{ english: "", polish: "" }]);
 
   const addNewRow = () => {
     setFormData([...formData, { english: "", polish: "" }]);
@@ -26,7 +22,7 @@ const NowyZestawPage = () => {
   };
 
   const handleForm = (e) => {
-    console.log({ name: e.target[0].value, data: formData });
+    console.log({ name: e.target[0].value, words: formData });
     const createWordSet = async () => {
       try {
         const res = await fetch(
@@ -37,19 +33,13 @@ const NowyZestawPage = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              name: e.target[0].value,
               category: category,
+              name: e.target[0].value,
               words: formData,
             }),
           }
         );
-        console.log(
-          JSON.stringify({
-            name: e.target[0].value,
-            category: category,
-            words: formData,
-          })
-        );
+
         if (!res.ok) {
           throw new Error("Failed to create word set");
         }

@@ -23,11 +23,12 @@ const EdycjaPage = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        setWordsSet(data);
-        setFormData(data.words);
-        setName(data.name);
-        setCategory(data.category);
-        console.log(formData);
+
+        const singleSet = data.sets[0];
+        setWordsSet(singleSet);
+        setFormData(singleSet.words);
+        setName(singleSet.name);
+        setCategory(singleSet.category);
       } catch (error) {
         console.error(error);
       }
@@ -59,11 +60,10 @@ const EdycjaPage = () => {
       id: id,
       updateData: {
         name: name,
-        category: category,
         words: formData,
       },
     });
-    const createWordSet = async () => {
+    const editWordSet = async () => {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}/edycja`,
@@ -73,10 +73,8 @@ const EdycjaPage = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              id: id,
               updateData: {
                 name: name,
-                category: category,
                 words: formData,
               },
             }),
@@ -88,13 +86,13 @@ const EdycjaPage = () => {
         }
         const data = await res.json();
         console.log("Word set created:", data);
-        router.push("/zestawy");
+        router.push(`/zestawy/${id}`);
       } catch (error) {
         console.error(error);
       }
     };
 
-    createWordSet();
+    editWordSet();
   };
 
   return (

@@ -41,7 +41,7 @@ const Category = ({
           if (isOpen) setActualCategory(null);
           else setActualCategory(category);
         }}
-        className={`flex flex-wrap  items-center justify-between gap-2 px-3 text-xl max-sm:text-lg cursor-pointer  ${
+        className={`flex flex-wrap items-center justify-between gap-2 px-3 text-xl max-sm:text-lg cursor-pointer  ${
           isOpen ? "bg-secondary/50" : "bg-primary/30"
         }`}
       >
@@ -80,9 +80,9 @@ const Category = ({
           ) : (
             <h3 className="font-semibold cursor-pointer">{category}</h3>
           )}
-          <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
+          {/* <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
             ({sets.length})
-          </p>
+          </p> */}
         </div>
         <div className="flex gap-4">
           <div

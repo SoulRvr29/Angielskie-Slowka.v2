@@ -8,7 +8,11 @@ export const GET = async (request, { params }) => {
 
     console.log("Connected to MongoDB");
 
-    const zestaw = await WordSets.findById(params.id);
+    const zestaw = await WordSets.findOne(
+      { "sets._id": params.id },
+      { sets: { $elemMatch: { _id: params.id } } }
+    );
+    console.log(`TEST_____ ${zestaw}`);
 
     if (!zestaw) return new Response("Not found", { status: 404 });
 
@@ -27,7 +31,10 @@ export const DELETE = async (request, { params }) => {
 
     console.log("Connected to MongoDB");
 
-    const deletedZestaw = await WordSets.findByIdAndDelete(params.id);
+    const deletedZestaw = await WordSets.updateOne(
+      { "sets._id": params.id },
+      { $pull: { sets: { _id: params.id } } }
+    );
 
     if (!deletedZestaw) return new Response("Not found", { status: 404 });
 

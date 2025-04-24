@@ -12,9 +12,15 @@ export const PUT = async (request, { params }) => {
     const id = params.id;
     const { updateData } = body;
 
-    const updatedWordSet = await WordSets.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+    const updatedWordSet = await WordSets.updateOne(
+      { "sets._id": id },
+      {
+        $set: {
+          "sets.$.name": updateData.name,
+          "sets.$.words": updateData.words,
+        },
+      }
+    );
 
     if (!updatedWordSet) {
       return new Response("Word set not found", { status: 404 });

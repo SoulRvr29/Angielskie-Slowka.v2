@@ -26,12 +26,18 @@ export const POST = async (request) => {
     console.log("Connected to MongoDB");
 
     const body = await request.json();
-    const newWordSet = new WordSets(body);
+    const { category, name, words } = body;
+    console.log(category, name, words);
+    // const newWordSet = new WordSets(body);
 
-    await newWordSet.save();
+    await WordSets.updateOne(
+      { category: category },
+      { $push: { sets: { $each: [{ name, words }] } } }
+    );
+    // await newWordSet.save();
     console.log("Saved new word set");
 
-    return new Response(JSON.stringify(newWordSet), { status: 201 });
+    return new Response(JSON.stringify(body), { status: 201 });
   } catch (error) {
     console.error("Error in POST /api/zestawy:", error);
     return new Response("Something went wrong", { status: 500 });
