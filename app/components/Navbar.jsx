@@ -48,7 +48,7 @@ const Navbar = () => {
       </label>
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="fixed top-11 left-0 bg-black/50 w-screen h-screen z-10">
+        <div className="fixed backdrop-blur-xs top-11 left-0 bg-black/50 w-screen h-screen z-10">
           <div
             className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-info"
             onClick={() => setIsMenuOpen(false)}

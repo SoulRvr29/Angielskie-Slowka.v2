@@ -57,7 +57,7 @@ const Set = () => {
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
-      router.back();
+      router.push("/zestawy");
     } catch (error) {
       console.error(error);
     }
