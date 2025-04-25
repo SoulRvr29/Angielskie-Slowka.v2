@@ -29,7 +29,6 @@ const Category = ({
     else setIsOpen(false);
   }, [actualCategory]);
 
-  console.log(sets);
   return (
     <div
       className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${

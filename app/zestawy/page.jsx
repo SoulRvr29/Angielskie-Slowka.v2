@@ -10,6 +10,7 @@ import SubNav from "../components/SubNav";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
+  const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
 
   const fetchWords = async () => {
@@ -21,6 +22,7 @@ const WordSetsPage = () => {
       const data = await res.json();
 
       setWordSets(data);
+      setCategoriesList(data.map((item) => item.category));
     } catch (error) {
       console.error(error);
     }
@@ -40,7 +42,6 @@ const WordSetsPage = () => {
       </div>
     );
   }
-  // const categories = getCategories(wordSets);
 
   const addCategoryHandler = (name) => {
     const createCategory = async () => {
@@ -143,18 +144,25 @@ const WordSetsPage = () => {
         link="/zestawy/wlasne"
       />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
-        {wordSets.map((item, index) => (
-          <Category
-            key={index}
-            category={item.category}
-            sets={item.sets}
-            actualCategory={actualCategory}
-            setActualCategory={setActualCategory}
-            deleteCategoryHandler={deleteCategoryHandler}
-            editCategoryHandler={editCategoryHandler}
-          />
-        ))}
-        <AddCategory addCategoryHandler={addCategoryHandler} />
+        {wordSets.length > 0 ? (
+          wordSets.map((item, index) => (
+            <Category
+              key={index}
+              category={item.category}
+              sets={item.sets}
+              actualCategory={actualCategory}
+              setActualCategory={setActualCategory}
+              deleteCategoryHandler={deleteCategoryHandler}
+              editCategoryHandler={editCategoryHandler}
+            />
+          ))
+        ) : (
+          <div>Brak kategorii</div>
+        )}
+        <AddCategory
+          addCategoryHandler={addCategoryHandler}
+          categoriesList={categoriesList}
+        />
       </div>
     </div>
   );
