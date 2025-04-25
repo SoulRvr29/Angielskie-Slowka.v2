@@ -17,18 +17,18 @@ const Navbar = () => {
   }, [isMenuOpen]);
 
   return (
-    <nav className=" flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-10">
+    <nav className="relative flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-20">
       <Link href="/">
         <h1 className="absolute top-1 max-md:top-0 max-md:pb-2 max-md:relative text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold mt-1">
           Angielskie Słówka<span className="text-sm text-primary">.v2</span>
         </h1>
       </Link>
-      <Link href="/" className="absolute left-2 top-[11px]">
+      {/* <Link href="/" className="absolute left-2 top-[11px]">
         <FaHome
           size={22}
           className={`${pathname === "/" ? "fill-success" : ""}`}
         />
-      </Link>
+      </Link> */}
       {/* Hamburger button */}
       <label className="btn btn-circle swap swap-rotate hidden max-sm:grid absolute right-1 top-1">
         {/* this hidden checkbox controls the state */}
