@@ -50,7 +50,7 @@ const AddCategory = ({ addCategoryHandler, categoriesList }) => {
       ) : (
         <button
           onClick={() => setAddCategory(true)}
-          className="btn btn-outline btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
+          className="btn btn-outline max-sm:w-[96vw] btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
         >
           Nowa kategoria
         </button>

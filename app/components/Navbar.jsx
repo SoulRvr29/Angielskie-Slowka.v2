@@ -5,11 +5,16 @@ import { FaHome, FaInfoCircle } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
+
+  useEffect(() => {
+    if (!isMenuOpen) setIsChecked(false);
+  }, [isMenuOpen]);
 
   return (
     <nav className=" flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-10">
@@ -18,11 +23,23 @@ const Navbar = () => {
           Angielskie Słówka<span className="text-sm text-primary">.v2</span>
         </h1>
       </Link>
+      <Link href="/" className="absolute left-2 top-[11px]">
+        <FaHome
+          size={22}
+          className={`${pathname === "/" ? "fill-success" : ""}`}
+        />
+      </Link>
       {/* Hamburger button */}
-
       <label className="btn btn-circle swap swap-rotate hidden max-sm:grid absolute right-1 top-1">
         {/* this hidden checkbox controls the state */}
-        <input type="checkbox" onClick={() => setIsMenuOpen((prev) => !prev)} />
+        <input
+          type="checkbox"
+          checked={isChecked}
+          onChange={(e) => setIsChecked(e.target.checked)}
+          onClick={() => {
+            setIsMenuOpen((prev) => !prev);
+          }}
+        />
 
         {/* hamburger icon */}
         <svg
@@ -57,6 +74,14 @@ const Navbar = () => {
               className={`${
                 pathname === "/zestawy" && "btn-success"
               } border-b-2  border-b-info py-2`}
+              href="/konto"
+            >
+              logowanie
+            </Link>
+            <Link
+              className={`${
+                pathname === "/zestawy" && "btn-success"
+              } border-b-2  border-b-info py-2`}
               href="/zestawy"
             >
               zestawy
@@ -69,7 +94,7 @@ const Navbar = () => {
             >
               ustawienia
             </Link>
-            <Link href="/about" className=" py-2">
+            <Link href="/o_stronie" className=" py-2">
               o stronie
             </Link>
           </div>
@@ -95,7 +120,7 @@ const Navbar = () => {
             } btn btn-xs btn-soft`}
             href="/konto"
           >
-            logowanie
+            zaloguj
           </Link>
           {/* <Link
             className={`${
@@ -114,7 +139,7 @@ const Navbar = () => {
           >
             <FaGear />
           </Link>
-          <Link href="/about">
+          <Link href="/o_stronie">
             <FaInfoCircle
               className={`${pathname === "/about" ? "fill-success" : ""}`}
             />

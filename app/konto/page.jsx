@@ -4,9 +4,9 @@ import { useState } from "react";
 const LogowaniePage = () => {
   const [loginOrRegister, setLoginOrRegister] = useState(true);
   return (
-    <div className="flex flex-col gap-2 justify-center items-center">
+    <div className="flex flex-col gap-2 justify-center items-center flex-1">
       {loginOrRegister ? (
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 mx-auto">
+        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-xs border p-4 mx-auto">
           <legend className="fieldset-legend text-xl relative bottom-0.5">
             Logowanie
           </legend>
