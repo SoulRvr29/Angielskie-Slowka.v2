@@ -3,10 +3,7 @@ import Category from "../components/Category";
 import { useEffect, useState } from "react";
 import AddCategory from "../components/AddCategory";
 import SubNav from "../components/SubNav";
-
-// const getCategories = (data) => {
-//   return [...new Set(data.map((item) => item.category).sort())];
-// };
+import Loader from "../components/Loader";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
@@ -33,14 +30,7 @@ const WordSetsPage = () => {
   }, []);
 
   if (!wordSets) {
-    return (
-      <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/50 flex-col gap-4 z-10 pointer-events-none">
-        <p className="text-info animate-pulse delayFadeIn">
-          Pobieranie zestawów
-        </p>
-        <span className="loader"></span>
-      </div>
-    );
+    return <Loader message="Pobieranie zestawów" />;
   }
 
   const addCategoryHandler = (name) => {

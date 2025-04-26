@@ -56,6 +56,19 @@ const NowyZestawPage = () => {
     createWordSet();
   };
 
+  const parseWords = (text) => {
+    const lines = text.split("\n");
+    const parsedText = lines
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0 && line.includes("-"))
+      .map((line) => {
+        const [english, polish] = line.split("-").map((part) => part.trim());
+        return { english, polish };
+      });
+
+    return parsedText;
+  };
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -63,22 +76,28 @@ const NowyZestawPage = () => {
     const reader = new FileReader();
 
     reader.onload = (event) => {
-      const text = event.target.result;
-      const lines = text.split("\n");
+      const text = parseWords(event.target.result);
 
-      const parsedWords = lines
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0 && line.includes("-"))
-        .map((line) => {
-          const [english, polish] = line.split("-").map((part) => part.trim());
-          return { english, polish };
-        });
-
-      setFormData(parsedWords);
+      setFormData(text);
       setImportField(false);
     };
 
     reader.readAsText(file);
+  };
+
+  const handlePasteText = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      if (!text) {
+        setError("Schowek jest pusty!");
+        return;
+      }
+      const parsedText = parseWords(text);
+      setFormData(parsedText);
+      setImportField(false);
+    } catch (err) {
+      setError("Błąd podczas odczytu schowka.");
+    }
   };
 
   return (
@@ -88,7 +107,16 @@ const NowyZestawPage = () => {
         text="wróć do zestawów"
         link="/zestawy"
       />
-
+      <div className="flex justify-center">
+        {" "}
+        <button
+          onClick={() => router.push("/zestawy")}
+          className="my-2 max-sm:mb-0 gap-2 items-center btn btn-sm"
+        >
+          <FaArrowLeft />
+          wróć do zestawów
+        </button>
+      </div>
       <div>
         <form
           className="flex flex-col gap-4 max-w-xl mx-auto "
@@ -133,7 +161,10 @@ const NowyZestawPage = () => {
             </button>
           </div>
         </form>
-        <div className="flex flex-col max-w-xl mx-auto items-end my-4 px-2">
+        <div className="flex justify-between gap-2 max-w-xl mx-auto items-start my-4 px-2 border-t border-base-content/30 pt-4">
+          <button onClick={() => handlePasteText()} className="btn btn-xs ">
+            wklej ze schowka
+          </button>
           {importField ? (
             <fieldset className="fieldset bg-base-200 rounded-md p-4 relative">
               <button
@@ -161,7 +192,7 @@ const NowyZestawPage = () => {
               onClick={() => setImportField(true)}
               className="btn btn-xs "
             >
-              import z pliku
+              importuj z pliku
             </button>
           )}
         </div>

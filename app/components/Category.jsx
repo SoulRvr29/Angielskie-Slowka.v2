@@ -8,7 +8,8 @@ import {
   FaEdit,
   FaCheck,
 } from "react-icons/fa";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const Category = ({
   category,
@@ -21,12 +22,14 @@ const Category = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState(category);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     setIsEdit(false);
     setNewCategoryName(category);
     if (actualCategory === category) setIsOpen(true);
     else setIsOpen(false);
+    setIsDeleting(false);
   }, [actualCategory]);
 
   return (
@@ -106,15 +109,20 @@ const Category = ({
                     setIsEdit((prev) => !prev);
                   }}
                 />
-                <FaTrashAlt
-                  title="usuń kategrię"
-                  className="hover:scale-110 transition-transform"
-                  size={18}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    deleteCategoryHandler(category);
-                  }}
-                />
+                {isDeleting ? (
+                  <LuLoaderCircle className="animate-spin" />
+                ) : (
+                  <FaTrashAlt
+                    title="usuń kategrię"
+                    className="hover:scale-110 transition-transform"
+                    size={18}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteCategoryHandler(category);
+                      setIsDeleting(true);
+                    }}
+                  />
+                )}
                 <FaCaretSquareUp
                   className="hover:scale-110 transition-transform"
                   title="zwiń"

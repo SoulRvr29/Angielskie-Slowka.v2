@@ -1,9 +1,16 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { LuLoaderCircle } from "react-icons/lu";
 
 const AddCategory = ({ addCategoryHandler, categoriesList }) => {
   const [addCategory, setAddCategory] = useState(false);
   const [categoryName, setCategoryName] = useState("");
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+
+  useEffect(() => {
+    setIsAddingCategory(false);
+  }, [categoriesList]);
+
   return (
     <>
       {addCategory ? (
@@ -14,6 +21,7 @@ const AddCategory = ({ addCategoryHandler, categoriesList }) => {
               if (categoriesList.includes(categoryName)) {
                 alert("Taka kategoria już istnieje");
               } else if (categoryName !== "") {
+                setIsAddingCategory(true);
                 setAddCategory(false);
                 addCategoryHandler(categoryName);
                 setCategoryName("");
@@ -47,12 +55,17 @@ const AddCategory = ({ addCategoryHandler, categoriesList }) => {
             </div>
           </form>
         </>
+      ) : isAddingCategory ? (
+        <div className="btn btn-outline max-sm:w-[96vw] btn-secondary btn-sm text-base mx-auto w-full max-w-2xl">
+          <LuLoaderCircle className="animate-spin" />
+          <p>Dodawanie kategorii...</p>
+        </div>
       ) : (
         <button
           onClick={() => setAddCategory(true)}
           className="btn btn-outline max-sm:w-[96vw] btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
         >
-          Nowa kategoria
+          <p>Nowa kategoria</p>
         </button>
       )}
     </>
