@@ -141,7 +141,7 @@ const Navbar = () => {
           </Link>
           <Link href="/o_stronie">
             <FaInfoCircle
-              className={`${pathname === "/about" ? "fill-success" : ""}`}
+              className={`${pathname === "/o_stronie" ? "fill-success" : ""}`}
             />
           </Link>
         </div>
