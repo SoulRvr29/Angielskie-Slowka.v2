@@ -25,7 +25,7 @@ const EdycjaPage = () => {
         }
         const data = await res.json();
 
-        const singleSet = data.sets[0];
+        const singleSet = data;
         setWordsSet(singleSet);
         setFormData(singleSet.words);
         setName(singleSet.name);

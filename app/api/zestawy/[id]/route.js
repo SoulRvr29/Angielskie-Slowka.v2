@@ -15,12 +15,15 @@ export const GET = async (request, { params }) => {
         category: 1, // Include the parent category field
       }
     );
-    console.log(`TEST_____ ${zestaw}`);
 
-    if (!zestaw) return new Response("Not found", { status: 404 });
+    const { category, sets } = zestaw;
+    const { name, words, _id } = sets[0];
+    const zestawNew = { id: _id, category: category, name: name, words: words };
+
+    if (!zestawNew) return new Response("Not found", { status: 404 });
 
     console.log("Fetched word set");
-    return new Response(JSON.stringify(zestaw), { status: 200 });
+    return new Response(JSON.stringify(zestawNew), { status: 200 });
   } catch (error) {
     console.error("Error in /api/:id", error);
     return new Response("Something went wrong", { status: 500 });

@@ -61,7 +61,7 @@ const Set = () => {
       console.error(error);
     }
   };
-
+  console.log(wordsSet);
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
       <div className="w-full">
@@ -74,11 +74,11 @@ const Set = () => {
 
       <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-md border-primary/50 bg-primary/10">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 flex flex-wrap gap-2 justify-between">
-          <div>{wordsSet.sets[0].name}</div>
-          <div>słówek: {wordsSet.sets[0].words.length}</div>
+          <div>{wordsSet.name}</div>
+          <div>słówek: {wordsSet.words.length}</div>
         </div>
         <div className="px-4 py-2">
-          {wordsSet.sets[0].words.map((item, index) => (
+          {wordsSet.words.map((item, index) => (
             <div key={index}>
               <span>{item.english}</span> - <span>{item.polish}</span>
             </div>

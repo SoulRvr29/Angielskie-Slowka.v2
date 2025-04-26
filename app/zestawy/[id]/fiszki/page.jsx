@@ -35,10 +35,12 @@ const FiszkiPage = () => {
       </div>
     );
   }
+
+  console.log(wordsSet);
   return (
     <div>
       <SubNav
-        title={wordsSet.sets[0].name}
+        title={wordsSet.name}
         text="Wróć do zestawu"
         link={`/zestawy/${id}`}
       />
