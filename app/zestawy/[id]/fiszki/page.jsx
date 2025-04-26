@@ -2,10 +2,16 @@
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
+import "@/assets/styles/card.css";
 
 const FiszkiPage = () => {
-  const [wordsSet, setWordsSet] = useState(null);
   const { id } = useParams();
+  const [wordsSet, setWordsSet] = useState(null);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [cardRotated, setCardRotated] = useState(false);
+  const [cardSide, setCardSide] = useState(false);
+  const [cardAnimation, setCardAnimation] = useState(false);
+  const [finalResult, setFinalResult] = useState([]);
 
   useEffect(() => {
     const fetchWords = async (id) => {
@@ -28,6 +34,28 @@ const FiszkiPage = () => {
     fetchWords(id);
   }, []);
 
+  const cardRotateHandler = () => {
+    setCardRotated(true);
+    setCardAnimation(true);
+    setTimeout(() => {
+      setCardSide((prev) => !prev);
+    }, 250);
+    setTimeout(() => {
+      setCardAnimation(false);
+    }, 500);
+  };
+
+  const wordCheckHandler = (check) => {
+    if (wordIndex < wordsSet.words.length - 1) {
+      setCardRotated(false);
+      setWordIndex((wordIndex) => wordIndex + 1);
+      setFinalResult((prev) => [
+        ...prev,
+        { ...wordsSet.words[wordIndex], known: check },
+      ]);
+    }
+  };
+
   if (!wordsSet) {
     return (
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
@@ -36,22 +64,63 @@ const FiszkiPage = () => {
     );
   }
 
-  console.log(wordsSet);
   return (
-    <div>
+    <div className="flex-grow ">
       <SubNav
         title={wordsSet.name}
         text="Wróć do zestawu"
         link={`/zestawy/${id}`}
       />
-      <div className="flex flex-col items-center">
-        {/* <div className="flex flex-col gap-2 border rounded-md p-2 mt-4">
-          {wordsSet.sets[0].words.map((item) => (
-            <div className="flex gap-2">
-              <p>{item.english}</p> - <p>{item.polish}</p>
-            </div>
-          ))}
-        </div> */}
+      <div className="flex flex-col items-center mx-4 mt-10 perspective-normal">
+        {/* Card */}
+        <button
+          onClick={() => {
+            if (!cardAnimation) cardRotateHandler();
+          }}
+          className={`card border-8 rounded-2xl py-2 px-4 w-100 h-40 max-[440px]:h-30 max-sm:w-full flex justify-center items-center text-center cursor-pointer select-none ${
+            !cardSide
+              ? "border-accent/70 hover:border-accent/100 bg-accent/10 hover:bg-accent/20"
+              : "border-secondary/70 hover:border-secondary/100 bg-secondary/10 hover:bg-secondary/20"
+          } ${cardAnimation && "card-anim"}`}
+        >
+          <p className="title  max-sm:text-2xl font-semibold">
+            {cardSide
+              ? wordsSet.words[wordIndex].english
+              : wordsSet.words[wordIndex].polish}
+          </p>
+        </button>
+        {!cardRotated ? (
+          <div className="flex gap-4 my-4 max-w-100 px-4 w-full justify-between">
+            <button
+              onClick={() => {
+                if (!cardAnimation) cardRotateHandler();
+                setCardRotated(true);
+              }}
+              className="btn btn-info w-full"
+            >
+              Obróć kartę
+            </button>
+          </div>
+        ) : (
+          <div className="flex gap-4 my-4 max-w-100 px-4 w-full justify-center">
+            <button
+              onClick={() => {
+                wordCheckHandler(true);
+              }}
+              className="btn btn-success w-45 max-sm:w-[38vw]"
+            >
+              Znam
+            </button>
+            <button
+              onClick={() => {
+                wordCheckHandler(false);
+              }}
+              className="btn btn-error w-45 max-sm:w-[38vw]"
+            >
+              Nie znam
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

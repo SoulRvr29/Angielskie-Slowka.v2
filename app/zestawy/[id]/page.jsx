@@ -86,7 +86,7 @@ const Set = () => {
         </div>
         <Link
           href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki`}
-          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2"
+          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-t-2 border-primary"
         >
           Uruchom zestaw
         </Link>
