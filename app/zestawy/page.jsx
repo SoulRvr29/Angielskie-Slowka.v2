@@ -128,11 +128,7 @@ const WordSetsPage = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <SubNav
-        title="Publiczne zestawy"
-        text="Moje zestawy"
-        link="/zestawy/wlasne"
-      />
+      <SubNav title="Publiczne zestawy" />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {wordSets.length > 0 ? (
           wordSets.map((item, index) => (

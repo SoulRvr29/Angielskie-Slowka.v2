@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { FaArrowDown, FaArrowLeft } from "react-icons/fa";
 import FormRow from "@/app/components/FormRow";
+import SubNav from "@/app/components/SubNav";
 
 const EdycjaPage = () => {
   const router = useRouter();
@@ -97,16 +98,11 @@ const EdycjaPage = () => {
 
   return (
     <div>
-      <div className="flex justify-center">
-        {" "}
-        <button
-          onClick={() => router.back()}
-          className="my-2 gap-2 items-center btn btn-sm"
-        >
-          <FaArrowLeft />
-          wróć do zestawu
-        </button>
-      </div>
+      <SubNav
+        title="Edycja zestawu"
+        text="wróć do zestawu"
+        link={`/zestawy/${id}`}
+      />
       <div>
         <form
           className="flex flex-col gap-4 max-w-xl mx-auto"

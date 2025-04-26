@@ -10,7 +10,10 @@ export const GET = async (request, { params }) => {
 
     const zestaw = await WordSets.findOne(
       { "sets._id": params.id },
-      { sets: { $elemMatch: { _id: params.id } } }
+      {
+        "sets.$": 1, // Fetch only the matching set
+        category: 1, // Include the parent category field
+      }
     );
     console.log(`TEST_____ ${zestaw}`);
 

@@ -1,8 +1,8 @@
 "use client";
 import { useRouter, useParams } from "next/navigation";
-import { FaArrowLeft } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import SubNav from "@/app/components/SubNav";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
@@ -21,8 +21,7 @@ const Set = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        console.log(data.sets[0]);
-        setWordsSet(data.sets[0]);
+        setWordsSet(data);
       } catch (error) {
         console.error(error);
       }
@@ -65,25 +64,32 @@ const Set = () => {
 
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
-      <button
-        onClick={() => router.push("/zestawy")}
-        className="my-2 max-sm:mb-0 gap-2 items-center btn btn-sm"
-      >
-        <FaArrowLeft />
-        wróć do zestawów
-      </button>
+      <div className="w-full">
+        <SubNav
+          title={wordsSet.category}
+          text="wróć do listy"
+          link="/zestawy"
+        />
+      </div>
+
       <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-md border-primary/50 bg-primary/10">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 flex flex-wrap gap-2 justify-between">
-          <div>{wordsSet.name}</div>
-          <div>słówek: {wordsSet.words.length}</div>
+          <div>{wordsSet.sets[0].name}</div>
+          <div>słówek: {wordsSet.sets[0].words.length}</div>
         </div>
         <div className="px-4 py-2">
-          {wordsSet.words.map((item, index) => (
+          {wordsSet.sets[0].words.map((item, index) => (
             <div key={index}>
               <span>{item.english}</span> - <span>{item.polish}</span>
             </div>
           ))}
         </div>
+        <Link
+          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki`}
+          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2"
+        >
+          Uruchom zestaw
+        </Link>
       </div>
       <div className="flex gap-4">
         <Link

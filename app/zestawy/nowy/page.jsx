@@ -107,16 +107,7 @@ const NowyZestawPage = () => {
         text="wróć do zestawów"
         link="/zestawy"
       />
-      <div className="flex justify-center">
-        {" "}
-        <button
-          onClick={() => router.push("/zestawy")}
-          className="my-2 max-sm:mb-0 gap-2 items-center btn btn-sm"
-        >
-          <FaArrowLeft />
-          wróć do zestawów
-        </button>
-      </div>
+
       <div>
         <form
           className="flex flex-col gap-4 max-w-xl mx-auto "
