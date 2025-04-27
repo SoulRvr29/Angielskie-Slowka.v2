@@ -7,6 +7,7 @@ import "@/assets/styles/card.css";
 const FiszkiPage = () => {
   const { id } = useParams();
   const [wordsSet, setWordsSet] = useState(null);
+  const [actualWords, setActualWords] = useState([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [cardRotated, setCardRotated] = useState(false);
   const [cardSide, setCardSide] = useState(false);
@@ -27,6 +28,7 @@ const FiszkiPage = () => {
         }
         const data = await res.json();
         setWordsSet(data);
+        setActualWords(data.words.map((item) => ({ ...item, known: false })));
       } catch (error) {
         console.error(error);
       }
@@ -46,30 +48,33 @@ const FiszkiPage = () => {
     }, 500);
   };
 
-  const wordCheckHandler = (check) => {
+  const wordCheckHandler = (isKnown) => {
     if (progress < 100) {
-      if (wordIndex < wordsSet.words.length - 1) {
+      if (wordIndex < actualWords.length - 1) {
         setCardRotated(false);
         setWordIndex((wordIndex) => wordIndex + 1);
-        setFinalResult((prev) => [
-          ...prev,
-          { ...wordsSet.words[wordIndex], known: check },
-        ]);
+        setActualWords((prev) =>
+          prev.map((item, index) =>
+            index === wordIndex ? { ...item, known: isKnown } : item
+          )
+        );
       }
-      if (wordIndex === wordsSet.words.length - 1) {
-        setFinalResult((prev) => [
-          ...prev,
-          { ...wordsSet.words[wordIndex], known: check },
-        ]);
+      if (wordIndex === actualWords.length - 1) {
+        setActualWords((prev) =>
+          prev.map((item, index) =>
+            index === wordIndex ? { ...item, known: isKnown } : item
+          )
+        );
       }
-      const step = 100 / wordsSet.words.length;
+      const step = 100 / actualWords.length;
       setProgress((prev) => prev + step);
     }
   };
 
   useEffect(() => {
-    console.log(finalResult);
-  }, [finalResult]);
+    // console.log(finalResult);
+    console.log(actualWords);
+  }, [actualWords]);
 
   if (!wordsSet) {
     return (
@@ -78,7 +83,7 @@ const FiszkiPage = () => {
       </div>
     );
   }
-  console.log(wordsSet);
+  // console.log(wordsSet);
   return (
     <div className="flex-grow ">
       <SubNav
@@ -110,8 +115,8 @@ const FiszkiPage = () => {
             <div className="absolute top-2 left-3">#{wordIndex + 1}</div>
             <p className="title  max-sm:text-2xl font-semibold">
               {!cardSide
-                ? wordsSet.words[wordIndex].english
-                : wordsSet.words[wordIndex].polish}
+                ? actualWords[wordIndex].english
+                : actualWords[wordIndex].polish}
             </p>
           </button>
           {/* Known yes/not controls */}
@@ -157,21 +162,21 @@ const FiszkiPage = () => {
           <div className="flex gap-4">
             <p className="bg-success/50 font-semibold px-2 rounded-xl">
               Znane:{" "}
-              {finalResult.reduce(
+              {actualWords.reduce(
                 (acc, item) => (item.known ? acc + 1 : acc),
                 0
               )}
             </p>
             <p className="bg-error/50 font-semibold px-2 rounded-xl">
               Nie znane:{" "}
-              {finalResult.reduce(
+              {actualWords.reduce(
                 (acc, item) => (!item.known ? acc + 1 : acc),
                 0
               )}
             </p>
           </div>
           <ul className="border-2 border-base-200 py-2 px-4 rounded-2xl">
-            {finalResult.map((item) => (
+            {actualWords.map((item) => (
               <li
                 key={item["_id"]}
                 className={`text-${item.known ? "success" : "error"}`}
@@ -185,28 +190,34 @@ const FiszkiPage = () => {
               onClick={() => {
                 setProgress(0);
                 setWordIndex(0);
-                setFinalResult([]);
+                setActualWords((prev) =>
+                  prev.map((item) => ({
+                    ...item,
+                    known: false,
+                  }))
+                );
               }}
               className="btn btn-sm"
             >
               Powtórz wszystko
             </button>
-            <button
-              onClick={() => {
-                setProgress(0);
-                setWordIndex(0);
-                const filtered = finalResult.filter((item) => {
-                  return item.known === false;
-                });
-                setFinalResult([]);
-                setWordsSet((prev) => ({ ...prev, words: filtered }));
-                console.log(filtered);
-                console.log(wordsSet);
-              }}
-              className="btn btn-sm"
-            >
-              Powtórz nie znane
-            </button>
+            {actualWords.reduce(
+              (acc, item) => (item.known ? acc : acc + 1),
+              0
+            ) > 0 && (
+              <button
+                onClick={() => {
+                  setProgress(0);
+                  setWordIndex(0);
+                  setActualWords((prev) =>
+                    prev.filter((item) => item.known === false)
+                  );
+                }}
+                className="btn btn-sm"
+              >
+                Powtórz nie znane
+              </button>
+            )}
           </div>
         </div>
       )}
