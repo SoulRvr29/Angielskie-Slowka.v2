@@ -78,7 +78,7 @@ const FiszkiPage = () => {
       </div>
     );
   }
-
+  console.log(wordsSet);
   return (
     <div className="flex-grow ">
       <SubNav
@@ -149,8 +149,28 @@ const FiszkiPage = () => {
           )}
         </div>
       ) : (
-        <div>
-          <ul>
+        // Final results
+        <div className="flex flex-col gap-4 items-center">
+          <h3 className="text-xl w-full text-center bg-base-200 py-1">
+            Podsumowanie
+          </h3>
+          <div className="flex gap-4">
+            <p className="bg-success/50 font-semibold px-2 rounded-xl">
+              Znane:{" "}
+              {finalResult.reduce(
+                (acc, item) => (item.known ? acc + 1 : acc),
+                0
+              )}
+            </p>
+            <p className="bg-error/50 font-semibold px-2 rounded-xl">
+              Nie znane:{" "}
+              {finalResult.reduce(
+                (acc, item) => (!item.known ? acc + 1 : acc),
+                0
+              )}
+            </p>
+          </div>
+          <ul className="border-2 border-base-200 py-2 px-4 rounded-2xl">
             {finalResult.map((item) => (
               <li
                 key={item["_id"]}
@@ -160,6 +180,34 @@ const FiszkiPage = () => {
               </li>
             ))}
           </ul>
+          <div className="flex gap-4 max-sm:flex-col max-sm:gap-2">
+            <button
+              onClick={() => {
+                setProgress(0);
+                setWordIndex(0);
+                setFinalResult([]);
+              }}
+              className="btn btn-sm"
+            >
+              Powtórz wszystko
+            </button>
+            <button
+              onClick={() => {
+                setProgress(0);
+                setWordIndex(0);
+                const filtered = finalResult.filter((item) => {
+                  return item.known === false;
+                });
+                setFinalResult([]);
+                setWordsSet((prev) => ({ ...prev, words: filtered }));
+                console.log(filtered);
+                console.log(wordsSet);
+              }}
+              className="btn btn-sm"
+            >
+              Powtórz nie znane
+            </button>
+          </div>
         </div>
       )}
     </div>
