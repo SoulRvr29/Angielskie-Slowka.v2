@@ -200,7 +200,7 @@ const FiszkiPage = () => {
                 / {actualWords.length}
               </div>
             </div>
-            <ul className="border-2 border-base-200 py-2 px-4 rounded-2xl min-w-sm">
+            <ul className="border-2 border-base-200 py-2 px-4 rounded-2xl min-w-sm max-sm:min-w-screen max-sm:rounded-none">
               {actualWords.map((item) => (
                 <li
                   key={item["_id"]}

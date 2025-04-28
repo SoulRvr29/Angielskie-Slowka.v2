@@ -30,7 +30,7 @@ const Navbar = () => {
         />
       </Link> */}
       {/* Hamburger button */}
-      <label className="btn btn-circle swap swap-rotate hidden max-sm:grid absolute right-1 top-1">
+      <label className="btn btn-circle swap swap-rotate hidden max-sm:grid absolute right-1 top-1 scale-90">
         {/* this hidden checkbox controls the state */}
         <input
           type="checkbox"
