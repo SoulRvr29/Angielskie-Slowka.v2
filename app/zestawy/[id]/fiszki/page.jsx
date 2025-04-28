@@ -8,6 +8,7 @@ const FiszkiPage = () => {
   const { id } = useParams();
   const [wordsSet, setWordsSet] = useState(null);
   const [actualWords, setActualWords] = useState([]);
+  const [actualUnknown, setActualUnknown] = useState([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [cardRotated, setCardRotated] = useState(false);
   const [cardSide, setCardSide] = useState(false);
@@ -78,16 +79,25 @@ const FiszkiPage = () => {
           index === wordIndex ? { ...item, known: isKnown } : item
         )
       );
-      setProgress((prev) => prev + 100 / actualWords.length);
+      if (!isKnown) {
+        setActualUnknown((prev) => [...prev, actualWords[wordIndex]]);
+      } else {
+        setProgress((prev) => prev + 100 / wordsSet.words.length);
+      }
     }
   };
 
   useEffect(() => {
     if (actualWords.length === wordIndex && actualWords.length !== 0) {
-      setGameOver(true);
-      setProgress(100);
-
-      // console.log(actualWords);
+      if (actualUnknown.length === 0) {
+        setGameOver(true);
+        setProgress(100);
+        setActualWords(actualWords.slice(0, wordsSet.words.length));
+      } else {
+        setActualWords((prev) => [...prev, ...randomize(actualUnknown)]);
+        console.log(actualWords);
+        setActualUnknown([]);
+      }
     }
   }, [wordIndex]);
 
