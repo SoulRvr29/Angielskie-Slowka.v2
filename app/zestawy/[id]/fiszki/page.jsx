@@ -29,7 +29,9 @@ const FiszkiPage = () => {
         }
         const data = await res.json();
         setWordsSet(data);
-        setActualWords(data.words.map((item) => ({ ...item, known: false })));
+        setActualWords(
+          randomize(data.words.map((item) => ({ ...item, known: false })))
+        );
       } catch (error) {
         console.error(error);
       }
@@ -37,6 +39,24 @@ const FiszkiPage = () => {
 
     fetchWords(id);
   }, []);
+
+  // randomize old
+  // const randomize = (data) => {
+  //   const indexArr = [];
+  //   while (indexArr.length < data.length) {
+  //     let randomNr = Math.floor(Math.random() * data.length);
+  //     if (indexArr.includes(randomNr) === false) indexArr.push(randomNr);
+  //   }
+  //   return indexArr.map((i) => data[i]);
+  // };
+  const randomize = (data) => {
+    const indexes = data.map((_, i) => i);
+    for (let i = indexes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+    }
+    return indexes.map((i) => data[i]);
+  };
 
   const cardRotateHandler = () => {
     setCardRotated(true);
@@ -60,9 +80,6 @@ const FiszkiPage = () => {
       );
       setProgress((prev) => prev + 100 / actualWords.length);
     }
-    console.log(
-      `actualWords.length: ${actualWords.length},wordIndex: ${wordIndex}`
-    );
   };
 
   useEffect(() => {
@@ -70,7 +87,7 @@ const FiszkiPage = () => {
       setGameOver(true);
       setProgress(100);
 
-      console.log(actualWords);
+      // console.log(actualWords);
     }
   }, [wordIndex]);
 
@@ -81,7 +98,6 @@ const FiszkiPage = () => {
       </div>
     );
   }
-  // console.log(wordsSet);
 
   const resetGame = () => {
     setProgress(0);
@@ -89,10 +105,12 @@ const FiszkiPage = () => {
     setGameOver(false);
     setShowResults(false);
     setActualWords((prev) =>
-      prev.map((item) => ({
-        ...item,
-        known: false,
-      }))
+      randomize(
+        prev.map((item) => ({
+          ...item,
+          known: false,
+        }))
+      )
     );
   };
   return (
