@@ -3,6 +3,7 @@ import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
 import "@/assets/styles/card.css";
+import { FaRandom, FaArrowRight } from "react-icons/fa";
 
 const FiszkiPage = () => {
   const { id } = useParams();
@@ -11,11 +12,13 @@ const FiszkiPage = () => {
   const [actualUnknown, setActualUnknown] = useState([]);
   const [wordIndex, setWordIndex] = useState(0);
   const [cardRotated, setCardRotated] = useState(false);
-  const [cardSide, setCardSide] = useState(false);
+  const [actualCardSide, setActualCardSide] = useState(false);
+  const [defaultCardSide, setDefaultCardSide] = useState(false);
   const [cardAnimation, setCardAnimation] = useState(false);
   const [progress, setProgress] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  // const [isRandom, setIsRandom] = useState(true);
 
   useEffect(() => {
     const fetchWords = async (id) => {
@@ -51,6 +54,7 @@ const FiszkiPage = () => {
   //   return indexArr.map((i) => data[i]);
   // };
   const randomize = (data) => {
+    // if (!isRandom) return data;
     const indexes = data.map((_, i) => i);
     for (let i = indexes.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -63,7 +67,7 @@ const FiszkiPage = () => {
     setCardRotated(true);
     setCardAnimation(true);
     setTimeout(() => {
-      setCardSide((prev) => !prev);
+      setActualCardSide((prev) => !prev);
     }, 250);
     setTimeout(() => {
       setCardAnimation(false);
@@ -72,6 +76,7 @@ const FiszkiPage = () => {
 
   const wordCheckHandler = (isKnown) => {
     if (!gameOver) {
+      setActualCardSide(defaultCardSide);
       setCardRotated(false);
       setWordIndex((wordIndex) => wordIndex + 1);
       setActualWords((prev) =>
@@ -95,7 +100,6 @@ const FiszkiPage = () => {
         setActualWords(actualWords.slice(0, wordsSet.words.length));
       } else {
         setActualWords((prev) => [...prev, ...randomize(actualUnknown)]);
-        console.log(actualWords);
         setActualUnknown([]);
       }
     }
@@ -141,29 +145,54 @@ const FiszkiPage = () => {
       {!showResults && (
         <div className="flex flex-col items-center mx-4 perspective-normal">
           {/* Card */}
-          <button
+          <div
             onClick={() => {
               if (!cardAnimation) cardRotateHandler();
             }}
-            className={`card my-6 shadow-lg relative border-8 rounded-2xl py-2 px-4 w-100 h-50 max-[440px]:h-30 max-sm:w-full flex justify-center items-center text-center cursor-pointer select-none ${
-              cardSide
+            className={`card my-6 shadow-lg relative border-8 rounded-2xl py-2 px-4 w-100 h-50 max-[440px]:h-40 max-sm:w-full flex justify-center items-center text-center cursor-pointer select-none ${
+              actualCardSide
                 ? "border-accent/70 hover:border-accent/100 bg-accent/10 hover:bg-accent/20"
                 : "border-secondary/70 hover:border-secondary/100 bg-secondary/10 hover:bg-secondary/20"
             } ${cardAnimation && "card-anim"}`}
           >
             {!gameOver ? (
               <>
-                <div className="absolute top-2 left-3">#{wordIndex + 1}</div>
                 <p className="title  max-sm:text-2xl font-semibold">
-                  {!cardSide
+                  {!actualCardSide
                     ? actualWords[wordIndex]?.english
                     : actualWords[wordIndex]?.polish}
                 </p>
+                <div className="absolute bottom-2 right-3 flex gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDefaultCardSide((prev) => !prev);
+                    }}
+                    title="kolejność"
+                    className="opacity-30 hover:opacity-100 text-md max-sm:text-sm font-bold"
+                  >
+                    {defaultCardSide ? "pl/eng" : "eng/pl"}
+                  </button>
+                  {/* <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsRandom((prev) => !prev);
+                    }}
+                    className="opacity-30 hover:opacity-100 "
+                    title={!isRandom ? "losowo" : "po kolei"}
+                  >
+                    {isRandom ? (
+                      <FaRandom size={16} />
+                    ) : (
+                      <FaArrowRight size={16} />
+                    )}
+                  </button> */}
+                </div>
               </>
             ) : (
               <p className="font-semibold">Koniec</p>
             )}
-          </button>
+          </div>
           {/* Known yes/not controls */}
           {!gameOver ? (
             <div className="max-w-100 w-full">
