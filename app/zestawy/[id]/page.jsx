@@ -10,6 +10,13 @@ const Set = () => {
   const { id } = useParams();
 
   useEffect(() => {
+    if (id === "zapisane") {
+      setWordsSet({
+        category: "Zapisane słówka",
+        words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
+      });
+      return;
+    }
     const fetchWords = async (id) => {
       if (!id) return;
       try {
@@ -91,17 +98,19 @@ const Set = () => {
           Uruchom zestaw
         </Link>
       </div>
-      <div className="flex gap-4">
-        <Link
-          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
-          className="btn btn-info"
-        >
-          Edytuj
-        </Link>
-        <button onClick={deleteHandler} className="btn btn-error">
-          Usuń
-        </button>
-      </div>
+      {id !== "zapisane" && (
+        <div className="flex gap-4">
+          <Link
+            href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
+            className="btn btn-info"
+          >
+            Edytuj
+          </Link>
+          <button onClick={deleteHandler} className="btn btn-error">
+            Usuń
+          </button>
+        </div>
+      )}
     </div>
   );
 };

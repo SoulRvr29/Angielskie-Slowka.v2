@@ -22,6 +22,15 @@ const FiszkiPage = () => {
 
   useEffect(() => {
     const fetchWords = async (id) => {
+      if (id === "zapisane") {
+        const savedWords = {
+          category: "Zapisane słówka",
+          words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
+        };
+        setWordsSet(savedWords);
+        setActualWords(savedWords.words);
+        return;
+      }
       if (!id) return;
       try {
         const res = await fetch(
@@ -293,7 +302,7 @@ const FiszkiPage = () => {
                       }}
                       className="btn btn-sm w-31 h-8 max-sm:w-full"
                     >
-                      Zapisz nie znane
+                      Zapisz wynik
                     </button>
                   )}
                 </>

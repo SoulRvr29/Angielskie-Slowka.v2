@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import AddCategory from "../components/AddCategory";
 import SubNav from "../components/SubNav";
 import Loader from "../components/Loader";
+import Link from "next/link";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
+  const [savedWordSets, setSavedWordSets] = useState();
 
   const fetchWords = async () => {
     try {
@@ -18,8 +20,8 @@ const WordSetsPage = () => {
       }
       const data = await res.json();
 
+      setCategoriesList(...data.map((item) => item.category));
       setWordSets(data);
-      setCategoriesList(data.map((item) => item.category));
     } catch (error) {
       console.error(error);
     }
@@ -27,6 +29,10 @@ const WordSetsPage = () => {
 
   useEffect(() => {
     fetchWords();
+    console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]"));
+    setSavedWordSets(
+      JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]")
+    );
   }, []);
 
   if (!wordSets) {
@@ -130,6 +136,14 @@ const WordSetsPage = () => {
     <div className="flex flex-col gap-2">
       <SubNav title="Lista zestawów" />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
+        {savedWordSets.length > 0 && (
+          <Link
+            className=" rounded-md gap-2 px-2 py-1 font-semibold max-sm:text-lg cursor-pointer bg-secondary/50 hover:bg-secondary/70"
+            href={`/zestawy/zapisane`}
+          >
+            Zapisane słówka
+          </Link>
+        )}
         {wordSets.length > 0 ? (
           wordSets.map((item, index) => (
             <Category
