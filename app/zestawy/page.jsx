@@ -29,7 +29,6 @@ const WordSetsPage = () => {
 
   useEffect(() => {
     fetchWords();
-    console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]"));
     setSavedWordSets(
       JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]")
     );

@@ -49,10 +49,6 @@ const Set = () => {
     const result = confirm("Potwierdź usunięcie");
     if (!result) return;
 
-    console.log({
-      id: wordsSet["_id"],
-    });
-
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`,
@@ -68,7 +64,6 @@ const Set = () => {
       console.error(error);
     }
   };
-  console.log(wordsSet);
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
       <div className="w-full">
@@ -93,7 +88,7 @@ const Set = () => {
         </div>
         <Link
           href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki`}
-          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-t-2 border-primary"
+          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2"
         >
           Uruchom zestaw
         </Link>

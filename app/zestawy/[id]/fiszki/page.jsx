@@ -137,12 +137,15 @@ const FiszkiPage = () => {
     setSaved(false);
   };
 
-  const saveUnknown = (arr) => {
+  const updateUnknown = (arr) => {
     const newUnknown = arr.filter((item) => item.known === false);
+    const newKnown = arr.filter((item) => item.known === true);
+    const knownIds = new Set(newKnown.map((item) => item._id));
     const oldSaved = JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]");
     const newArr = [...oldSaved, ...newUnknown];
+    const filtered = newArr.filter((item) => !knownIds.has(item._id));
     const unique = [
-      ...new Map(newArr.map((item) => [item["_id"], item])).values(),
+      ...new Map(filtered.map((item) => [item["_id"], item])).values(),
     ];
     localStorage.setItem("nieZnaneSlowka", JSON.stringify(unique));
     console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka")));
@@ -282,31 +285,31 @@ const FiszkiPage = () => {
             </ul>
             <div className="flex justify-center gap-4 max-sm:flex-col max-sm:gap-2 py-4">
               <button onClick={resetGame} className="btn btn-sm">
-                Powtórz wszystko
+                Restartuj
               </button>
-              {actualWords.reduce(
+              {/* {actualWords.reduce(
                 (acc, item) => (item.known ? acc : acc + 1),
                 0
-              ) > 0 && (
-                <>
-                  {saved ? (
-                    <button className="btn btn-sm btn-success flex items-center gap-2 w-31 h-8 max-sm:w-full">
-                      <FaCheck />
-                      <p>Zapisano</p>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        saveUnknown(actualWords);
-                        setSaved(true);
-                      }}
-                      className="btn btn-sm w-31 h-8 max-sm:w-full"
-                    >
-                      Zapisz wynik
-                    </button>
-                  )}
-                </>
-              )}
+              ) > 0 && ( */}
+              <>
+                {saved ? (
+                  <button className="btn btn-sm btn-success flex items-center gap-2 w-31 h-8 max-sm:w-full">
+                    <FaCheck />
+                    <p>Zapisano</p>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      updateUnknown(actualWords);
+                      setSaved(true);
+                    }}
+                    className="btn btn-sm w-31 h-8 max-sm:w-full"
+                  >
+                    Zapisz wynik
+                  </button>
+                )}
+              </>
+              {/* )} */}
             </div>
           </div>
         )}
