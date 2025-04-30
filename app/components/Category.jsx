@@ -133,7 +133,7 @@ const Category = ({
         </div>
       </div>
       {isOpen && (
-        <div className="flex flex-col flex-wrap gap-2 pt-2">
+        <div className="flex flex-col flex-wrap">
           {/* <div className="flex justify-between bg-secondary/20 px-3 border-b-2 border-secondary/20">
             <div>Nazwa zestawu:</div>
             <div>Słówek:</div>
@@ -143,7 +143,7 @@ const Category = ({
               <div key={item.name} className="flex justify-between">
                 <Link
                   href={`/zestawy/${item["_id"]}`}
-                  className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2"
+                  className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2 py-1"
                 >
                   {item.name}
                 </Link>

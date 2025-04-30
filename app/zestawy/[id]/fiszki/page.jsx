@@ -1,9 +1,9 @@
 "use client";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
 import "@/assets/styles/card.css";
-import { FaRandom, FaArrowRight } from "react-icons/fa";
+import { FaCheck } from "react-icons/fa";
 
 const FiszkiPage = () => {
   const { id } = useParams();
@@ -18,7 +18,7 @@ const FiszkiPage = () => {
   const [progress, setProgress] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  // const [isRandom, setIsRandom] = useState(true);
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const fetchWords = async (id) => {
@@ -54,7 +54,6 @@ const FiszkiPage = () => {
   //   return indexArr.map((i) => data[i]);
   // };
   const randomize = (data) => {
-    // if (!isRandom) return data;
     const indexes = data.map((_, i) => i);
     for (let i = indexes.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -126,14 +125,23 @@ const FiszkiPage = () => {
         }))
       )
     );
+    setSaved(false);
   };
+
+  const saveUnknown = (arr) => {
+    const newUnknown = arr.filter((item) => item.known === false);
+    const oldSaved = JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]");
+    const newArr = [...oldSaved, ...newUnknown];
+    const unique = [
+      ...new Map(newArr.map((item) => [item["_id"], item])).values(),
+    ];
+    localStorage.setItem("nieZnaneSlowka", JSON.stringify(unique));
+    console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka")));
+  };
+
   return (
     <div className="flex-grow ">
-      <SubNav
-        title={wordsSet.name}
-        text="Wróć do zestawu"
-        link={`/zestawy/${id}`}
-      />
+      <SubNav title={wordsSet.name} text="Wróć do listy" link={`/zestawy`} />
       {/* Progress bar */}
       <div className="relative bg-base-300 w-full text-center px-2">
         <p className="z-[1] relative">Postęp {Math.trunc(progress)}%</p>
@@ -157,6 +165,15 @@ const FiszkiPage = () => {
           >
             {!gameOver ? (
               <>
+                {actualWords.length > wordsSet.words.length && (
+                  <div
+                    className={`absolute top-1 left-2 opacity-50 font-semibold ${
+                      actualCardSide ? "text-accent" : "text-secondary"
+                    }`}
+                  >
+                    Powtórka
+                  </div>
+                )}
                 <p className="title  max-sm:text-2xl font-semibold">
                   {!actualCardSide
                     ? actualWords[wordIndex]?.english
@@ -169,24 +186,10 @@ const FiszkiPage = () => {
                       setDefaultCardSide((prev) => !prev);
                     }}
                     title="kolejność"
-                    className="opacity-30 hover:opacity-100 text-md max-sm:text-sm font-bold"
+                    className="angpl-btn opacity-0 pointer-events-none text-md max-sm:text-sm font-bold"
                   >
                     {defaultCardSide ? "pl/eng" : "eng/pl"}
                   </button>
-                  {/* <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsRandom((prev) => !prev);
-                    }}
-                    className="opacity-30 hover:opacity-100 "
-                    title={!isRandom ? "losowo" : "po kolei"}
-                  >
-                    {isRandom ? (
-                      <FaRandom size={16} />
-                    ) : (
-                      <FaArrowRight size={16} />
-                    )}
-                  </button> */}
                 </div>
               </>
             ) : (
@@ -234,6 +237,7 @@ const FiszkiPage = () => {
               <button
                 onClick={() => {
                   setShowResults(true);
+                  // console.log(actualWords);
                 }}
                 className="btn btn-info w-full"
               >
@@ -247,7 +251,7 @@ const FiszkiPage = () => {
         {/* Final results */}
         {showResults && (
           <div className="my-4">
-            <div className="w-full text-xl flex justify-center gap-2 bg-base-200 py-1">
+            <div className="w-full text-xl flex justify-center gap-2 bg-base-200 py-1 rounded-t-2xl">
               <h3>Wynik:</h3>
               <div>
                 {actualWords.reduce(
@@ -257,7 +261,7 @@ const FiszkiPage = () => {
                 / {actualWords.length}
               </div>
             </div>
-            <ul className="border-2 border-base-200 py-2 px-4 rounded-2xl min-w-sm max-sm:min-w-screen max-sm:rounded-none">
+            <ul className="border-2 border-base-200 py-2 px-4 rounded-b-2xl min-w-sm max-sm:min-w-screen max-sm:rounded-none">
               {actualWords.map((item) => (
                 <li
                   key={item["_id"]}
@@ -271,25 +275,29 @@ const FiszkiPage = () => {
               <button onClick={resetGame} className="btn btn-sm">
                 Powtórz wszystko
               </button>
-              {/* {actualWords.reduce(
+              {actualWords.reduce(
                 (acc, item) => (item.known ? acc : acc + 1),
                 0
               ) > 0 && (
-                <button
-                  onClick={() => {
-                    setProgress(0);
-                    setWordIndex(0);
-                    setGameOver(false);
-                    setShowResults(false);
-                    setActualWords((prev) =>
-                      prev.filter((item) => item.known === false)
-                    );
-                  }}
-                  className="btn btn-sm"
-                >
-                  Powtórz nie znane
-                </button>
-              )} */}
+                <>
+                  {saved ? (
+                    <button className="btn btn-sm btn-success flex items-center gap-2 w-31 h-8 max-sm:w-full">
+                      <FaCheck />
+                      <p>Zapisano</p>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        saveUnknown(actualWords);
+                        setSaved(true);
+                      }}
+                      className="btn btn-sm w-31 h-8 max-sm:w-full"
+                    >
+                      Zapisz nie znane
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           </div>
         )}

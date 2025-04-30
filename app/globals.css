@@ -30,3 +30,12 @@ body {
 button {
   cursor: pointer;
 }
+
+.card:hover .angpl-btn {
+  opacity: 0.5;
+  pointer-events: all;
+}
+
+.card:hover .angpl-btn:hover {
+  opacity: 1;
+}
