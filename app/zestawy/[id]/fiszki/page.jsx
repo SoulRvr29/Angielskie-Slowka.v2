@@ -102,7 +102,7 @@ const FiszkiPage = () => {
 
   useEffect(() => {
     if (actualWords.length === wordIndex && actualWords.length !== 0) {
-      if (actualUnknown.length === 0) {
+      if (actualUnknown.length === 1) {
         setGameOver(true);
         setProgress(100);
         setActualWords(actualWords.slice(0, wordsSet.words.length));
@@ -155,7 +155,7 @@ const FiszkiPage = () => {
     <div className="flex-grow ">
       <SubNav title={wordsSet.name} text="Wróć do listy" link={`/zestawy`} />
       {/* Progress bar */}
-      <div className="relative bg-base-300 w-full text-center px-2">
+      <div className="relative bg-base-300 w-full text-center px-2 max-sm:py-1">
         <p className="z-[1] relative">Postęp {Math.trunc(progress)}%</p>
         <div
           style={{ width: `${progress}%` }}
@@ -263,7 +263,7 @@ const FiszkiPage = () => {
         {/* Final results */}
         {showResults && (
           <div className="my-4">
-            <div className="w-full text-xl flex justify-center gap-2 bg-base-200 py-1 rounded-t-2xl">
+            <div className="w-full text-xl flex justify-center gap-2 bg-base-200 py-1 rounded-t-2xl max-sm:rounded-none">
               <h3>Wynik:</h3>
               <div>
                 {actualWords.reduce(
@@ -283,8 +283,8 @@ const FiszkiPage = () => {
                 </li>
               ))}
             </ul>
-            <div className="flex justify-center gap-4 max-sm:flex-col max-sm:gap-2 py-4">
-              <button onClick={resetGame} className="btn btn-sm">
+            <div className="flex justify-center max-sm:px-4 gap-4 max-sm:flex-col max-sm:gap-2 py-4">
+              <button onClick={resetGame} className="btn btn-sm max-sm:btn-lg ">
                 Restartuj
               </button>
               {/* {actualWords.reduce(
@@ -293,7 +293,7 @@ const FiszkiPage = () => {
               ) > 0 && ( */}
               <>
                 {saved ? (
-                  <button className="btn btn-sm btn-success flex items-center gap-2 w-31 h-8 max-sm:w-full">
+                  <button className="btn btn-sm btn-success flex items-center gap-2 w-31 h-8 max-sm:w-full max-sm:h-12 max-sm:text-lg">
                     <FaCheck />
                     <p>Zapisano</p>
                   </button>
@@ -303,7 +303,7 @@ const FiszkiPage = () => {
                       updateUnknown(actualWords);
                       setSaved(true);
                     }}
-                    className="btn btn-sm w-31 h-8 max-sm:w-full"
+                    className="btn btn-sm w-31 h-8 max-sm:w-full max-sm:h-12 max-sm:text-lg"
                   >
                     Zapisz wynik
                   </button>

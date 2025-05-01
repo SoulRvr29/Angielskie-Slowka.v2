@@ -11,10 +11,15 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [mobileTheme, setMobileTheme] = useState();
 
   useEffect(() => {
     if (!isMenuOpen) setIsChecked(false);
   }, [isMenuOpen]);
+
+  useEffect(() => {
+    setMobileTheme(document.querySelector("html").getAttribute("data-theme"));
+  }, []);
 
   return (
     <nav className="relative flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-20">
@@ -65,40 +70,59 @@ const Navbar = () => {
       </label>
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="fixed backdrop-blur-xs top-11 left-0 bg-black/50 w-screen h-screen z-10">
+        <>
           <div
-            className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-info"
             onClick={() => setIsMenuOpen(false)}
-          >
-            <Link
-              className={`${
-                pathname === "/zestawy" && "btn-success"
-              } border-b-2  border-b-info py-2`}
-              href="/konto"
+            className="bg-black/50 backdrop-blur-xs fixed left-0 top-11 w-screen h-screen z-10"
+          ></div>
+          <div className="fixed top-11 left-0 w-screen z-10">
+            <div
+              onClick={() => {
+                const newTheme = mobileTheme === "dark" ? "corporate" : "dark";
+                setMobileTheme(newTheme);
+                document
+                  .querySelector("html")
+                  .setAttribute("data-theme", newTheme);
+                localStorage.setItem("theme", newTheme);
+              }}
+              className="btn-success border-t-2 border-info py-2 w-screen bg-base-100 text-xl text-center"
             >
-              logowanie
-            </Link>
-            <Link
-              className={`${
-                pathname === "/zestawy" && "btn-success"
-              } border-b-2  border-b-info py-2`}
-              href="/zestawy"
+              kolorystyka
+            </div>
+            <div
+              className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-info"
+              onClick={() => setIsMenuOpen(false)}
             >
-              zestawy
-            </Link>
-            <Link
-              className={`${
-                pathname === "/ustawienia" && "btn-success"
-              } border-b-2  border-b-info py-2`}
-              href="/ustawienia"
-            >
-              ustawienia
-            </Link>
-            <Link href="/o_stronie" className=" py-2">
-              o stronie
-            </Link>
+              <Link
+                className={`${
+                  pathname === "/zestawy" && "btn-success"
+                } border-b-2  border-b-info py-2`}
+                href="/konto"
+              >
+                logowanie
+              </Link>
+              <Link
+                className={`${
+                  pathname === "/zestawy" && "btn-success"
+                } border-b-2  border-b-info py-2`}
+                href="/zestawy"
+              >
+                zestawy
+              </Link>
+              <Link
+                className={`${
+                  pathname === "/ustawienia" && "btn-success"
+                } border-b-2  border-b-info py-2`}
+                href="/ustawienia"
+              >
+                ustawienia
+              </Link>
+              <Link href="/o_stronie" className=" py-2">
+                o stronie
+              </Link>
+            </div>
           </div>
-        </div>
+        </>
       )}
       {/* Desktop menu */}
       <div className="flex justify-between items-center w-full p-3 max-md:p-2 max-sm:hidden">

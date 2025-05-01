@@ -43,7 +43,7 @@ const Category = ({
           if (isOpen) setActualCategory(null);
           else setActualCategory(category);
         }}
-        className={`flex flex-wrap items-center justify-between gap-2 px-3 text-xl max-sm:text-lg cursor-pointer  ${
+        className={`flex flex-wrap items-center justify-between gap-2 max-sm:py-1 px-3 text-xl max-sm:text-lg cursor-pointer  ${
           isOpen ? "bg-secondary/50" : "bg-primary/30"
         }`}
       >
@@ -140,7 +140,10 @@ const Category = ({
           </div> */}
           {sets.length > 0 ? (
             sets.map((item) => (
-              <div key={item.name} className="flex justify-between">
+              <div
+                key={item.name}
+                className="flex justify-between max-sm:py-1 max-sm:border-b border-secondary/50 last-of-type:border-none "
+              >
                 <Link
                   href={`/zestawy/${item["_id"]}`}
                   className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2 py-1"
@@ -156,7 +159,7 @@ const Category = ({
           )}
           <button>
             <Link
-              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/10 hover:bg-secondary/20"
+              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/10 hover:bg-secondary/20 max-sm:py-2"
               href={{
                 pathname: "/zestawy/nowy",
                 query: { category: category },
