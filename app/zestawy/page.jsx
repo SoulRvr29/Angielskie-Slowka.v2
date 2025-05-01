@@ -137,7 +137,7 @@ const WordSetsPage = () => {
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {savedWordSets.length > 0 && (
           <Link
-            className=" rounded-md gap-2 px-2 py-1 max-sm:py-2 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer bg-secondary/50 hover:bg-secondary/70"
+            className="text-xl rounded-md gap-2 px-4 py-1 max-sm:py-2 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-primary "
             href={`/zestawy/zapisane`}
           >
             Zapisane słówka

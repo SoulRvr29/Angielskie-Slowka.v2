@@ -102,7 +102,7 @@ const FiszkiPage = () => {
 
   useEffect(() => {
     if (actualWords.length === wordIndex && actualWords.length !== 0) {
-      if (actualUnknown.length === 1) {
+      if (actualUnknown.length === 0) {
         setGameOver(true);
         setProgress(100);
         setActualWords(actualWords.slice(0, wordsSet.words.length));
@@ -173,7 +173,9 @@ const FiszkiPage = () => {
               actualCardSide
                 ? "border-accent/70 hover:border-accent/100 bg-accent/10 hover:bg-accent/20"
                 : "border-secondary/70 hover:border-secondary/100 bg-secondary/10 hover:bg-secondary/20"
-            } ${cardAnimation && "card-anim"}`}
+            } ${cardAnimation && "card-anim"} ${
+              actualWords.length > wordsSet.words.length && "border-double"
+            }`}
           >
             {!gameOver ? (
               <>

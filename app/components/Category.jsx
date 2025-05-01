@@ -134,32 +134,34 @@ const Category = ({
       </div>
       {isOpen && (
         <div className="flex flex-col flex-wrap">
-          {/* <div className="flex justify-between bg-secondary/20 px-3 border-b-2 border-secondary/20">
+          <div className="flex justify-between bg-secondary/0 px-3 border-b-2 border-secondary/50 ">
             <div>Nazwa zestawu:</div>
-            <div>Słówek:</div>
-          </div> */}
+            <div>Ilość słówek:</div>
+          </div>
           {sets.length > 0 ? (
             sets.map((item) => (
               <div
                 key={item.name}
-                className="flex justify-between max-sm:py-1 max-sm:border-b border-secondary/50 last-of-type:border-none "
+                className="flex justify-between max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20"
               >
                 <Link
                   href={`/zestawy/${item["_id"]}`}
-                  className="flex gap-2 hover:bg-secondary/20 justify-between w-full px-2 py-1"
+                  className="flex gap-2  justify-between w-full py-1"
                 >
                   {item.name}
                 </Link>
 
-                {/* <p>{item.words.length}</p> */}
+                <p className="flex items-center">{item.words.length}</p>
               </div>
             ))
           ) : (
-            <div className="px-2 opacity-50">Brak zestawów</div>
+            <div className="px-2 opacity-50 py-1 max-sm:py-2">
+              Brak zestawów
+            </div>
           )}
           <button>
             <Link
-              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/10 hover:bg-secondary/20 max-sm:py-2"
+              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2"
               href={{
                 pathname: "/zestawy/nowy",
                 query: { category: category },
