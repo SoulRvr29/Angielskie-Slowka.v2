@@ -134,7 +134,7 @@ const Category = ({
       </div>
       {isOpen && (
         <div className="flex flex-col flex-wrap">
-          <div className="flex justify-between bg-secondary/0 px-3 border-b-2 border-secondary/50 ">
+          <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50">
             <div>Nazwa zestawu:</div>
             <div>Ilość słówek:</div>
           </div>

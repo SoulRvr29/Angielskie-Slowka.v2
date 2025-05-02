@@ -19,6 +19,7 @@ const FiszkiPage = () => {
   const [gameOver, setGameOver] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [autoSave, setAutoSave] = useState(false);
 
   useEffect(() => {
     const fetchWords = async (id) => {
@@ -181,7 +182,7 @@ const FiszkiPage = () => {
               <>
                 {actualWords.length > wordsSet.words.length && (
                   <div
-                    className={`absolute top-1 left-2 opacity-50 font-semibold ${
+                    className={`absolute text-lg top-1 left-2 opacity-50 font-semibold ${
                       actualCardSide ? "text-accent" : "text-secondary"
                     }`}
                   >
@@ -250,8 +251,14 @@ const FiszkiPage = () => {
             <div className="flex gap-4 max-w-100 px-4 w-full justify-between">
               <button
                 onClick={() => {
+                  setAutoSave(
+                    JSON.parse(localStorage.getItem("autoSave") || false)
+                  );
                   setShowResults(true);
-                  // console.log(actualWords);
+                  if (JSON.parse(localStorage.getItem("autoSave"))) {
+                    updateUnknown(actualWords);
+                    setSaved(true);
+                  }
                 }}
                 className="btn btn-info w-full"
               >
@@ -294,22 +301,57 @@ const FiszkiPage = () => {
                 0
               ) > 0 && ( */}
               <>
-                {saved ? (
-                  <button className="btn btn-sm btn-success flex items-center gap-2 w-31 h-8 max-sm:w-full max-sm:h-12 max-sm:text-lg">
-                    <FaCheck />
-                    <p>Zapisano</p>
-                  </button>
-                ) : (
-                  <button
-                    onClick={() => {
-                      updateUnknown(actualWords);
-                      setSaved(true);
+                <div className="flex items-center relative">
+                  <input
+                    className="absolute left-2 checkbox checkbox-sm max-sm:checkbox-lg"
+                    type="checkbox"
+                    defaultChecked={autoSave}
+                    onChange={(e) => {
+                      setAutoSave(e.target.checked);
+                      localStorage.setItem(
+                        "autoSave",
+                        JSON.stringify(e.target.checked)
+                      );
+                      if (e.target.checked) {
+                        updateUnknown(actualWords);
+                        setSaved(true);
+                      }
                     }}
-                    className="btn btn-sm w-31 h-8 max-sm:w-full max-sm:h-12 max-sm:text-lg"
-                  >
-                    Zapisz wynik
-                  </button>
-                )}
+                  />
+                  {autoSave ? (
+                    <div
+                      className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                        autoSave && "btn-success"
+                      }`}
+                    >
+                      Autozapis
+                    </div>
+                  ) : (
+                    <>
+                      {saved ? (
+                        <button
+                          className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                            saved && "btn-success"
+                          }`}
+                        >
+                          Zapisano
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            updateUnknown(actualWords);
+                            setSaved(true);
+                          }}
+                          className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                            autoSave && "btn-success"
+                          }`}
+                        >
+                          Zapisz wynik
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
               </>
               {/* )} */}
             </div>

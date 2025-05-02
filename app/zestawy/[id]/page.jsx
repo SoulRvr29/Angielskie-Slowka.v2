@@ -74,7 +74,7 @@ const Set = () => {
         />
       </div>
 
-      <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-md border-primary/50 bg-primary/10">
+      <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-t-md border-primary/50 bg-primary/10">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 max-sm:py-2 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
           <div>słówek: {wordsSet.words.length}</div>
@@ -88,7 +88,7 @@ const Set = () => {
         </div>
         <Link
           href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki`}
-          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2"
+          className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-primary"
         >
           Uruchom zestaw
         </Link>
