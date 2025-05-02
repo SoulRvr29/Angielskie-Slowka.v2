@@ -133,11 +133,11 @@ const WordSetsPage = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <SubNav title="Lista zestawów" />
+      <SubNav title="Lista słówek" />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {savedWordSets.length > 0 && (
           <Link
-            className="text-xl rounded-md gap-2 px-4 py-1 max-sm:py-2 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-primary "
+            className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-primary bg-primary/10"
             href={`/zestawy/zapisane`}
           >
             Zapisane słówka

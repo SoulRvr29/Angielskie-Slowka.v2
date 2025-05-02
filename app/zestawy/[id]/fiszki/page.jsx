@@ -149,7 +149,7 @@ const FiszkiPage = () => {
       ...new Map(filtered.map((item) => [item["_id"], item])).values(),
     ];
     localStorage.setItem("nieZnaneSlowka", JSON.stringify(unique));
-    console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka")));
+    // console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka")));
   };
 
   return (

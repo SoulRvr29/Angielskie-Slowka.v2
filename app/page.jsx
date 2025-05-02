@@ -8,7 +8,7 @@ const HomePage = () => {
         Rozpocznij
       </Link>
       <Link href="/konto" className="btn btn-xl">
-        Logowanie
+        Mój profil
       </Link>
     </div>
   );

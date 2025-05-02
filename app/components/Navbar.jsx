@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FaHome, FaInfoCircle } from "react-icons/fa";
+import { FaHome, FaInfoCircle, FaList, FaAdjust, FaUser } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname } from "next/navigation";
@@ -75,7 +75,7 @@ const Navbar = () => {
             onClick={() => setIsMenuOpen(false)}
             className="bg-black/50 backdrop-blur-xs fixed left-0 top-11 w-screen h-screen z-10"
           ></div>
-          <div className="fixed top-11 left-0 w-screen z-10">
+          <div className="fixed top-11 left-0 w-screen z-10 font-semibold ">
             <div
               onClick={() => {
                 const newTheme = mobileTheme === "dark" ? "corporate" : "dark";
@@ -85,8 +85,9 @@ const Navbar = () => {
                   .setAttribute("data-theme", newTheme);
                 localStorage.setItem("theme", newTheme);
               }}
-              className="btn-success border-t-2 border-info py-2 w-screen bg-base-100 text-xl text-center"
+              className="btn-success border-t-2 border-info py-2 w-screen bg-base-100 text-xl text-center  flex items-center justify-center gap-2"
             >
+              <FaAdjust />
               kolorystyka
             </div>
             <div
@@ -96,29 +97,35 @@ const Navbar = () => {
               <Link
                 className={`${
                   pathname === "/zestawy" && "btn-success"
-                } border-b-2  border-b-info py-2`}
+                } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
                 href="/konto"
               >
-                logowanie
+                <FaUser />
+                mój profil
               </Link>
               <Link
                 className={`${
                   pathname === "/zestawy" && "btn-success"
-                } border-b-2  border-b-info py-2`}
+                } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
                 href="/zestawy"
               >
-                zestawy
+                <FaList />
+                lista słówek
               </Link>
               <Link
                 className={`${
                   pathname === "/ustawienia" && "btn-success"
-                } border-b-2  border-b-info py-2`}
+                } border-b-2  border-b-info py-2 flex items-center justify-center gap-2 `}
                 href="/ustawienia"
               >
+                <FaGear />
                 ustawienia
               </Link>
-              <Link href="/o_stronie" className=" py-2">
-                o stronie
+              <Link
+                href="/o_stronie"
+                className=" py-2  flex items-center justify-center gap-2"
+              >
+                <FaInfoCircle />o stronie
               </Link>
             </div>
           </div>
@@ -136,7 +143,7 @@ const Navbar = () => {
             } btn btn-xs btn-soft`}
             href="/zestawy"
           >
-            zestawy
+            lista słówek
           </Link>
           <Link
             className={`${
@@ -144,7 +151,7 @@ const Navbar = () => {
             } btn btn-xs btn-soft`}
             href="/konto"
           >
-            zaloguj
+            mój profil
           </Link>
           {/* <Link
             className={`${
@@ -158,7 +165,7 @@ const Navbar = () => {
         <div className="flex gap-3 items-center">
           <ThemeChange />
           <Link
-            href="ustawienia"
+            href="/ustawienia"
             className={`${pathname === "/ustawienia" && "text-success"} `}
           >
             <FaGear />
