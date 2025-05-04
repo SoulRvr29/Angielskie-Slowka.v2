@@ -110,7 +110,7 @@ const FiszkiPage = () => {
       if (actualUnknown.length === 0) {
         setGameOver(true);
         setProgress(100);
-        setActualWords(actualWords.slice(0, wordsSet.words.length));
+        setActualWords(actualWords.slice(0, size));
       } else {
         setActualWords((prev) => [...prev, ...randomize(actualUnknown)]);
         setActualUnknown([]);
@@ -199,12 +199,12 @@ const FiszkiPage = () => {
                 ? "border-accent/70 hover:border-accent/100 bg-accent/10 hover:bg-accent/20"
                 : "border-secondary/70 hover:border-secondary/100 bg-secondary/10 hover:bg-secondary/20"
             } ${cardAnimation && "card-anim"} ${
-              actualWords.length > wordsSet.words.length && "border-double "
+              actualWords.length > size && "border-double "
             }`}
           >
             {!gameOver ? (
               <>
-                {actualWords.length > wordsSet.words.length && (
+                {actualWords.length > size && (
                   <div
                     className={`absolute text-lg top-1 left-2 opacity-50 font-semibold ${
                       actualCardSide ? "text-accent" : "text-secondary"
@@ -290,17 +290,15 @@ const FiszkiPage = () => {
               </button>
             </div>
           )}
-          {wordIndex > 0 &&
-            !gameOver &&
-            actualWords.length <= wordsSet.words.length && (
-              <button
-                title="Cofnij"
-                onClick={backwardHandler}
-                className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline my-6"
-              >
-                <FaBackward size={20} />
-              </button>
-            )}
+          {wordIndex > 0 && !gameOver && actualWords.length <= size && (
+            <button
+              title="Cofnij"
+              onClick={backwardHandler}
+              className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline my-6"
+            >
+              <FaBackward size={20} />
+            </button>
+          )}
         </div>
       )}
       <div className="flex flex-col gap-4 items-center">
