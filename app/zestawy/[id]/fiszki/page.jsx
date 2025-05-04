@@ -1,12 +1,14 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
 import "@/assets/styles/card.css";
-import { FaCheck, FaBackward } from "react-icons/fa";
+import { FaBackward } from "react-icons/fa";
 
 const FiszkiPage = () => {
   const { id } = useParams();
+  const searchParams = useSearchParams();
+  const size = searchParams.get("size");
   const [wordsSet, setWordsSet] = useState(null);
   const [actualWords, setActualWords] = useState([]);
   const [actualUnknown, setActualUnknown] = useState([]);
@@ -44,7 +46,9 @@ const FiszkiPage = () => {
         const data = await res.json();
         setWordsSet(data);
         setActualWords(
-          randomize(data.words.map((item) => ({ ...item, known: false })))
+          randomize(
+            data.words.map((item) => ({ ...item, known: false }))
+          ).slice(0, size)
         );
       } catch (error) {
         console.error(error);
@@ -96,7 +100,7 @@ const FiszkiPage = () => {
       if (!isKnown) {
         setActualUnknown((prev) => [...prev, actualWords[wordIndex]]);
       } else {
-        setProgress((prev) => prev + 100 / wordsSet.words.length);
+        setProgress((prev) => prev + 100 / size);
       }
     }
   };
@@ -112,7 +116,6 @@ const FiszkiPage = () => {
         setActualUnknown([]);
       }
     }
-    console.log(actualUnknown);
   }, [wordIndex]);
 
   if (!wordsSet) {
@@ -130,10 +133,12 @@ const FiszkiPage = () => {
     setShowResults(false);
     setActualWords((prev) =>
       randomize(
-        prev.map((item) => ({
-          ...item,
-          known: false,
-        }))
+        prev
+          .map((item) => ({
+            ...item,
+            known: false,
+          }))
+          .slice(0, size)
       )
     );
     setSaved(false);
@@ -155,12 +160,11 @@ const FiszkiPage = () => {
   const backwardHandler = () => {
     if (wordIndex > 0) {
       if (actualWords[wordIndex - 1].known) {
-        setProgress((prev) => prev - 100 / wordsSet.words.length);
+        setProgress((prev) => prev - 100 / size);
       }
       setWordIndex((prev) => prev - 1);
       setCardRotated(false);
       setActualCardSide(defaultCardSide);
-      console.log(actualWords[wordIndex].known);
     } else {
       setWordIndex(0);
     }
@@ -170,7 +174,11 @@ const FiszkiPage = () => {
   };
   return (
     <div className="flex-grow ">
-      <SubNav title={wordsSet.name} text="Wróć do listy" link={`/zestawy`} />
+      <SubNav
+        title={wordsSet.name}
+        text="Wróć do zestawu"
+        link={`/zestawy/${id}`}
+      />
       {/* Progress bar */}
       <div className="relative bg-base-300 w-full text-center px-2 max-sm:py-1">
         <p className="z-[1] relative">Postęp {Math.trunc(progress)}%</p>
@@ -312,7 +320,7 @@ const FiszkiPage = () => {
             <ul className="border-2 border-base-200 py-2 px-4 rounded-b-2xl min-w-sm max-sm:min-w-screen max-sm:rounded-none">
               {actualWords.map((item) => (
                 <li
-                  key={item["_id"]}
+                  key={item.english}
                   className={`text-${item.known ? "success" : "error"}`}
                 >
                   {item.english} - {item.polish}

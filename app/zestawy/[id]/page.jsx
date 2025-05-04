@@ -8,6 +8,7 @@ const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
   const router = useRouter();
   const { id } = useParams();
+  const [size, setSize] = useState(0);
 
   useEffect(() => {
     if (id === "zapisane") {
@@ -29,6 +30,7 @@ const Set = () => {
         }
         const data = await res.json();
         setWordsSet(data);
+        setSize(data.words.length);
       } catch (error) {
         console.error(error);
       }
@@ -75,9 +77,41 @@ const Set = () => {
       </div>
 
       <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-t-md border-primary/50 bg-primary/10">
-        <div className="bg-primary/50 w-full font-semibold text-lg px-2 max-sm:py-2 flex flex-wrap gap-2 justify-between">
+        <div className="bg-primary/50 w-full font-semibold text-lg px-2 max-sm:py-2 py-1 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
-          <div>słówek: {wordsSet.words.length}</div>
+          <div className="flex gap-1 items-center">
+            <div>słówek:</div>
+            <input
+              type="text"
+              pattern="[0-9]*"
+              onChange={(e) => {
+                const input = e.target.value;
+                if (/^\d{0,2}$/.test(input)) {
+                  if (parseInt(input) > wordsSet.words.length) {
+                    setSize(wordsSet.words.length);
+                  } else if (parseInt(input) > 0 || input === "") {
+                    setSize(input === "" ? "" : parseInt(input));
+                  }
+                }
+              }}
+              onFocus={() => setSize("")}
+              onBlur={() => {
+                if (size === "") {
+                  setSize(wordsSet.words.length);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.target.blur();
+                }
+              }}
+              className="input input-xs text-base px-1 w-7"
+              value={size}
+              min={1}
+              max={wordsSet.words.length}
+              maxLength={2}
+            />
+          </div>
         </div>
         <div className="px-4 py-2">
           {wordsSet.words.map((item, index) => (
@@ -87,7 +121,7 @@ const Set = () => {
           ))}
         </div>
         <Link
-          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki`}
+          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki?size=${size}`}
           className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-primary"
         >
           Uruchom zestaw
