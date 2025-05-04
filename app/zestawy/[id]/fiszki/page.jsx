@@ -3,7 +3,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
 import "@/assets/styles/card.css";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaBackward } from "react-icons/fa";
 
 const FiszkiPage = () => {
   const { id } = useParams();
@@ -112,6 +112,7 @@ const FiszkiPage = () => {
         setActualUnknown([]);
       }
     }
+    console.log(actualUnknown);
   }, [wordIndex]);
 
   if (!wordsSet) {
@@ -149,9 +150,24 @@ const FiszkiPage = () => {
       ...new Map(filtered.map((item) => [item["_id"], item])).values(),
     ];
     localStorage.setItem("nieZnaneSlowka", JSON.stringify(unique));
-    // console.log(JSON.parse(localStorage.getItem("nieZnaneSlowka")));
   };
 
+  const backwardHandler = () => {
+    if (wordIndex > 0) {
+      if (actualWords[wordIndex - 1].known) {
+        setProgress((prev) => prev - 100 / wordsSet.words.length);
+      }
+      setWordIndex((prev) => prev - 1);
+      setCardRotated(false);
+      setActualCardSide(defaultCardSide);
+      console.log(actualWords[wordIndex].known);
+    } else {
+      setWordIndex(0);
+    }
+    if (actualWords[wordIndex - 1].known === false) {
+      setActualUnknown((prev) => [...prev.slice(0, -1)]);
+    }
+  };
   return (
     <div className="flex-grow ">
       <SubNav title={wordsSet.name} text="Wróć do listy" link={`/zestawy`} />
@@ -175,7 +191,7 @@ const FiszkiPage = () => {
                 ? "border-accent/70 hover:border-accent/100 bg-accent/10 hover:bg-accent/20"
                 : "border-secondary/70 hover:border-secondary/100 bg-secondary/10 hover:bg-secondary/20"
             } ${cardAnimation && "card-anim"} ${
-              actualWords.length > wordsSet.words.length && "border-double"
+              actualWords.length > wordsSet.words.length && "border-double "
             }`}
           >
             {!gameOver ? (
@@ -266,6 +282,17 @@ const FiszkiPage = () => {
               </button>
             </div>
           )}
+          {wordIndex > 0 &&
+            !gameOver &&
+            actualWords.length <= wordsSet.words.length && (
+              <button
+                title="Cofnij"
+                onClick={backwardHandler}
+                className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline my-6"
+              >
+                <FaBackward size={20} />
+              </button>
+            )}
         </div>
       )}
       <div className="flex flex-col gap-4 items-center">
