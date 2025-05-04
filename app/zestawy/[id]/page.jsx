@@ -16,6 +16,7 @@ const Set = () => {
         category: "Zapisane słówka",
         words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
       });
+      setSize(JSON.parse(localStorage.getItem("nieZnaneSlowka")).length);
       return;
     }
     const fetchWords = async (id) => {
