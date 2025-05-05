@@ -101,7 +101,7 @@ const Navbar = () => {
                 href="/konto"
               >
                 <FaUser />
-                mój profil
+                moje słówka
               </Link>
               <Link
                 className={`${
@@ -151,7 +151,7 @@ const Navbar = () => {
             } btn btn-xs btn-soft`}
             href="/konto"
           >
-            mój profil
+            moje słówka
           </Link>
           {/* <Link
             className={`${
