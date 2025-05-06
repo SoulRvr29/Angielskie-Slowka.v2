@@ -5,13 +5,27 @@ import { FaHome, FaInfoCircle, FaList, FaAdjust, FaUser } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
+import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Navbar = () => {
-  const pathname = usePathname();
+  const { data: session } = useSession();
+  console.log(session);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [mobileTheme, setMobileTheme] = useState();
+  const [providers, setProviders] = useState(null);
+
+  const pathname = usePathname();
+
+  useEffect(() => {
+    const setAuthProviders = async () => {
+      const res = await getProviders();
+      setProviders(res);
+    };
+    setAuthProviders();
+  }, []);
 
   useEffect(() => {
     if (!isMenuOpen) setIsChecked(false);
@@ -94,15 +108,35 @@ const Navbar = () => {
               className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-info"
               onClick={() => setIsMenuOpen(false)}
             >
-              <Link
-                className={`${
-                  pathname === "/zestawy" && "btn-success"
-                } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
-                href="/konto"
-              >
-                <FaUser />
-                moje słówka
-              </Link>
+              {session ? (
+                <Link
+                  className={`${
+                    pathname === "/zestawy" && "btn-success"
+                  } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
+                  href="/moje_zestawy"
+                >
+                  <FaUser />
+                  moje słówka
+                </Link>
+              ) : (
+                <>
+                  {providers &&
+                    Object.values(providers).map((provider, index) => (
+                      <button
+                        key={index}
+                        className={`${
+                          pathname === "/moje_zestawy" && "btn-success"
+                        } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
+                        onClick={() => {
+                          signIn(provider.id);
+                        }}
+                      >
+                        <FaUser />
+                        logowanie
+                      </button>
+                    ))}
+                </>
+              )}
               <Link
                 className={`${
                   pathname === "/zestawy" && "btn-success"
@@ -145,14 +179,33 @@ const Navbar = () => {
           >
             lista słówek
           </Link>
-          <Link
-            className={`${
-              pathname === "/konto" && "btn-success"
-            } btn btn-xs btn-soft`}
-            href="/konto"
-          >
-            moje słówka
-          </Link>
+          {session ? (
+            <Link
+              className={`${
+                pathname === "/moje_zestawy" && "btn-success"
+              } btn btn-xs btn-soft`}
+              href="/moje_zestawy"
+            >
+              moje słówka
+            </Link>
+          ) : (
+            <>
+              {providers &&
+                Object.values(providers).map((provider) => (
+                  <button
+                    key={provider.name}
+                    className={`${
+                      pathname === "/moje_zestawy" && "btn-success"
+                    } btn btn-xs btn-soft`}
+                    onClick={() => {
+                      signIn(provider.id);
+                    }}
+                  >
+                    logowanie
+                  </button>
+                ))}
+            </>
+          )}
           {/* <Link
             className={`${
               pathname === "/ustawienia" && "btn-success"
