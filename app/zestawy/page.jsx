@@ -5,12 +5,26 @@ import AddCategory from "../components/AddCategory";
 import SubNav from "../components/SubNav";
 import Loader from "../components/Loader";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
   const [savedWordSets, setSavedWordSets] = useState();
+  const [admin, setAdmin] = useState(false);
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    if (session) {
+      if (
+        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2
+      ) {
+        setAdmin(true);
+      }
+    }
+  }, [session]);
 
   const fetchWords = async () => {
     try {
@@ -69,9 +83,6 @@ const WordSetsPage = () => {
   };
 
   const deleteCategoryHandler = (name) => {
-    const result = confirm("Potwierdź usunięcie");
-    if (!result) return;
-
     const deleteCategory = async () => {
       try {
         const res = await fetch(
@@ -153,15 +164,18 @@ const WordSetsPage = () => {
               setActualCategory={setActualCategory}
               deleteCategoryHandler={deleteCategoryHandler}
               editCategoryHandler={editCategoryHandler}
+              admin={admin}
             />
           ))
         ) : (
           <div>Brak kategorii</div>
         )}
-        <AddCategory
-          addCategoryHandler={addCategoryHandler}
-          categoriesList={categoriesList}
-        />
+        {admin && (
+          <AddCategory
+            addCategoryHandler={addCategoryHandler}
+            categoriesList={categoriesList}
+          />
+        )}
       </div>
     </div>
   );

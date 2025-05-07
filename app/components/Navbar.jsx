@@ -1,8 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { FaHome, FaInfoCircle, FaList, FaAdjust, FaUser } from "react-icons/fa";
-import { FaGear, FaU } from "react-icons/fa6";
+import {
+  FaHome,
+  FaInfoCircle,
+  FaList,
+  FaAdjust,
+  FaUser,
+  FaGoogle,
+} from "react-icons/fa";
+import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -232,7 +239,7 @@ const Navbar = () => {
                 popoverTarget="popover-1"
                 style={{ anchorName: "--anchor-1" }}
               >
-                {session ? (
+                {profileImage ? (
                   <Image
                     className="size-7 border-2 border-primary rounded-full -ml-2"
                     src={profileImage}
@@ -241,7 +248,7 @@ const Navbar = () => {
                     alt="profile image"
                   />
                 ) : (
-                  <FaUser className="text-3xl p-1 bg-base-100 rounded-full" />
+                  <FaUser className="text-3xl p-1 border-2 border-primary rounded-full bg-base-100 -ml-2" />
                 )}
                 {session.user.name}
               </button>
@@ -284,11 +291,12 @@ const Navbar = () => {
                 Object.values(providers).map((provider) => (
                   <button
                     key={provider.name}
-                    className="btn btn-xs btn-soft"
+                    className="btn btn-xs btn-soft pl-1"
                     onClick={() => {
                       signIn(provider.id);
                     }}
                   >
+                    <FaGoogle size={14} />
                     logowanie
                   </button>
                 ))}

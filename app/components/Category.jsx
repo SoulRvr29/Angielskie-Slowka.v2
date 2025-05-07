@@ -18,6 +18,7 @@ const Category = ({
   setActualCategory,
   deleteCategoryHandler,
   editCategoryHandler,
+  admin,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -100,34 +101,42 @@ const Category = ({
                 title="rozwiń"
               />
             ) : (
-              <div className="flex items-center gap-2">
-                <FaEdit
-                  className="hover:scale-110 transition-transform"
-                  title="zmień nazwę"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsEdit((prev) => !prev);
-                  }}
-                />
-                {isDeleting ? (
-                  <LuLoaderCircle className="animate-spin" />
-                ) : (
-                  <FaTrashAlt
-                    title="usuń kategrię"
+              <>
+                <div className="flex items-center gap-2">
+                  {admin && (
+                    <>
+                      <FaEdit
+                        className="hover:scale-110 transition-transform"
+                        title="zmień nazwę"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setIsEdit((prev) => !prev);
+                        }}
+                      />
+                      {isDeleting ? (
+                        <LuLoaderCircle className="animate-spin" />
+                      ) : (
+                        <FaTrashAlt
+                          title="usuń kategrię"
+                          className="hover:scale-110 transition-transform"
+                          size={18}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            const confirmed = confirm("Potwierdź usunięcie");
+                            if (!confirmed) return;
+                            deleteCategoryHandler(category);
+                            setIsDeleting(true);
+                          }}
+                        />
+                      )}
+                    </>
+                  )}
+                  <FaCaretSquareUp
                     className="hover:scale-110 transition-transform"
-                    size={18}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      deleteCategoryHandler(category);
-                      setIsDeleting(true);
-                    }}
+                    title="zwiń"
                   />
-                )}
-                <FaCaretSquareUp
-                  className="hover:scale-110 transition-transform"
-                  title="zwiń"
-                />
-              </div>
+                </div>
+              </>
             )}
           </div>
         </div>
@@ -159,7 +168,7 @@ const Category = ({
               Brak zestawów
             </div>
           )}
-          <button>
+          {admin && (
             <Link
               className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2"
               href={{
@@ -169,7 +178,7 @@ const Category = ({
             >
               <FaPlusSquare title="dodaj zestaw" /> <p>Dodaj nowy zestaw</p>
             </Link>
-          </button>
+          )}
         </div>
       )}
     </div>

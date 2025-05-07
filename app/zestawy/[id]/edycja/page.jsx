@@ -48,7 +48,6 @@ const EdycjaPage = () => {
 
   const addNewRow = () => {
     setFormData([...formData, { english: "", polish: "" }]);
-    console.log(formData);
   };
 
   const deleteRow = (indexToDelete) => {
@@ -57,13 +56,6 @@ const EdycjaPage = () => {
   };
 
   const handleForm = (e) => {
-    console.log({
-      id: id,
-      updateData: {
-        name: name,
-        words: formData,
-      },
-    });
     const editWordSet = async () => {
       try {
         const res = await fetch(

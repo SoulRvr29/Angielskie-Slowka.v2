@@ -1,14 +1,28 @@
 "use client";
 import { useRouter, useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import SubNav from "@/app/components/SubNav";
+import { useSession } from "next-auth/react";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
   const router = useRouter();
   const { id } = useParams();
   const [size, setSize] = useState(0);
+  const { data: session } = useSession();
+  const [admin, setAdmin] = useState(false);
+
+  useEffect(() => {
+    if (session) {
+      if (
+        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2
+      ) {
+        setAdmin(true);
+      }
+    }
+  }, [session]);
 
   useEffect(() => {
     if (id === "zapisane") {
@@ -129,17 +143,21 @@ const Set = () => {
         </Link>
       </div>
       {id !== "zapisane" && (
-        <div className="flex gap-4">
-          <Link
-            href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
-            className="btn btn-info"
-          >
-            Edytuj
-          </Link>
-          <button onClick={deleteHandler} className="btn btn-error">
-            Usuń
-          </button>
-        </div>
+        <>
+          {admin && (
+            <div className="flex gap-4">
+              <Link
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
+                className="btn btn-info"
+              >
+                Edytuj
+              </Link>
+              <button onClick={deleteHandler} className="btn btn-error">
+                Usuń
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

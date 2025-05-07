@@ -15,7 +15,6 @@ const NowyZestawPage = () => {
 
   const addNewRow = () => {
     setFormData([...formData, { english: "", polish: "" }]);
-    console.log(formData);
   };
 
   const deleteRow = (indexToDelete) => {
@@ -24,7 +23,6 @@ const NowyZestawPage = () => {
   };
 
   const handleForm = (e) => {
-    console.log({ name: e.target[0].value, words: formData });
     const createWordSet = async () => {
       try {
         const res = await fetch(
