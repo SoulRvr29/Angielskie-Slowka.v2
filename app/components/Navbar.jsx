@@ -2,20 +2,22 @@
 
 import Link from "next/link";
 import { FaHome, FaInfoCircle, FaList, FaAdjust, FaUser } from "react-icons/fa";
-import { FaGear } from "react-icons/fa6";
+import { FaGear, FaU } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname } from "next/navigation";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import Image from "next/image";
 
 const Navbar = () => {
   const { data: session } = useSession();
-  console.log(session);
+  const profileImage = session?.user?.image;
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [mobileTheme, setMobileTheme] = useState();
   const [providers, setProviders] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const pathname = usePathname();
 
@@ -28,8 +30,8 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (!isMenuOpen) setIsChecked(false);
-  }, [isMenuOpen]);
+    if (!isMobileMenuOpen) setIsChecked(false);
+  }, [isMobileMenuOpen]);
 
   useEffect(() => {
     setMobileTheme(document.querySelector("html").getAttribute("data-theme"));
@@ -56,7 +58,7 @@ const Navbar = () => {
           checked={isChecked}
           onChange={(e) => setIsChecked(e.target.checked)}
           onClick={() => {
-            setIsMenuOpen((prev) => !prev);
+            setIsMobileMenuOpen((prev) => !prev);
           }}
         />
 
@@ -83,41 +85,63 @@ const Navbar = () => {
         </svg>
       </label>
       {/* Mobile menu */}
-      {isMenuOpen && (
+      {isMobileMenuOpen && (
         <>
           <div
-            onClick={() => setIsMenuOpen(false)}
+            // onClick={() => setIsMobileMenuOpen(false)}
             className="bg-black/50 backdrop-blur-xs fixed left-0 top-11 w-screen h-screen z-10"
           ></div>
           <div className="fixed top-11 left-0 w-screen z-10 font-semibold ">
             <div
-              onClick={() => {
-                const newTheme = mobileTheme === "dark" ? "corporate" : "dark";
-                setMobileTheme(newTheme);
-                document
-                  .querySelector("html")
-                  .setAttribute("data-theme", newTheme);
-                localStorage.setItem("theme", newTheme);
-              }}
-              className="btn-success border-t-2 border-info py-2 w-screen bg-base-100 text-xl text-center  flex items-center justify-center gap-2"
-            >
-              <FaAdjust />
-              kolorystyka
-            </div>
-            <div
               className="flex-col bg-base-100 text-center hidden max-sm:flex text-xl border-y-2 border-info"
-              onClick={() => setIsMenuOpen(false)}
+              onClick={() => setIsMobileMenuOpen(false)}
             >
+              {/* Logowanie Button */}
               {session ? (
-                <Link
-                  className={`${
-                    pathname === "/zestawy" && "btn-success"
-                  } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
-                  href="/moje_zestawy"
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="collapse border-b-2 border-b-info rounded-none "
                 >
-                  <FaUser />
-                  moje słówka
-                </Link>
+                  <input type="checkbox" className="" />
+                  <div className="collapse-title font-semibold flex justify-center gap-2 ml-2">
+                    <Image
+                      className="size-7 border-2 border-primary rounded-full"
+                      src={profileImage}
+                      width={40}
+                      height={40}
+                      alt="profile image"
+                    />
+
+                    {session.user.name}
+                  </div>
+                  <div className="flex flex-col collapse-content bg-base-100 text-center">
+                    <div className=" py-2">
+                      <Link
+                        href="/profil"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Mój profil
+                      </Link>
+                    </div>
+                    <div className="border-y border-y-info py-2">
+                      <Link
+                        href="/moje_zestawy"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                      >
+                        Moje słówka
+                      </Link>
+                    </div>
+                    <div className=" py-2">
+                      <button
+                        onClick={() => {
+                          signOut();
+                        }}
+                      >
+                        Wyloguj
+                      </button>
+                    </div>
+                  </div>
+                </div>
               ) : (
                 <>
                   {providers &&
@@ -126,7 +150,7 @@ const Navbar = () => {
                         key={index}
                         className={`${
                           pathname === "/moje_zestawy" && "btn-success"
-                        } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
+                        } border-b-2  border-b-info py-4 flex items-center justify-center gap-2 `}
                         onClick={() => {
                           signIn(provider.id);
                         }}
@@ -137,6 +161,24 @@ const Navbar = () => {
                     ))}
                 </>
               )}
+              {/* Kolorystyka Button */}
+              <div
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const newTheme =
+                    mobileTheme === "dark" ? "corporate" : "dark";
+                  setMobileTheme(newTheme);
+                  document
+                    .querySelector("html")
+                    .setAttribute("data-theme", newTheme);
+                  localStorage.setItem("theme", newTheme);
+                }}
+                className="btn-success border-b-2 border-info py-2 w-screen bg-base-100 text-xl text-center  flex items-center justify-center gap-2"
+              >
+                <FaAdjust />
+                kolorystyka
+              </div>
+              {/* Lista słówek Button */}
               <Link
                 className={`${
                   pathname === "/zestawy" && "btn-success"
@@ -146,6 +188,7 @@ const Navbar = () => {
                 <FaList />
                 lista słówek
               </Link>
+              {/* Ustawienia Button */}
               <Link
                 className={`${
                   pathname === "/ustawienia" && "btn-success"
@@ -155,6 +198,7 @@ const Navbar = () => {
                 <FaGear />
                 ustawienia
               </Link>
+              {/* O stronie Button */}
               <Link
                 href="/o_stronie"
                 className=" py-2  flex items-center justify-center gap-2"
@@ -179,24 +223,68 @@ const Navbar = () => {
           >
             lista słówek
           </Link>
+
           {session ? (
-            <Link
-              className={`${
-                pathname === "/moje_zestawy" && "btn-success"
-              } btn btn-xs btn-soft`}
-              href="/moje_zestawy"
-            >
-              moje słówka
-            </Link>
+            <>
+              <button
+                onClick={() => setDropdownOpen((prev) => !prev)}
+                className="btn btn-xs btn-soft pl-0 ml-2"
+                popoverTarget="popover-1"
+                style={{ anchorName: "--anchor-1" }}
+              >
+                {session ? (
+                  <Image
+                    className="size-7 border-2 border-primary rounded-full -ml-2"
+                    src={profileImage}
+                    width={40}
+                    height={40}
+                    alt="profile image"
+                  />
+                ) : (
+                  <FaUser className="text-3xl p-1 bg-base-100 rounded-full" />
+                )}
+                {session.user.name}
+              </button>
+
+              {dropdownOpen && (
+                <ul
+                  className="dropdown menu border mt-1 border-info rounded-box bg-base-100 shadow-sm"
+                  popover="auto"
+                  id="popover-1"
+                  style={{ positionAnchor: "--anchor-1" }}
+                >
+                  <li>
+                    <Link href="/profil" onClick={() => setDropdownOpen(false)}>
+                      Mój profil
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      href="/moje_zestawy"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      Moje słówka
+                    </Link>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => {
+                        signOut();
+                      }}
+                    >
+                      Wyloguj
+                    </button>
+                  </li>
+                </ul>
+              )}
+            </>
           ) : (
             <>
               {providers &&
                 Object.values(providers).map((provider) => (
                   <button
                     key={provider.name}
-                    className={`${
-                      pathname === "/moje_zestawy" && "btn-success"
-                    } btn btn-xs btn-soft`}
+                    className="btn btn-xs btn-soft"
                     onClick={() => {
                       signIn(provider.id);
                     }}
