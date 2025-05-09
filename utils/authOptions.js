@@ -32,6 +32,7 @@ export const authOptions = {
             email: profile.email,
             username,
             image: profile.picture,
+            wordSets: [],
           });
         }
         // 4. Return true to allow sign-in

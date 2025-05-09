@@ -267,7 +267,7 @@ const Navbar = () => {
                   </li>
                   <li>
                     <Link
-                      href="/moje_zestawy"
+                      href="/zestawy/wlasne"
                       onClick={() => setDropdownOpen(false)}
                     >
                       Moje słówka

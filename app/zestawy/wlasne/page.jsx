@@ -1,98 +1,186 @@
 "use client";
 import Category from "../../components/Category";
 import { useEffect, useState } from "react";
+import AddCategory from "../../components/AddCategory";
 import SubNav from "../../components/SubNav";
-import { FaArrowLeft } from "react-icons/fa";
+import Loader from "../../components/Loader";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 
-const getCategories = (data) => {
-  return [...new Set(data.map((item) => item.category).sort())];
-};
-
-const MojeZestawyPage = () => {
+const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
+  const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
-  const [addCategory, setAddCategory] = useState(false);
+  const [savedWordSets, setSavedWordSets] = useState();
+  const [admin, setAdmin] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
-    const fetchWords = async () => {
+    if (session) {
+      if (
+        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
+        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2
+      ) {
+        setAdmin(true);
+      }
+    }
+  }, [session]);
+
+  const fetchWords = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne`
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      console.log(data);
+
+      setCategoriesList(data.wordSets.map((item) => item.category));
+      setWordSets(data.wordSets);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWords();
+    setSavedWordSets(
+      JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]")
+    );
+  }, []);
+
+  if (!wordSets) {
+    return <Loader message="Pobieranie zestawów" />;
+  }
+
+  const addCategoryHandler = (name) => {
+    const createCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne/kategoria`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              category: name,
+            }),
+          }
         );
+
         if (!res.ok) {
-          throw new Error("Failed to fetch data");
+          throw new Error("Failed to create category");
         }
         const data = await res.json();
-        console.log(data[0].user_sets);
-
-        setWordSets(data[0].user_sets);
+        console.log("Category created:", data);
+        fetchWords();
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchWords();
-  }, []);
+    createCategory();
+  };
 
-  if (!wordSets) {
-    return (
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
-        <p className="text-info animate-pulse delayFadeIn">
-          Pobieranie zestawów
-        </p>
-        <span className="loader"></span>
-      </div>
-    );
-  }
-  const categories = getCategories(wordSets);
+  const deleteCategoryHandler = (name) => {
+    const deleteCategory = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne/kategoria`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ category: name }),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to delete category");
+        }
+
+        const data = await res.json();
+        console.log("Category deleted:", data);
+        fetchWords();
+        setActualCategory(null);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    deleteCategory();
+  };
+
+  const editCategoryHandler = (categoryData) => {
+    const editCategory = async () => {
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne/kategoria`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(categoryData),
+          }
+        );
+
+        if (!res.ok) {
+          throw new Error("Failed to edit category");
+        }
+
+        const data = await res.json();
+        console.log("Category edited:", data);
+        fetchWords();
+        setActualCategory(null);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    editCategory();
+  };
 
   return (
-    <div>
-      <div className="flex flex-col gap-4 ">
-        <SubNav title="Moje zestawy" text="Publiczne zestawy" link="/zestawy" />
-        <div className="flex flex-col max-sm:gap-2 gap-6 max-w-2xl mx-auto w-full">
-          {categories.map((category) => (
+    <div className="flex flex-col gap-2">
+      <SubNav title="Lista słówek" />
+      <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
+        {savedWordSets.length > 0 && (
+          <Link
+            className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-primary bg-primary/10"
+            href={`/zestawy/zapisane`}
+          >
+            Zapisane słówka
+          </Link>
+        )}
+        {wordSets.length > 0 ? (
+          wordSets.map((item, index) => (
             <Category
-              key={category}
-              category={category}
-              wordSets={wordSets}
+              key={index}
+              category={item.category}
+              sets={item.sets}
               actualCategory={actualCategory}
               setActualCategory={setActualCategory}
+              deleteCategoryHandler={deleteCategoryHandler}
+              editCategoryHandler={editCategoryHandler}
+              admin={admin}
             />
-          ))}
-        </div>
-        {addCategory ? (
-          <form
-            className=" max-w-2xl mx-auto w-full flex flex-col gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              console.log(e);
-            }}
-          >
-            <input
-              type="text"
-              name="nowaKategoria"
-              className="input w-full"
-              autoFocus
-            />
-            <button
-              type="submit"
-              onClick={() => setAddCategory(false)}
-              className="btn btn-outline btn-secondary btn-sm text-base "
-            >
-              Dodaj kategorię
-            </button>
-          </form>
+          ))
         ) : (
-          <button
-            onClick={() => setAddCategory(true)}
-            className="btn btn-outline btn-secondary btn-sm text-base mx-auto w-full max-w-2xl"
-          >
-            Nowa kategoria
-          </button>
+          <div>Brak kategorii</div>
+        )}
+        {admin && (
+          <AddCategory
+            addCategoryHandler={addCategoryHandler}
+            categoriesList={categoriesList}
+          />
         )}
       </div>
     </div>
   );
 };
-export default MojeZestawyPage;
+export default WordSetsPage;

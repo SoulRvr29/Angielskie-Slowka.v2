@@ -31,6 +31,7 @@ const Category = ({
     if (actualCategory === category) setIsOpen(true);
     else setIsOpen(false);
     setIsDeleting(false);
+    console.log(sets);
   }, [actualCategory]);
 
   return (
