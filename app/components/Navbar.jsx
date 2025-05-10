@@ -132,7 +132,7 @@ const Navbar = () => {
                     </div>
                     <div className="border-y border-y-info py-2">
                       <Link
-                        href="/moje_zestawy"
+                        href="/prywatne_zestawy"
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Moje słówka
@@ -156,7 +156,7 @@ const Navbar = () => {
                       <button
                         key={index}
                         className={`${
-                          pathname === "/moje_zestawy" && "btn-success"
+                          pathname === "/prywatne_zestawy" && "btn-success"
                         } border-b-2  border-b-info py-4 flex items-center justify-center gap-2 `}
                         onClick={() => {
                           signIn(provider.id);
@@ -188,9 +188,9 @@ const Navbar = () => {
               {/* Lista słówek Button */}
               <Link
                 className={`${
-                  pathname === "/zestawy" && "btn-success"
+                  pathname === "/publiczne_zestawy" && "btn-success"
                 } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
-                href="/zestawy"
+                href="/publiczne_zestawy"
               >
                 <FaList />
                 lista słówek
@@ -224,9 +224,9 @@ const Navbar = () => {
           </Link>
           <Link
             className={`${
-              pathname === "/zestawy" && "btn-success"
+              pathname === "/publiczne_zestawy" && "btn-success"
             } btn btn-xs btn-soft`}
-            href="/zestawy"
+            href="/publiczne_zestawy"
           >
             lista słówek
           </Link>
@@ -267,7 +267,7 @@ const Navbar = () => {
                   </li>
                   <li>
                     <Link
-                      href="/zestawy/wlasne"
+                      href="/prywatne_zestawy"
                       onClick={() => setDropdownOpen(false)}
                     >
                       Moje słówka
