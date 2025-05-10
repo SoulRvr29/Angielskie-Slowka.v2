@@ -1,5 +1,5 @@
 import connectDB from "@/config/database";
-import WordSets from "@/models/WordSets";
+import User from "@/models/User";
 
 // POST /api/zestawy/kategoria
 export const POST = async (request) => {
@@ -8,11 +8,14 @@ export const POST = async (request) => {
 
     console.log("Connected to MongoDB");
 
-    const body = await request.json();
-    const newCategory = new WordSets(body);
+    const { category } = await request.json();
 
-    await newCategory.save();
-    console.log("Saved new category");
+    const newCategory = await User.updateOne(
+      { email: process.env.NEXT_PUBLIC_ADMIN_EMAIL },
+      { $push: { wordSets: { category: category, words: [] } } }
+    );
+
+    console.log("Added new category to wordSets");
 
     return new Response(JSON.stringify(newCategory), { status: 201 });
   } catch (error) {
@@ -26,19 +29,23 @@ export const DELETE = async (request) => {
     await connectDB();
     console.log("Connected to MongoDB");
 
-    const { name } = await request.json();
+    const { category } = await request.json();
 
-    await WordSets.deleteOne({ category: name });
-    console.log(`Deleted category: ${name}`);
+    await User.updateOne(
+      { email: process.env.NEXT_PUBLIC_ADMIN_EMAIL },
+      { $pull: { wordSets: { category: category } } }
+    );
+    console.log(`Deleted category: ${category} from user wordSets`);
 
-    return new Response(JSON.stringify({ category: name }), {
+    return new Response(JSON.stringify({ category: category }), {
       status: 200,
     });
   } catch (error) {
-    console.error("Error in POST /api/zestawy/kategoria:", error);
+    console.error("Error in DELETE /api/zestawy/kategoria:", error);
     return new Response("Something went wrong", { status: 500 });
   }
 };
+
 // PUT /api/zestawy/kategoria
 export const PUT = async (request) => {
   try {
@@ -46,9 +53,14 @@ export const PUT = async (request) => {
     console.log("Connected to MongoDB");
 
     const { category, newName } = await request.json();
-    await WordSets.updateOne(
-      { category: category },
-      { $set: { category: newName } }
+    console.log(category, newName);
+
+    await User.updateOne(
+      {
+        email: process.env.NEXT_PUBLIC_ADMIN_EMAIL,
+        "wordSets.category": category,
+      },
+      { $set: { "wordSets.$.category": newName } }
     );
     console.log(`Changed category: ${category} to: ${newName}`);
 
@@ -56,7 +68,7 @@ export const PUT = async (request) => {
       status: 200,
     });
   } catch (error) {
-    console.error("Error in POST /api/zestawy/kategoria:", error);
+    console.error("Error in PUT /api/zestawy/kategoria:", error);
     return new Response("Something went wrong", { status: 500 });
   }
 };

@@ -5,26 +5,12 @@ import AddCategory from "../../components/AddCategory";
 import SubNav from "../../components/SubNav";
 import Loader from "../../components/Loader";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
   const [savedWordSets, setSavedWordSets] = useState();
-  const [admin, setAdmin] = useState(false);
-  const { data: session } = useSession();
-
-  useEffect(() => {
-    if (session) {
-      if (
-        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
-        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2
-      ) {
-        setAdmin(true);
-      }
-    }
-  }, [session]);
 
   const fetchWords = async () => {
     try {
@@ -35,7 +21,6 @@ const WordSetsPage = () => {
         throw new Error("Failed to fetch data");
       }
       const data = await res.json();
-      console.log(data);
 
       setCategoriesList(data.wordSets.map((item) => item.category));
       setWordSets(data.wordSets);
@@ -167,18 +152,17 @@ const WordSetsPage = () => {
               setActualCategory={setActualCategory}
               deleteCategoryHandler={deleteCategoryHandler}
               editCategoryHandler={editCategoryHandler}
-              admin={admin}
+              admin={true}
             />
           ))
         ) : (
           <div>Brak kategorii</div>
         )}
-        {admin && (
-          <AddCategory
-            addCategoryHandler={addCategoryHandler}
-            categoriesList={categoriesList}
-          />
-        )}
+
+        <AddCategory
+          addCategoryHandler={addCategoryHandler}
+          categoriesList={categoriesList}
+        />
       </div>
     </div>
   );

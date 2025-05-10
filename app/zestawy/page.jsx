@@ -17,10 +17,7 @@ const WordSetsPage = () => {
 
   useEffect(() => {
     if (session) {
-      if (
-        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ||
-        session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL_2
-      ) {
+      if (session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         setAdmin(true);
       }
     }
@@ -33,9 +30,10 @@ const WordSetsPage = () => {
         throw new Error("Failed to fetch data");
       }
       const data = await res.json();
+      console.log(data);
 
-      setCategoriesList(data.map((item) => item.category));
-      setWordSets(data);
+      setCategoriesList(data.wordSets.map((item) => item.category));
+      setWordSets(data.wordSets);
     } catch (error) {
       console.error(error);
     }
@@ -92,7 +90,7 @@ const WordSetsPage = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name: name }),
+            body: JSON.stringify({ category: name }),
           }
         );
 

@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
+import { usePathname } from "next/navigation";
 
 const Category = ({
   category,
@@ -24,6 +25,8 @@ const Category = ({
   const [isEdit, setIsEdit] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState(category);
   const [isDeleting, setIsDeleting] = useState(false);
+  const pathname = usePathname();
+  console.log(pathname);
 
   useEffect(() => {
     setIsEdit(false);
@@ -31,7 +34,6 @@ const Category = ({
     if (actualCategory === category) setIsOpen(true);
     else setIsOpen(false);
     setIsDeleting(false);
-    console.log(sets);
   }, [actualCategory]);
 
   return (
@@ -155,7 +157,7 @@ const Category = ({
                 className="flex justify-between max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20"
               >
                 <Link
-                  href={`/zestawy/${item["_id"]}`}
+                  href={`${pathname}/${item["_id"]}`}
                   className="flex gap-2  justify-between w-full py-1"
                 >
                   {item.name}
@@ -173,7 +175,7 @@ const Category = ({
             <Link
               className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2"
               href={{
-                pathname: "/zestawy/nowy",
+                pathname: `${pathname}/nowy`,
                 query: { category: category },
               }}
             >

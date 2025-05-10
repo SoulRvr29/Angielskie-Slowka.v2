@@ -43,22 +43,36 @@ export const POST = async (request) => {
       return new Response("Unauthorized", { status: 401 });
     }
 
-    const { name, words } = await request.json();
+    const { name, words, category } = await request.json();
 
-    // Add the word set for the logged-in user
-    const newSet = await UserSets.findOneAndUpdate(
-      { _id: session.user.id },
-      {
-        $push: { sets: { name, words } },
-      },
-      { new: true, upsert: true }
+    // Find the user by email
+    const user = await User.findOne({
+      _id: session.user.id,
+    });
+
+    if (!user) {
+      return new Response("User not found", { status: 404 });
+    }
+
+    // Find the category in the user's wordSets
+    const categoryIndex = user.wordSets.findIndex(
+      (set) => set.category === category
     );
 
-    console.log("Added new word set for user:", session.user.email);
+    // If the category exists, add the new set to it
+    user.wordSets[categoryIndex].sets.push({ name, words });
 
-    return new Response(JSON.stringify(newSet), { status: 201 });
+    // Save the updated user document
+    await user.save();
+
+    console.log(
+      "Added new word set for user:",
+      process.env.NEXT_PUBLIC_ADMIN_EMAIL
+    );
+
+    return new Response(JSON.stringify(user.wordSets), { status: 201 });
   } catch (error) {
-    console.error("Error in POST /api/zestawy/wlasne:", error);
+    console.error("Error in POST /api/zestawy:", error);
     return new Response("Something went wrong", { status: 500 });
   }
 };

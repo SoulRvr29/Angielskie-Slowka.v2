@@ -1,5 +1,7 @@
 import connectDB from "@/config/database";
 import User from "@/models/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
 
 // PUT /api/zestawy/[id]/edycja
 export const PUT = async (request, { params }) => {
@@ -8,15 +10,19 @@ export const PUT = async (request, { params }) => {
 
     console.log("Connected to MongoDB");
 
+    // Get the session to identify the logged-in user
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user || !session.user.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
     const body = await request.json();
     const id = params.id;
     const { updateData } = body;
 
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
-
     const updatedUser = await User.updateOne(
       {
-        email: adminEmail,
+        _id: session.user.id,
         "wordSets.sets._id": id,
       },
       {

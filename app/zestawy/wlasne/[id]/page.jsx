@@ -3,23 +3,12 @@ import { useRouter, useParams } from "next/navigation";
 import { use, useEffect, useState } from "react";
 import Link from "next/link";
 import SubNav from "@/app/components/SubNav";
-import { useSession } from "next-auth/react";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
   const router = useRouter();
   const { id } = useParams();
   const [size, setSize] = useState(0);
-  const { data: session } = useSession();
-  const [admin, setAdmin] = useState(false);
-
-  useEffect(() => {
-    if (session) {
-      if (session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-        setAdmin(true);
-      }
-    }
-  }, [session]);
 
   useEffect(() => {
     if (id === "zapisane") {
@@ -34,9 +23,11 @@ const Set = () => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne/${id}`
         );
-        console.log(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`);
+        console.log(
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne/${id}`
+        );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -65,7 +56,7 @@ const Set = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`,
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/wlasne/${id}`,
         {
           method: "DELETE",
         }
@@ -73,7 +64,7 @@ const Set = () => {
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
-      router.push("/zestawy");
+      router.push("/zestawy/wlasne");
     } catch (error) {
       console.error(error);
     }
@@ -84,7 +75,7 @@ const Set = () => {
         <SubNav
           title={wordsSet.category}
           text="wróć do listy"
-          link="/zestawy"
+          link="/zestawy/wlasne"
         />
       </div>
 
@@ -133,7 +124,7 @@ const Set = () => {
           ))}
         </div>
         <Link
-          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki?size=${size}`}
+          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/wlasne/${id}/fiszki?size=${size}`}
           className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-primary"
         >
           Uruchom zestaw
@@ -141,19 +132,17 @@ const Set = () => {
       </div>
       {id !== "zapisane" && (
         <>
-          {admin && (
-            <div className="flex gap-4">
-              <Link
-                href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
-                className="btn btn-info"
-              >
-                Edytuj
-              </Link>
-              <button onClick={deleteHandler} className="btn btn-error">
-                Usuń
-              </button>
-            </div>
-          )}
+          <div className="flex gap-4">
+            <Link
+              href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/wlasne/${id}/edycja`}
+              className="btn btn-info"
+            >
+              Edytuj
+            </Link>
+            <button onClick={deleteHandler} className="btn btn-error">
+              Usuń
+            </button>
+          </div>
         </>
       )}
     </div>

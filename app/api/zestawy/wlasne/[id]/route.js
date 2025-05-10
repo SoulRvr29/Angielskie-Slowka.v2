@@ -1,17 +1,24 @@
 import connectDB from "@/config/database";
 import User from "@/models/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/utils/authOptions";
 
-// GET /api/zestawy/:id
+// GET /api/zestawy/wlasne/:id
 export const GET = async (request, { params }) => {
   try {
     await connectDB();
 
     console.log("Connected to MongoDB");
 
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+    // Get the session to identify the logged-in user
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user || !session.user.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     const user = await User.findOne(
-      { email: adminEmail, "wordSets.sets._id": params.id },
+      { _id: session.user.id, "wordSets.sets._id": params.id },
       {
         "wordSets.sets.$": 1, // Fetch only the matching set
         "wordSets.category": 1, // Include the parent category field
@@ -49,13 +56,17 @@ export const GET = async (request, { params }) => {
 export const DELETE = async (request, { params }) => {
   try {
     await connectDB();
-
     console.log("Connected to MongoDB");
 
-    const adminEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+    // Get the session to identify the logged-in user
+    const session = await getServerSession(authOptions);
+
+    if (!session || !session.user || !session.user.id) {
+      return new Response("Unauthorized", { status: 401 });
+    }
 
     const updatedUser = await User.updateOne(
-      { email: adminEmail, "wordSets.sets._id": params.id },
+      { _id: session.user.id, "wordSets.sets._id": params.id },
       { $pull: { "wordSets.$[].sets": { _id: params.id } } }
     );
 
