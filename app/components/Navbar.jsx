@@ -141,7 +141,7 @@ const Navbar = () => {
                     <div className=" py-2">
                       <button
                         onClick={() => {
-                          signOut();
+                          signOut({ callbackUrl: "/" });
                         }}
                       >
                         Wyloguj
@@ -196,7 +196,7 @@ const Navbar = () => {
                 lista słówek
               </Link>
               {/* Ustawienia Button */}
-              <Link
+              {/* <Link
                 className={`${
                   pathname === "/ustawienia" && "btn-success"
                 } border-b-2  border-b-info py-2 flex items-center justify-center gap-2 `}
@@ -204,7 +204,7 @@ const Navbar = () => {
               >
                 <FaGear />
                 ustawienia
-              </Link>
+              </Link> */}
               {/* O stronie Button */}
               <Link
                 href="/o_stronie"
@@ -235,7 +235,11 @@ const Navbar = () => {
             <>
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
-                className="btn btn-xs btn-soft pl-0 ml-2"
+                className={`btn btn-xs btn-soft pl-0 ml-2 ${
+                  (pathname === "/prywatne_zestawy" ||
+                    pathname === "/profil") &&
+                  "btn-success"
+                }`}
                 popoverTarget="popover-1"
                 style={{ anchorName: "--anchor-1" }}
               >
@@ -313,12 +317,12 @@ const Navbar = () => {
         </div>
         <div className="flex gap-3 items-center">
           <ThemeChange />
-          <Link
+          {/* <Link
             href="/ustawienia"
             className={`${pathname === "/ustawienia" && "text-success"} `}
           >
             <FaGear />
-          </Link>
+          </Link> */}
           <Link href="/o_stronie">
             <FaInfoCircle
               className={`${pathname === "/o_stronie" ? "fill-success" : ""}`}

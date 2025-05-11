@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LoginBtn from "./components/LoginBtn";
 
 const HomePage = () => {
   return (
@@ -10,9 +11,10 @@ const HomePage = () => {
       >
         Rozpocznij
       </Link>
-      <Link href="/profil" className="btn btn-xl">
+      <LoginBtn />
+      {/* <Link href="/profil" className="btn btn-xl">
         Mój profil
-      </Link>
+      </Link> */}
     </div>
   );
 };
