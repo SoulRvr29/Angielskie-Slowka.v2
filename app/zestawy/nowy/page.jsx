@@ -26,7 +26,7 @@ const NowyZestawPage = () => {
     const createWordSet = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`,
           {
             method: "POST",
             headers: {
@@ -45,7 +45,7 @@ const NowyZestawPage = () => {
         }
         const data = await res.json();
         console.log("Word set created:", data);
-        router.push("/publiczne_zestawy");
+        router.push("/zestawy");
       } catch (error) {
         console.error(error);
       }
@@ -103,7 +103,7 @@ const NowyZestawPage = () => {
       <SubNav
         title={`Kategoria: ${category}`}
         text="wróć do zestawów"
-        link="/publiczne_zestawy"
+        link="/zestawy"
       />
 
       <div>

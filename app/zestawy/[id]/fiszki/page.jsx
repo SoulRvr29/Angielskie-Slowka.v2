@@ -37,11 +37,9 @@ const FiszkiPage = () => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
         );
-        console.log(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}`
-        );
+        console.log(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`);
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -170,7 +168,7 @@ const FiszkiPage = () => {
       <SubNav
         title={wordsSet.name}
         text="Wróć do zestawu"
-        link={`/publiczne_zestawy/${id}`}
+        link={`/zestawy/${id}`}
       />
       {/* Progress bar */}
       <div className="relative bg-base-300 w-full text-center px-2 max-sm:py-1">

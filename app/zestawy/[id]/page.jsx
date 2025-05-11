@@ -34,11 +34,9 @@ const Set = () => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
         );
-        console.log(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}`
-        );
+        console.log(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`);
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -67,7 +65,7 @@ const Set = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}`,
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`,
         {
           method: "DELETE",
         }
@@ -75,7 +73,7 @@ const Set = () => {
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
-      router.push("/publiczne_zestawy");
+      router.push("/zestawy");
     } catch (error) {
       console.error(error);
     }
@@ -86,7 +84,7 @@ const Set = () => {
         <SubNav
           title={wordsSet.category}
           text="wróć do listy"
-          link="/publiczne_zestawy"
+          link="/zestawy"
         />
       </div>
 
@@ -135,7 +133,7 @@ const Set = () => {
           ))}
         </div>
         <Link
-          href={`${process.env.NEXT_PUBLIC_DOMAIN}/publiczne_zestawy/${id}/fiszki?size=${size}`}
+          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki?size=${size}`}
           className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-primary"
         >
           Uruchom zestaw
@@ -146,7 +144,7 @@ const Set = () => {
           {admin && (
             <div className="flex gap-4">
               <Link
-                href={`${process.env.NEXT_PUBLIC_DOMAIN}/publiczne_zestawy/${id}/edycja`}
+                href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
                 className="btn btn-info"
               >
                 Edytuj

@@ -17,7 +17,7 @@ const EdycjaPage = () => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
         );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
@@ -57,7 +57,7 @@ const EdycjaPage = () => {
     const editWordSet = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/${id}/edycja`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}/edycja`,
           {
             method: "PUT",
             headers: {
@@ -77,7 +77,7 @@ const EdycjaPage = () => {
         }
         const data = await res.json();
         console.log("Word set created:", data);
-        router.push(`/publiczne_zestawy/${id}`);
+        router.push(`/zestawy/${id}`);
       } catch (error) {
         console.error(error);
       }
@@ -91,7 +91,7 @@ const EdycjaPage = () => {
       <SubNav
         title="Edycja zestawu"
         text="wróć do zestawu"
-        link={`/publiczne_zestawy/${id}`}
+        link={`/zestawy/${id}`}
       />
       <div>
         <form

@@ -132,7 +132,7 @@ const WordSetsPage = () => {
 
   return (
     <div className="flex flex-col gap-2">
-      <SubNav title="Lista słówek" />
+      <SubNav title="Moje słówka" />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {savedWordSets.length > 0 && (
           <Link

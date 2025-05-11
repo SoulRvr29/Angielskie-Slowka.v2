@@ -188,9 +188,9 @@ const Navbar = () => {
               {/* Lista słówek Button */}
               <Link
                 className={`${
-                  pathname === "/publiczne_zestawy" && "btn-success"
+                  pathname === "/zestawy" && "btn-success"
                 } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
-                href="/publiczne_zestawy"
+                href="/zestawy"
               >
                 <FaList />
                 lista słówek
@@ -224,9 +224,9 @@ const Navbar = () => {
           </Link>
           <Link
             className={`${
-              pathname === "/publiczne_zestawy" && "btn-success"
+              pathname === "/zestawy" && "btn-success"
             } btn btn-xs btn-soft`}
-            href="/publiczne_zestawy"
+            href="/zestawy"
           >
             lista słówek
           </Link>
@@ -276,7 +276,7 @@ const Navbar = () => {
                   <li>
                     <button
                       onClick={() => {
-                        signOut();
+                        signOut({ callbackUrl: "/" });
                       }}
                     >
                       Wyloguj

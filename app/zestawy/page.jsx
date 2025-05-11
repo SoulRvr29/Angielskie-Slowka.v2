@@ -25,16 +25,14 @@ const WordSetsPage = () => {
 
   const fetchWords = async () => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy`
-      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`);
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
       const data = await res.json();
 
-      setCategoriesList(data.wordSets.map((item) => item.category));
-      setWordSets(data.wordSets);
+      setCategoriesList(data.map((item) => item.category));
+      setWordSets(data);
     } catch (error) {
       console.error(error);
     }
@@ -55,7 +53,7 @@ const WordSetsPage = () => {
     const createCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/kategoria`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/kategoria`,
           {
             method: "POST",
             headers: {
@@ -85,7 +83,7 @@ const WordSetsPage = () => {
     const deleteCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/kategoria`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/kategoria`,
           {
             method: "DELETE",
             headers: {
@@ -115,7 +113,7 @@ const WordSetsPage = () => {
     const editCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/publiczne_zestawy/kategoria`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/kategoria`,
           {
             method: "PUT",
             headers: {
@@ -148,7 +146,7 @@ const WordSetsPage = () => {
         {savedWordSets.length > 0 && (
           <Link
             className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-primary bg-primary/10"
-            href={`/publiczne_zestawy/zapisane`}
+            href={`/zestawy/zapisane`}
           >
             Zapisane słówka
           </Link>

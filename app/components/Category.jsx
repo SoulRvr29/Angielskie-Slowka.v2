@@ -26,7 +26,6 @@ const Category = ({
   const [newCategoryName, setNewCategoryName] = useState(category);
   const [isDeleting, setIsDeleting] = useState(false);
   const pathname = usePathname();
-  console.log(pathname);
 
   useEffect(() => {
     setIsEdit(false);
