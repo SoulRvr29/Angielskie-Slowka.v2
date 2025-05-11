@@ -42,11 +42,11 @@ const ProfilPage = () => {
   return (
     <div className="flex flex-col gap-4">
       {profileData ? (
-        <div className="flex flex-col items-center gap-2 p-4 bg-base-300 w-fit mx-auto rounded-lg shadow-lg justify-center mt-8 max-sm:w-[90vw] border-2 border-info wrap-anywhere">
+        <div className="flex flex-col items-center min-w-sm max-sm:min-w-auto gap-2 p-4 bg-info/10 w-fit mx-auto rounded-lg shadow-lg justify-center mt-8 max-sm:w-[90vw] border-2 border-info wrap-anywhere">
           {image && (
             <Image src={image} width={100} height={100} alt="profile image" />
           )}
-          <div>
+          <div className="w-full mt-2 ">
             <p>
               <span className="font-semibold text-info">Login:</span> {username}
             </p>
@@ -54,24 +54,35 @@ const ProfilPage = () => {
               <span className="font-semibold text-info ">Mail:</span> {email}
             </p>
             <p>
-              <span className="font-semibold text-info">Rejestracja:</span>{" "}
+              <span className="font-semibold text-info">Data rejestracji:</span>{" "}
               {formatDate(createdAt)}
             </p>
+            <hr className="border-dotted border-info my-2" />
             <p>
-              <span className="font-semibold text-info">Kategorie:</span>{" "}
+              <span className="font-semibold text-info">
+                Utworzone kategorie:
+              </span>{" "}
               {wordSets.length}
             </p>
             <p>
-              <span className="font-semibold text-info">Zestawy:</span>{" "}
+              <span className="font-semibold text-info">
+                Utworzone zestawy:
+              </span>{" "}
               {wordSets.reduce((acc, wordSet) => acc + wordSet.sets.length, 0)}
             </p>
             <p>
-              <span className="font-semibold text-info">Słówka:</span>{" "}
+              <span className="font-semibold text-info">Utworzone słówka:</span>{" "}
               {wordSets.reduce(
                 (acc, wordSet) =>
                   acc +
                   wordSet.sets.reduce((acc, set) => acc + set.words.length, 0),
                 0
+              )}
+            </p>
+            <p>
+              <span className="font-semibold text-info">Zapisane słówka:</span>{" "}
+              {JSON.parse(
+                localStorage.getItem("nieZnaneSlowka")[0].length || 0
               )}
             </p>
           </div>

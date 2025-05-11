@@ -95,7 +95,7 @@ const Navbar = () => {
       {isMobileMenuOpen && (
         <>
           <div
-            // onClick={() => setIsMobileMenuOpen(false)}
+            onClick={() => setIsMobileMenuOpen(false)}
             className="bg-black/50 backdrop-blur-xs fixed left-0 top-11 w-screen h-screen z-10"
           ></div>
           <div className="fixed top-11 left-0 w-screen z-10 font-semibold ">
@@ -121,7 +121,7 @@ const Navbar = () => {
 
                     {session.user.name}
                   </div>
-                  <div className="flex flex-col collapse-content bg-base-100 text-center">
+                  <div className="flex flex-col collapse-content bg-base-100 text-center ">
                     <div className=" py-2">
                       <Link
                         href="/profil"

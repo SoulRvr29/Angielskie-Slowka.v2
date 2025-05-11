@@ -1,5 +1,6 @@
 "use client";
 import { FaWindowClose } from "react-icons/fa";
+import { FaArrowRightArrowLeft } from "react-icons/fa6";
 
 const TableRow = ({ index, formData, setFormData, deleteRow }) => {
   const updateForm = (key, data) => {
@@ -7,6 +8,16 @@ const TableRow = ({ index, formData, setFormData, deleteRow }) => {
     updatedFormData[index] = {
       ...updatedFormData[index],
       [key]: data,
+    };
+    setFormData(updatedFormData);
+  };
+
+  const changeOrder = () => {
+    const updatedFormData = [...formData];
+    updatedFormData[index] = {
+      ...updatedFormData[index],
+      english: formData[index].polish,
+      polish: formData[index].english,
     };
     setFormData(updatedFormData);
   };
@@ -37,6 +48,14 @@ const TableRow = ({ index, formData, setFormData, deleteRow }) => {
             required
             id={"polish" + index}
             className="input"
+          />
+        </td>
+        <td className="p-0 pr-2 ">
+          <FaArrowRightArrowLeft
+            className="btn btn-square p-[2px] btn-xs "
+            onClick={() => {
+              changeOrder();
+            }}
           />
         </td>
         <td className="p-0 max-sm:pr-2 ">
