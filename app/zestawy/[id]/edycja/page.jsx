@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { FaArrowDown } from "react-icons/fa";
 import FormRow from "@/app/components/FormRow";
 import SubNav from "@/app/components/SubNav";
@@ -11,13 +11,16 @@ const EdycjaPage = () => {
   const [wordsSet, setWordsSet] = useState();
   const [formData, setFormData] = useState([]);
   const [name, setName] = useState("");
+  const searchParams = useSearchParams();
+  const root =
+    searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
   useEffect(() => {
     const fetchWords = async (id) => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
         );
         if (!res.ok) {
           throw new Error("Failed to fetch data");
@@ -57,7 +60,7 @@ const EdycjaPage = () => {
     const editWordSet = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}/edycja`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}/edycja`,
           {
             method: "PUT",
             headers: {

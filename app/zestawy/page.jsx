@@ -6,6 +6,7 @@ import SubNav from "../components/SubNav";
 import Loader from "../components/Loader";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useSearchParams } from "next/navigation";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
@@ -14,6 +15,9 @@ const WordSetsPage = () => {
   const [savedWordSets, setSavedWordSets] = useState();
   const [admin, setAdmin] = useState(false);
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const root =
+    searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
   useEffect(() => {
     if (session) {
@@ -25,14 +29,19 @@ const WordSetsPage = () => {
 
   const fetchWords = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`);
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}`);
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
       const data = await res.json();
 
-      setCategoriesList(data.map((item) => item.category));
-      setWordSets(data);
+      {
+        root === "zestawy"
+          ? (setCategoriesList(data.map((item) => item.category)),
+            setWordSets(data))
+          : (setCategoriesList(data.wordSets.map((item) => item.category)),
+            setWordSets(data.wordSets));
+      }
     } catch (error) {
       console.error(error);
     }
@@ -45,6 +54,18 @@ const WordSetsPage = () => {
     );
   }, []);
 
+  useEffect(() => {
+    fetchWords();
+    if (root !== "zestawy") {
+      setAdmin(true);
+    } else {
+      setAdmin(false);
+    }
+    if (session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      setAdmin(true);
+    }
+  }, [root]);
+
   if (!wordSets) {
     return <Loader message="Pobieranie zestawów" />;
   }
@@ -53,7 +74,7 @@ const WordSetsPage = () => {
     const createCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/kategoria`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/kategoria`,
           {
             method: "POST",
             headers: {
@@ -83,7 +104,7 @@ const WordSetsPage = () => {
     const deleteCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/kategoria`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/kategoria`,
           {
             method: "DELETE",
             headers: {
@@ -113,7 +134,7 @@ const WordSetsPage = () => {
     const editCategory = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/kategoria`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/kategoria`,
           {
             method: "PUT",
             headers: {
@@ -162,6 +183,7 @@ const WordSetsPage = () => {
               deleteCategoryHandler={deleteCategoryHandler}
               editCategoryHandler={editCategoryHandler}
               admin={admin}
+              type={searchParams.get("type")}
             />
           ))
         ) : (

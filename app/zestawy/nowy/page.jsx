@@ -12,6 +12,8 @@ const NowyZestawPage = () => {
   const router = useRouter();
   const [formData, setFormData] = useState([{ english: "", polish: "" }]);
   const [importField, setImportField] = useState(false);
+  const root =
+    searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
   const addNewRow = () => {
     setFormData([...formData, { english: "", polish: "" }]);
@@ -26,7 +28,7 @@ const NowyZestawPage = () => {
     const createWordSet = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`,
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}`,
           {
             method: "POST",
             headers: {

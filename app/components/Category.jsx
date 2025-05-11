@@ -20,6 +20,7 @@ const Category = ({
   deleteCategoryHandler,
   editCategoryHandler,
   admin,
+  type,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -156,7 +157,7 @@ const Category = ({
                 className="flex justify-between max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20"
               >
                 <Link
-                  href={`${pathname}/${item["_id"]}`}
+                  href={`${pathname}/${item["_id"]}?type=${type}`}
                   className="flex gap-2  justify-between w-full py-1"
                 >
                   {item.name}
@@ -175,7 +176,7 @@ const Category = ({
               className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2"
               href={{
                 pathname: `${pathname}/nowy`,
-                query: { category: category },
+                query: { category: category, type: type },
               }}
             >
               <FaPlusSquare title="dodaj zestaw" /> <p>Dodaj nowy zestaw</p>

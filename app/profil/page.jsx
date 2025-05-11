@@ -95,7 +95,7 @@ const ProfilPage = () => {
       <div className="flex flex-col items-center gap-4">
         <Link
           className="btn btn-info btn-lg "
-          href="/prywatne_zestawy"
+          href="/zestawy"
           onClick={() => setDropdownOpen(false)}
         >
           Moje słówka

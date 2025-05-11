@@ -1,5 +1,5 @@
 "use client";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import SubNav from "@/app/components/SubNav";
@@ -12,6 +12,9 @@ const Set = () => {
   const [size, setSize] = useState(0);
   const { data: session } = useSession();
   const [admin, setAdmin] = useState(false);
+  const searchParams = useSearchParams();
+  const root =
+    searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
   useEffect(() => {
     if (session) {
@@ -34,9 +37,8 @@ const Set = () => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
         );
-        console.log(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`);
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -50,6 +52,14 @@ const Set = () => {
 
     fetchWords(id);
   }, []);
+
+  useEffect(() => {
+    if (root !== "zestawy") {
+      setAdmin(true);
+    } else {
+      setAdmin(false);
+    }
+  }, [root]);
 
   if (!wordsSet) {
     return (
@@ -65,7 +75,7 @@ const Set = () => {
 
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`,
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`,
         {
           method: "DELETE",
         }
@@ -84,7 +94,10 @@ const Set = () => {
         <SubNav
           title={wordsSet.category}
           text="wróć do listy"
-          link="/zestawy"
+          link={{
+            pathname: "/zestawy",
+            query: { type: searchParams.get("type") },
+          }}
         />
       </div>
 
@@ -133,7 +146,9 @@ const Set = () => {
           ))}
         </div>
         <Link
-          href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/fiszki?size=${size}`}
+          href={`${
+            process.env.NEXT_PUBLIC_DOMAIN
+          }/zestawy/${id}/fiszki?type=${searchParams.get("type")}&size=${size}`}
           className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-primary"
         >
           Uruchom zestaw

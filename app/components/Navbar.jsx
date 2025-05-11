@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Image from "next/image";
@@ -25,6 +25,8 @@ const Navbar = () => {
   const [mobileTheme, setMobileTheme] = useState();
   const [providers, setProviders] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const type = searchParams.get("type");
 
   const pathname = usePathname();
 
@@ -132,7 +134,10 @@ const Navbar = () => {
                     </div>
                     <div className="border-y border-y-info py-2">
                       <Link
-                        href="/prywatne_zestawy"
+                        href={{
+                          pathname: "/zestawy",
+                          query: { type: "private" },
+                        }}
                         onClick={() => setIsMobileMenuOpen(false)}
                       >
                         Moje słówka
@@ -224,9 +229,9 @@ const Navbar = () => {
           </Link>
           <Link
             className={`${
-              pathname === "/zestawy" && "btn-success"
+              type === "public" && "btn-success"
             } btn btn-xs btn-soft`}
-            href="/zestawy"
+            href={{ pathname: "/zestawy", query: { type: "public" } }}
           >
             lista słówek
           </Link>
@@ -237,7 +242,8 @@ const Navbar = () => {
                 onClick={() => setDropdownOpen((prev) => !prev)}
                 className={`btn btn-xs btn-soft pl-0 ml-2 ${
                   (pathname === "/prywatne_zestawy" ||
-                    pathname === "/profil") &&
+                    pathname === "/profil" ||
+                    type === "private") &&
                   "btn-success"
                 }`}
                 popoverTarget="popover-1"
@@ -271,7 +277,10 @@ const Navbar = () => {
                   </li>
                   <li>
                     <Link
-                      href="/prywatne_zestawy"
+                      href={{
+                        pathname: "/zestawy",
+                        query: { type: "private" },
+                      }}
                       onClick={() => setDropdownOpen(false)}
                     >
                       Moje słówka

@@ -22,6 +22,8 @@ const FiszkiPage = () => {
   const [showResults, setShowResults] = useState(false);
   const [saved, setSaved] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
+  const root =
+    searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
   useEffect(() => {
     const fetchWords = async (id) => {
@@ -37,9 +39,9 @@ const FiszkiPage = () => {
       if (!id) return;
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`
+          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
         );
-        console.log(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy/${id}`);
+
         if (!res.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -168,7 +170,10 @@ const FiszkiPage = () => {
       <SubNav
         title={wordsSet.name}
         text="Wróć do zestawu"
-        link={`/zestawy/${id}`}
+        link={{
+          pathname: `/zestawy/${id}`,
+          query: { type: searchParams.get("type") },
+        }}
       />
       {/* Progress bar */}
       <div className="relative bg-base-300 w-full text-center px-2 max-sm:py-1">
