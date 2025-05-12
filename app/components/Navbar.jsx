@@ -47,7 +47,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="relative flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-20">
+    <nav className="flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-20 ">
       <Link href="/">
         <h1 className="absolute top-1 max-md:top-0 max-md:pb-2 max-md:relative text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold mt-1">
           Angielskie Słówka<span className="text-sm text-primary">.v2</span>
@@ -173,6 +173,16 @@ const Navbar = () => {
                     ))}
                 </>
               )}
+              {/* Lista słówek Button */}
+              <Link
+                className={`${
+                  pathname === "/zestawy" && "btn-success"
+                } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
+                href={{ pathname: "/zestawy", query: { type: "public" } }}
+              >
+                <FaList />
+                lista słówek
+              </Link>
               {/* Kolorystyka Button */}
               <div
                 onClick={(e) => {
@@ -190,16 +200,7 @@ const Navbar = () => {
                 <FaAdjust />
                 kolorystyka
               </div>
-              {/* Lista słówek Button */}
-              <Link
-                className={`${
-                  pathname === "/zestawy" && "btn-success"
-                } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
-                href="/zestawy"
-              >
-                <FaList />
-                lista słówek
-              </Link>
+
               {/* Ustawienia Button */}
               {/* <Link
                 className={`${

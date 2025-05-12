@@ -167,7 +167,10 @@ const WordSetsPage = () => {
         {savedWordSets.length > 0 && (
           <Link
             className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-primary bg-primary/10"
-            href={`/zestawy/zapisane`}
+            href={{
+              pathname: `/zestawy/zapisane`,
+              query: { type: searchParams.get("type") },
+            }}
           >
             Zapisane słówka
           </Link>

@@ -80,7 +80,7 @@ const EdycjaPage = () => {
         }
         const data = await res.json();
         console.log("Word set created:", data);
-        router.push(`/zestawy/${id}`);
+        router.push(`/zestawy/${id}?type=${searchParams.get("type")}`);
       } catch (error) {
         console.error(error);
       }

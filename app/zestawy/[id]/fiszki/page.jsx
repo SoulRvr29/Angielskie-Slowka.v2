@@ -33,7 +33,7 @@ const FiszkiPage = () => {
           words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
         };
         setWordsSet(savedWords);
-        setActualWords(savedWords.words);
+        setActualWords(randomize(savedWords.words).slice(0, size));
         return;
       }
       if (!id) return;

@@ -47,7 +47,7 @@ const NowyZestawPage = () => {
         }
         const data = await res.json();
         console.log("Word set created:", data);
-        router.push("/zestawy");
+        router.push(`/zestawy?type=${searchParams.get("type")}`);
       } catch (error) {
         console.error(error);
       }
@@ -105,7 +105,10 @@ const NowyZestawPage = () => {
       <SubNav
         title={`Kategoria: ${category}`}
         text="wróć do zestawów"
-        link="/zestawy"
+        link={{
+          pathname: "/zestawy",
+          query: { type: searchParams.get("type") },
+        }}
       />
 
       <div>

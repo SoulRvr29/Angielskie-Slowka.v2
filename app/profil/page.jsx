@@ -39,9 +39,17 @@ const ProfilPage = () => {
     return date.toLocaleDateString("pl-PL", options);
   };
 
+  if (!profileData) {
+    return (
+      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4">
-      {profileData ? (
+      {profileData && (
         <div className="flex flex-col items-center min-w-sm max-sm:min-w-auto gap-2 p-4 bg-info/10 w-fit mx-auto rounded-lg shadow-lg justify-center mt-8 max-sm:w-[90vw] border-2 border-info wrap-anywhere">
           {image && (
             <Image src={image} width={100} height={100} alt="profile image" />
@@ -87,15 +95,14 @@ const ProfilPage = () => {
             </p>
           </div>
         </div>
-      ) : (
-        <div className="flex flex-col items-center gap-2 p-4 bg-base-300 w-fit mx-auto rounded-lg shadow-lg justify-center mt-8 max-sm:w-[90vw]">
-          <p>Ładowanie...</p>
-        </div>
       )}
       <div className="flex flex-col items-center gap-4">
         <Link
           className="btn btn-info btn-lg "
-          href="/zestawy"
+          href={{
+            pathname: "/zestawy",
+            query: { type: "private" },
+          }}
           onClick={() => setDropdownOpen(false)}
         >
           Moje słówka

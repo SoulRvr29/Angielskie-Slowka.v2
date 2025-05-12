@@ -83,7 +83,7 @@ const Set = () => {
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
-      router.push("/zestawy");
+      router.push(`/zestawy?type=${searchParams.get("type")}`);
     } catch (error) {
       console.error(error);
     }
@@ -159,7 +159,10 @@ const Set = () => {
           {admin && (
             <div className="flex gap-4">
               <Link
-                href={`${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`}
+                href={{
+                  pathname: `${process.env.NEXT_PUBLIC_DOMAIN}/zestawy/${id}/edycja`,
+                  query: { type: searchParams.get("type") },
+                }}
                 className="btn btn-info"
               >
                 Edytuj
