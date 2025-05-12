@@ -12,7 +12,7 @@ const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
-  const [savedWordSets, setSavedWordSets] = useState();
+  const [savedWordSets, setSavedWordSets] = useState([]);
   const [admin, setAdmin] = useState(false);
   const { data: session } = useSession();
   const searchParams = useSearchParams();
@@ -24,6 +24,7 @@ const WordSetsPage = () => {
       if (session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         setAdmin(true);
       }
+      fetchWordsToLearn();
     }
   }, [session]);
 
@@ -47,11 +48,24 @@ const WordSetsPage = () => {
     }
   };
 
+  const fetchWordsToLearn = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${session.user.email}`
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+
+      setSavedWordSets(data.wordsToLearn);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
     fetchWords();
-    setSavedWordSets(
-      JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]")
-    );
   }, []);
 
   useEffect(() => {

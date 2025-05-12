@@ -21,18 +21,43 @@ const Set = () => {
       if (session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         setAdmin(true);
       }
+      // if (id === "zapisane") {
+      //   fetchWordsToLearn();
+      // }
     }
   }, [session]);
 
-  useEffect(() => {
-    if (id === "zapisane") {
+  const fetchWordsToLearn = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${session.user.email}`
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+
       setWordsSet({
         category: "Zapisane słówka",
-        words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
+        words: data.wordsToLearn,
       });
-      setSize(JSON.parse(localStorage.getItem("nieZnaneSlowka")).length);
+      setSize(data.wordsToLearn.length);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (id === "zapisane") {
+      fetchWordsToLearn();
+      // setWordsSet({
+      //   category: "Zapisane słówka",
+      //   words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
+      // });
+      // setSize(JSON.parse(localStorage.getItem("nieZnaneSlowka")).length);
       return;
     }
+
     const fetchWords = async (id) => {
       if (!id) return;
       try {

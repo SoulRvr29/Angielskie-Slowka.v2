@@ -36,6 +36,12 @@ const UserSchema = new Schema(
         ],
       },
     ],
+    wordsToLearn: [
+      {
+        english: { type: String, required: true },
+        polish: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,

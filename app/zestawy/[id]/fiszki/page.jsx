@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
 import "@/assets/styles/card.css";
 import { FaBackward } from "react-icons/fa";
+import { useSession } from "next-auth/react";
 
 const FiszkiPage = () => {
   const { id } = useParams();
@@ -22,43 +23,76 @@ const FiszkiPage = () => {
   const [showResults, setShowResults] = useState(false);
   const [saved, setSaved] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
+  const { data: session } = useSession();
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
   useEffect(() => {
-    const fetchWords = async (id) => {
-      if (id === "zapisane") {
-        const savedWords = {
-          category: "Zapisane słówka",
-          words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
-        };
-        setWordsSet(savedWords);
-        setActualWords(randomize(savedWords.words).slice(0, size));
-        return;
-      }
-      if (!id) return;
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await res.json();
-        setWordsSet(data);
-        setActualWords(
-          randomize(
-            data.words.map((item) => ({ ...item, known: false }))
-          ).slice(0, size)
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchWords(id);
+    if (id === "zapisane") {
+      fetchWordsToLearn();
+    } else fetchWords();
   }, []);
+
+  const fetchWords = async () => {
+    if (!id) return;
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      setWordsSet(data);
+      setActualWords(
+        randomize(data.words.map((item) => ({ ...item, known: false }))).slice(
+          0,
+          size
+        )
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchWordsToLearnOld = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      return data.wordsToLearn;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchWordsToLearn = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      const savedWords = {
+        category: "Zapisane słówka",
+        words: data.wordsToLearn,
+      };
+      // setWordsToLearnOld(savedWords.words);
+      setWordsSet(savedWords);
+      setActualWords(randomize(savedWords.words).slice(0, size));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const randomize = (arr) => {
     const indexes = arr.map((_, i) => i);
@@ -137,17 +171,43 @@ const FiszkiPage = () => {
     setSaved(false);
   };
 
-  const updateUnknown = (arr) => {
-    const newUnknown = arr.filter((item) => item.known === false);
-    const newKnown = arr.filter((item) => item.known === true);
-    const knownIds = new Set(newKnown.map((item) => item._id));
-    const oldSaved = JSON.parse(localStorage.getItem("nieZnaneSlowka") || "[]");
-    const newArr = [...oldSaved, ...newUnknown];
-    const filtered = newArr.filter((item) => !knownIds.has(item._id));
-    const unique = [
-      ...new Map(filtered.map((item) => [item["_id"], item])).values(),
-    ];
-    localStorage.setItem("nieZnaneSlowka", JSON.stringify(unique));
+  const updateUnknown = async (arr) => {
+    if (session) {
+      const newUnknown = arr.filter((item) => item.known === false);
+      const newKnown = arr.filter((item) => item.known === true);
+      const knownIds = new Set(newKnown.map((item) => item._id));
+      const oldSaved = await fetchWordsToLearnOld();
+      const newArr = [...oldSaved, ...newUnknown];
+      const filtered = newArr.filter((item) => !knownIds.has(item._id));
+      const unique = [
+        ...new Map(filtered.map((item) => [item["_id"], item])).values(),
+      ];
+      updateWordsToLearn(unique);
+    }
+  };
+
+  const updateWordsToLearn = async (data) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ wordsToLearn: data }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to update data");
+      }
+
+      const updatedData = await res.json();
+      console.log("Update successful:", updatedData);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const backwardHandler = () => {
@@ -330,59 +390,60 @@ const FiszkiPage = () => {
                 0
               ) > 0 && ( */}
               <>
-                <div className="flex items-center relative">
-                  <input
-                    className="absolute left-2 checkbox checkbox-sm max-sm:checkbox-lg"
-                    type="checkbox"
-                    defaultChecked={autoSave}
-                    onChange={(e) => {
-                      setAutoSave(e.target.checked);
-                      localStorage.setItem(
-                        "autoSave",
-                        JSON.stringify(e.target.checked)
-                      );
-                      if (e.target.checked) {
-                        updateUnknown(actualWords);
-                        setSaved(true);
-                      }
-                    }}
-                  />
-                  {autoSave ? (
-                    <div
-                      className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
-                        autoSave && "btn-success"
-                      }`}
-                    >
-                      Autozapis
-                    </div>
-                  ) : (
-                    <>
-                      {saved ? (
-                        <button
-                          className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
-                            saved && "btn-success"
-                          }`}
-                        >
-                          Zapisano
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => {
-                            updateUnknown(actualWords);
-                            setSaved(true);
-                          }}
-                          className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
-                            autoSave && "btn-success"
-                          }`}
-                        >
-                          Zapisz wynik
-                        </button>
-                      )}
-                    </>
-                  )}
-                </div>
+                {session && (
+                  <div className="flex items-center relative">
+                    <input
+                      className="absolute left-2 checkbox checkbox-sm max-sm:checkbox-lg"
+                      type="checkbox"
+                      defaultChecked={autoSave}
+                      onChange={(e) => {
+                        setAutoSave(e.target.checked);
+                        localStorage.setItem(
+                          "autoSave",
+                          JSON.stringify(e.target.checked)
+                        );
+                        if (e.target.checked) {
+                          updateUnknown(actualWords);
+                          setSaved(true);
+                        }
+                      }}
+                    />
+                    {autoSave ? (
+                      <div
+                        className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                          autoSave && "btn-success"
+                        }`}
+                      >
+                        Autozapis
+                      </div>
+                    ) : (
+                      <>
+                        {saved ? (
+                          <button
+                            className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                              saved && "btn-success"
+                            }`}
+                          >
+                            Zapisano
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              updateUnknown(actualWords);
+                              setSaved(true);
+                            }}
+                            className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                              autoSave && "btn-success"
+                            }`}
+                          >
+                            Zapisz wynik
+                          </button>
+                        )}
+                      </>
+                    )}
+                  </div>
+                )}
               </>
-              {/* )} */}
             </div>
           </div>
         )}

@@ -27,7 +27,8 @@ const ProfilPage = () => {
     fetchProfile();
   }, []);
 
-  const { email, username, image, createdAt, wordSets } = profileData || {};
+  const { email, username, image, createdAt, wordSets, wordsToLearn } =
+    profileData || {};
 
   const formatDate = (dateString) => {
     const options = {
@@ -88,10 +89,10 @@ const ProfilPage = () => {
               )}
             </p>
             <p>
-              <span className="font-semibold text-info">Zapisane słówka:</span>{" "}
-              {JSON.parse(
-                localStorage.getItem("nieZnaneSlowka")[0].length || 0
-              )}
+              <span className="font-semibold text-info">
+                Słówka do nauczenia:
+              </span>{" "}
+              {wordsToLearn.length}
             </p>
           </div>
         </div>
