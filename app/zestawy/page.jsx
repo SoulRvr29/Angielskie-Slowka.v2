@@ -186,7 +186,7 @@ const WordSetsPage = () => {
               query: { type: searchParams.get("type") },
             }}
           >
-            Zapisane słówka
+            Słówka do powtórki
           </Link>
         )}
         {wordSets.length > 0 ? (

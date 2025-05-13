@@ -38,7 +38,7 @@ const Set = () => {
       const data = await res.json();
 
       setWordsSet({
-        category: "Zapisane słówka",
+        category: "Słówka do powtórki",
         words: data.wordsToLearn,
       });
       setSize(data.wordsToLearn.length);

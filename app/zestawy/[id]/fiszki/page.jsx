@@ -71,6 +71,21 @@ const FiszkiPage = () => {
       console.error(error);
     }
   };
+  const fetchWordsKnownOld = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      return data.wordsKnown;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchWordsToLearn = async () => {
     try {
@@ -171,22 +186,59 @@ const FiszkiPage = () => {
     setSaved(false);
   };
 
-  const updateUnknown = async (arr) => {
+  const updateSavedWords = async (arr) => {
     if (session) {
-      const newUnknown = arr.filter((item) => item.known === false);
+      const newWordsToLearn = arr.filter((item) => item.known === false);
       const newKnown = arr.filter((item) => item.known === true);
       const knownIds = new Set(newKnown.map((item) => item._id));
-      const oldSaved = await fetchWordsToLearnOld();
-      const newArr = [...oldSaved, ...newUnknown];
-      const filtered = newArr.filter((item) => !knownIds.has(item._id));
-      const unique = [
-        ...new Map(filtered.map((item) => [item["_id"], item])).values(),
+      const unknownIds = new Set(newWordsToLearn.map((item) => item._id));
+      const oldWordsToLearn = await fetchWordsToLearnOld();
+      const oldKnown = await fetchWordsKnownOld();
+      const newArrOfWordsToLearn = [...oldWordsToLearn, ...newWordsToLearn];
+      const newArrOfKnown = [...oldKnown, ...newKnown];
+      const filteredWordsToLearn = newArrOfWordsToLearn.filter(
+        (item) => !knownIds.has(item._id)
+      );
+      const filteredKnown = newArrOfKnown.filter(
+        (item) => !unknownIds.has(item._id)
+      );
+      const uniqueWordsToLearn = [
+        ...new Map(
+          filteredWordsToLearn.map((item) => [item["_id"], item])
+        ).values(),
       ];
-      updateWordsToLearn(unique);
+      const uniqueKnown = [
+        ...new Map(filteredKnown.map((item) => [item["_id"], item])).values(),
+      ];
+      postWordsToLearn(uniqueWordsToLearn);
+      postWordsKnown(uniqueKnown);
     }
   };
 
-  const updateWordsToLearn = async (data) => {
+  const postWordsKnown = async (data) => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka/${id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ wordsKnown: data }),
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to update data");
+      }
+
+      const updatedData = await res.json();
+      console.log("Update successful:", updatedData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const postWordsToLearn = async (data) => {
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`,
@@ -336,7 +388,7 @@ const FiszkiPage = () => {
                   );
                   setShowResults(true);
                   if (JSON.parse(localStorage.getItem("autoSave"))) {
-                    updateUnknown(actualWords);
+                    updateSavedWords(actualWords);
                     setSaved(true);
                   }
                 }}
@@ -403,7 +455,7 @@ const FiszkiPage = () => {
                           JSON.stringify(e.target.checked)
                         );
                         if (e.target.checked) {
-                          updateUnknown(actualWords);
+                          updateSavedWords(actualWords);
                           setSaved(true);
                         }
                       }}
@@ -429,7 +481,7 @@ const FiszkiPage = () => {
                         ) : (
                           <button
                             onClick={() => {
-                              updateUnknown(actualWords);
+                              updateSavedWords(actualWords);
                               setSaved(true);
                             }}
                             className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${

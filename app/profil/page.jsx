@@ -27,8 +27,15 @@ const ProfilPage = () => {
     fetchProfile();
   }, []);
 
-  const { email, username, image, createdAt, wordSets, wordsToLearn } =
-    profileData || {};
+  const {
+    email,
+    username,
+    image,
+    createdAt,
+    wordSets,
+    wordsToLearn,
+    wordsKnown,
+  } = profileData || {};
 
   const formatDate = (dateString) => {
     const options = {
@@ -88,11 +95,16 @@ const ProfilPage = () => {
                 0
               )}
             </p>
+            <hr className="border-dotted border-info my-2" />
             <p>
               <span className="font-semibold text-info">
-                Słówka do nauczenia:
+                Słówka do powtórki:
               </span>{" "}
               {wordsToLearn.length}
+            </p>
+            <p>
+              <span className="font-semibold text-info">Słówka nauczone:</span>{" "}
+              {wordsKnown.length}
             </p>
           </div>
         </div>

@@ -42,6 +42,12 @@ const UserSchema = new Schema(
         polish: { type: String, required: true },
       },
     ],
+    wordsKnown: [
+      {
+        english: { type: String, required: true },
+        polish: { type: String, required: true },
+      },
+    ],
   },
   {
     timestamps: true,
