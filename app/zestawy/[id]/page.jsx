@@ -13,6 +13,7 @@ const Set = () => {
   const { data: session } = useSession();
   const [admin, setAdmin] = useState(false);
   const searchParams = useSearchParams();
+  // const [actualUnknown, setActualUnknown] = useState([]);
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
@@ -26,6 +27,40 @@ const Set = () => {
       // }
     }
   }, [session]);
+
+  const fetchWordsToLearnOld = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      // setActualUnknown(data.wordsToLearn);
+
+      return data.wordsToLearn;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchWordsKnownOld = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka/${id}`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      return data.wordsKnown;
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchWordsToLearn = async () => {
     try {
@@ -68,13 +103,27 @@ const Set = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        setWordsSet(data);
+        const actualUnknown = await fetchWordsToLearnOld();
+        const actualKnown = await fetchWordsKnownOld();
+        const wordsMapped = data.words.map((word) => {
+          const isKnown = actualKnown.some((known) => known._id === word._id);
+          const isUnknown = actualUnknown.some(
+            (unknown) => unknown._id === word._id
+          );
+          return isKnown
+            ? { ...word, known: true }
+            : isUnknown
+            ? { ...word, known: false }
+            : word;
+        });
+        setWordsSet({ ...data, words: wordsMapped });
         setSize(data.words.length);
       } catch (error) {
         console.error(error);
       }
     };
 
+    fetchWordsToLearnOld();
     fetchWords(id);
   }, []);
 
@@ -163,9 +212,20 @@ const Set = () => {
             />
           </div>
         </div>
-        <div className="px-4 py-2">
+        <div className="px-4 py-2 font-semibold">
           {wordsSet.words.map((item, index) => (
-            <div key={index}>
+            <div
+              key={index}
+              className={`${
+                id === "zapisane"
+                  ? "text-error"
+                  : item.known === false
+                  ? "text-error"
+                  : item.known === true
+                  ? "text-success"
+                  : ""
+              }`}
+            >
               <span>{item.english}</span> - <span>{item.polish}</span>
             </div>
           ))}
