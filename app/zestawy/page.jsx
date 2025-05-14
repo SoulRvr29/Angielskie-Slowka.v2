@@ -180,6 +180,9 @@ const WordSetsPage = () => {
 
   useEffect(() => {
     fetchWords();
+    if (session) {
+      mapKnownWords();
+    }
   }, []);
 
   useEffect(() => {
