@@ -30,6 +30,7 @@ const Category = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
+  console.log(sets, category);
 
   useEffect(() => {
     setIsEdit(false);
@@ -42,8 +43,10 @@ const Category = ({
   return (
     <div
       className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${
-        isOpen ? "border-secondary/50" : "border-primary/30"
-      }`}
+        sets.length > 0 &&
+        sets.every((set) => set.words.every((word) => word.known === true)) &&
+        "category-checked"
+      } ${isOpen ? "border-secondary/50" : "border-primary/30"}`}
     >
       <div
         onClick={() => {
@@ -88,17 +91,13 @@ const Category = ({
             </form>
           ) : (
             <>
-              {/* {sets.every(
-                (set) =>
-                  set.name === actualCategory &&
+              {sets.length > 0 &&
+                sets.every((set) =>
                   set.words.every((word) => word.known === true)
-              ) === true && <FaCheckSquare />} */}
+                ) && <FaCheckSquare className="checked" />}
               <h3 className="font-semibold cursor-pointer">{category}</h3>
             </>
           )}
-          {/* <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
-            ({sets.length})
-          </p> */}
         </div>
         <div className="flex gap-4">
           <div
@@ -156,7 +155,7 @@ const Category = ({
       </div>
       {isOpen && (
         <div className="flex flex-col flex-wrap">
-          <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50">
+          <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50 category-sub">
             <div>Nazwa zestawu:</div>
             <div>{session ? "Znane słówka:" : "Słówka:"}</div>
           </div>
@@ -209,7 +208,7 @@ const Category = ({
           )}
           {admin && (
             <Link
-              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2"
+              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2 add-new-set"
               href={{
                 pathname: `${pathname}/nowy`,
                 query: { category: category, type: type },
