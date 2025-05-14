@@ -30,7 +30,6 @@ const Category = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
-  console.log(sets, category);
 
   useEffect(() => {
     setIsEdit(false);

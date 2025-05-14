@@ -22,9 +22,6 @@ const Set = () => {
       if (session.user.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
         setAdmin(true);
       }
-      // if (id === "zapisane") {
-      //   fetchWordsToLearn();
-      // }
     }
   }, [session]);
 
@@ -138,6 +135,9 @@ const Set = () => {
     } else {
       setAdmin(false);
     }
+    if (session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      setAdmin(true);
+    }
   }, [root]);
 
   if (!wordsSet) {
@@ -167,6 +167,7 @@ const Set = () => {
       console.error(error);
     }
   };
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
       <div className="w-full">

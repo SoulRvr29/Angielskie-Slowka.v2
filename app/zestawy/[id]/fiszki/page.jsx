@@ -3,7 +3,7 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import SubNav from "@/app/components/SubNav";
 import "@/assets/styles/card.css";
-import { FaBackward } from "react-icons/fa";
+import { FaBackward, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 
 const FiszkiPage = () => {
@@ -32,6 +32,39 @@ const FiszkiPage = () => {
       fetchWordsToLearn();
     } else fetchWords();
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        if (!cardAnimation) {
+          cardRotateHandler();
+        }
+      }
+      if (e.code === "ArrowLeft") {
+        e.preventDefault();
+        if (cardRotated) {
+          wordCheckHandler(true);
+        }
+      }
+      if (e.code === "ArrowRight") {
+        e.preventDefault();
+        if (cardRotated) {
+          wordCheckHandler(false);
+        }
+      }
+      if (e.code === "Backspace") {
+        e.preventDefault();
+        backwardHandler();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [cardAnimation, cardRotated]);
 
   const fetchWords = async () => {
     if (!id) return;
@@ -277,6 +310,7 @@ const FiszkiPage = () => {
       setActualUnknown((prev) => [...prev.slice(0, -1)]);
     }
   };
+
   return (
     <div className="flex-grow ">
       <SubNav
@@ -353,8 +387,11 @@ const FiszkiPage = () => {
                       if (!cardAnimation) cardRotateHandler();
                       setCardRotated(true);
                     }}
-                    className="btn btn-info w-full"
+                    className="btn btn-info w-full relative group"
                   >
+                    <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px]">
+                      spacja
+                    </div>
                     Obróć kartę
                   </button>
                 </div>
@@ -364,16 +401,22 @@ const FiszkiPage = () => {
                     onClick={() => {
                       wordCheckHandler(true);
                     }}
-                    className="btn btn-success w-45 max-sm:w-[38vw]"
+                    className="btn btn-success w-45 max-sm:w-[38vw] group relative"
                   >
+                    <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black flex items-center">
+                      <FaArrowLeft className="border border-black rounded-sm p-[2px] size-5" />
+                    </div>
                     Znam
                   </button>
                   <button
                     onClick={() => {
                       wordCheckHandler(false);
                     }}
-                    className="btn btn-error w-45 max-sm:w-[38vw]"
+                    className="btn btn-error w-45 max-sm:w-[38vw] relative group "
                   >
+                    <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black flex items-center">
+                      <FaArrowRight className="border border-black rounded-sm p-[2px] size-5" />
+                    </div>
                     Nie znam
                   </button>
                 </div>
@@ -402,8 +445,11 @@ const FiszkiPage = () => {
             <button
               title="Cofnij"
               onClick={backwardHandler}
-              className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline my-6"
+              className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline my-6 relative group"
             >
+              <div className="absolute -bottom-8 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px] bg-[rgba(255,255,255,0.5)]">
+                backspace
+              </div>
               <FaBackward size={20} />
             </button>
           )}
