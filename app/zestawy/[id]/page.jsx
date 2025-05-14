@@ -103,27 +103,32 @@ const Set = () => {
           throw new Error("Failed to fetch data");
         }
         const data = await res.json();
-        const actualUnknown = await fetchWordsToLearnOld();
-        const actualKnown = await fetchWordsKnownOld();
-        const wordsMapped = data.words.map((word) => {
-          const isKnown = actualKnown.some((known) => known._id === word._id);
-          const isUnknown = actualUnknown.some(
-            (unknown) => unknown._id === word._id
-          );
-          return isKnown
-            ? { ...word, known: true }
-            : isUnknown
-            ? { ...word, known: false }
-            : word;
-        });
-        setWordsSet({ ...data, words: wordsMapped });
         setSize(data.words.length);
+        setWordsSet(data);
+        if (session) {
+          const actualUnknown = await fetchWordsToLearnOld();
+          const actualKnown = await fetchWordsKnownOld();
+          const wordsMapped = data.words.map((word) => {
+            const isKnown = actualKnown.some((known) => known._id === word._id);
+            const isUnknown = actualUnknown.some(
+              (unknown) => unknown._id === word._id
+            );
+            return isKnown
+              ? { ...word, known: true }
+              : isUnknown
+              ? { ...word, known: false }
+              : word;
+          });
+          setWordsSet({ ...data, words: wordsMapped });
+        }
       } catch (error) {
         console.error(error);
       }
     };
 
-    fetchWordsToLearnOld();
+    if (session) {
+      fetchWordsToLearnOld();
+    }
     fetchWords(id);
   }, []);
 
@@ -204,7 +209,7 @@ const Set = () => {
                   e.target.blur();
                 }
               }}
-              className="input input-xs text-base px-1 w-7"
+              className="input input-xs text-base px-1 w-7 "
               value={size}
               min={1}
               max={wordsSet.words.length}

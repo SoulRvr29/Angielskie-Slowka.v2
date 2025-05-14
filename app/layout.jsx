@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       <AuthProvider>
         <html lang="en" data-theme="dark" className="bg-base-200">
           <body className="relative max-w-6xl mx-auto flex flex-col bg-base-100">
-            <header className="sticky top-0 ">
+            <header className="sticky top-0 z-20">
               <Navbar />
             </header>
             <main className="flex-grow flex flex-col px-4 py-2 max-sm:px-0">
