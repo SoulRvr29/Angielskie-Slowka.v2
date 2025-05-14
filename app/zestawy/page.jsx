@@ -36,13 +36,116 @@ const WordSetsPage = () => {
       }
       const data = await res.json();
 
-      {
-        root === "zestawy"
-          ? (setCategoriesList(data.map((item) => item.category)),
-            setWordSets(data))
-          : (setCategoriesList(data.wordSets.map((item) => item.category)),
-            setWordSets(data.wordSets));
+      if (session) {
+        const wordsToLearn = await fetchWordsToLearnOld();
+        const wordsKnown = await fetchWordsKnownOld();
+        if (searchParams.get("type") === "public") {
+          const mappedData = data.map((item) => {
+            const updatedSets = item.sets.map((set) => {
+              const updatedWords = set.words.map((word) => {
+                if (
+                  wordsKnown.some((wordToLearn) => wordToLearn._id === word._id)
+                ) {
+                  return { ...word, known: true };
+                } else if (
+                  wordsToLearn.some(
+                    (wordToLearn) => wordToLearn._id === word._id
+                  )
+                ) {
+                  return { ...word, known: false };
+                }
+                return word;
+              });
+              return { ...set, words: updatedWords };
+            });
+            return { ...item, sets: updatedSets };
+          });
+
+          if (Array.isArray(mappedData)) {
+            setCategoriesList(mappedData.map((item) => item.category));
+            setWordSets(mappedData);
+          } else if (mappedData.wordSets) {
+            setCategoriesList(mappedData.wordSets.map((item) => item.category));
+            setWordSets(mappedData.wordSets);
+          }
+        } else {
+          const mappedData = {
+            ...data,
+            wordSets: data.wordSets.map((item) => {
+              const updatedSets = item.sets.map((set) => {
+                const updatedWords = set.words.map((word) => {
+                  if (
+                    wordsKnown.some(
+                      (wordToLearn) => wordToLearn._id === word._id
+                    )
+                  ) {
+                    return { ...word, known: true };
+                  } else if (
+                    wordsToLearn.some(
+                      (wordToLearn) => wordToLearn._id === word._id
+                    )
+                  ) {
+                    return { ...word, known: false };
+                  }
+                  return word;
+                });
+                return { ...set, words: updatedWords };
+              });
+              return { ...item, sets: updatedSets };
+            }),
+          };
+
+          if (Array.isArray(mappedData)) {
+            setCategoriesList(mappedData.map((item) => item.category));
+            setWordSets(mappedData);
+          } else if (mappedData.wordSets) {
+            setCategoriesList(mappedData.wordSets.map((item) => item.category));
+            setWordSets(mappedData.wordSets);
+          }
+        }
+      } else {
+        if (Array.isArray(data)) {
+          setCategoriesList(data.map((item) => item.category));
+          setWordSets(data);
+        } else if (data.wordSets) {
+          setCategoriesList(data.wordSets.map((item) => item.category));
+          setWordSets(data.wordSets);
+        }
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchWordsToLearnOld = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      // setActualUnknown(data.wordsToLearn);
+
+      return data.wordsToLearn;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const fetchWordsKnownOld = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka`
+      );
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      return data.wordsKnown;
     } catch (error) {
       console.error(error);
     }
@@ -51,7 +154,7 @@ const WordSetsPage = () => {
   const fetchWordsToLearn = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${session.user.email}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`
       );
       if (!res.ok) {
         throw new Error("Failed to fetch data");

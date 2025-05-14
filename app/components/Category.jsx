@@ -7,10 +7,12 @@ import {
   FaTrashAlt,
   FaEdit,
   FaCheck,
+  FaCheckSquare,
 } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 const Category = ({
   category,
@@ -27,6 +29,7 @@ const Category = ({
   const [newCategoryName, setNewCategoryName] = useState(category);
   const [isDeleting, setIsDeleting] = useState(false);
   const pathname = usePathname();
+  const { data: session } = useSession();
 
   useEffect(() => {
     setIsEdit(false);
@@ -84,7 +87,14 @@ const Category = ({
               </button>
             </form>
           ) : (
-            <h3 className="font-semibold cursor-pointer">{category}</h3>
+            <>
+              {/* {sets.every(
+                (set) =>
+                  set.name === actualCategory &&
+                  set.words.every((word) => word.known === true)
+              ) === true && <FaCheckSquare />} */}
+              <h3 className="font-semibold cursor-pointer">{category}</h3>
+            </>
           )}
           {/* <p className=" border-base-content font-semibold rounded-full size-5  flex justify-center items-center">
             ({sets.length})
@@ -100,7 +110,7 @@ const Category = ({
           >
             {!isOpen ? (
               <FaCaretSquareDown
-                className="hover:scale-110 transition-transform"
+                className="hover:scale-110 transition-transform "
                 title="rozwiń"
               />
             ) : (
@@ -148,14 +158,23 @@ const Category = ({
         <div className="flex flex-col flex-wrap">
           <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50">
             <div>Nazwa zestawu:</div>
-            <div>Ilość słówek:</div>
+            <div>{session ? "Znane słówka:" : "Słówka:"}</div>
           </div>
           {sets.length > 0 ? (
             sets.map((item) => (
               <div
                 key={item.name}
-                className="flex justify-between max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20"
+                className="flex justify-between items-center max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20 set-line"
               >
+                {item.words.reduce(
+                  (sum, word) => (word.known === true ? sum + 1 : sum),
+                  0
+                ) === item.words.length && (
+                  <FaCheckSquare
+                    className="mr-2 text-success checked"
+                    size={20}
+                  />
+                )}
                 <Link
                   href={`${pathname}/${item["_id"]}?type=${type}`}
                   className="flex gap-2  justify-between w-full py-1"
@@ -163,7 +182,24 @@ const Category = ({
                   {item.name}
                 </Link>
 
-                <p className="flex items-center">{item.words.length}</p>
+                <div className="flex items-center gap-1">
+                  {session && (
+                    <>
+                      <div>
+                        {
+                          (item.words.length,
+                          item.words.reduce(
+                            (sum, word) =>
+                              word.known === true ? sum + 1 : sum,
+                            0
+                          ))
+                        }
+                      </div>
+                      /
+                    </>
+                  )}
+                  <div>{item.words.length}</div>
+                </div>
               </div>
             ))
           ) : (

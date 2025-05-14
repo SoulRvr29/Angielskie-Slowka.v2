@@ -31,7 +31,7 @@ const Set = () => {
   const fetchWordsToLearnOld = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`
       );
 
       if (!res.ok) {
@@ -49,7 +49,7 @@ const Set = () => {
   const fetchWordsKnownOld = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka/${id}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka`
       );
 
       if (!res.ok) {
@@ -65,7 +65,7 @@ const Set = () => {
   const fetchWordsToLearn = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${session.user.email}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`
       );
       if (!res.ok) {
         throw new Error("Failed to fetch data");

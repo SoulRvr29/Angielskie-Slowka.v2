@@ -59,7 +59,7 @@ const FiszkiPage = () => {
   const fetchWordsToLearnOld = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`
       );
 
       if (!res.ok) {
@@ -74,7 +74,7 @@ const FiszkiPage = () => {
   const fetchWordsKnownOld = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka/${id}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka`
       );
 
       if (!res.ok) {
@@ -90,7 +90,7 @@ const FiszkiPage = () => {
   const fetchWordsToLearn = async () => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`
       );
 
       if (!res.ok) {
@@ -218,7 +218,7 @@ const FiszkiPage = () => {
   const postWordsKnown = async (data) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka/${id}`,
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/znane_slowka`,
         {
           method: "PUT",
           headers: {
@@ -241,7 +241,7 @@ const FiszkiPage = () => {
   const postWordsToLearn = async (data) => {
     try {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia/${id}`,
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/do_nauczenia`,
         {
           method: "PUT",
           headers: {
