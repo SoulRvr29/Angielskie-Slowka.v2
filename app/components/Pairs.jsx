@@ -7,6 +7,8 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
   const [secondWord, setSecondWord] = useState("");
   const [leftWords, setLeftWords] = useState([]);
   const [rightWords, setRightWords] = useState([]);
+  const [actualSelected, setActualSelected] = useState("");
+  const [actualSide, setActualSide] = useState("");
 
   useEffect(() => {
     setLeftWords(
@@ -35,34 +37,95 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
 
   const wordsCheckHandler = () => {
     if ((firstWord !== "") & (secondWord === "")) {
-      console.log(firstWord);
+      setActualSelected(firstWord);
     }
     if ((firstWord === "") & (secondWord !== "")) {
-      console.log(secondWord);
+      setActualSelected(secondWord);
     }
 
     if ((firstWord !== "") & (secondWord !== "")) {
       if (firstWord._id === secondWord._id) {
-        setLeftWords([
-          ...leftWords.map((item) => {
-            if (item._id === firstWord._id) {
-              return { ...item, color: "base" };
-            } else return item;
-          }),
-        ]);
-        setRightWords([
-          ...rightWords.map((item) => {
-            if (item._id === secondWord._id) {
-              return { ...item, color: "base" };
-            } else return item;
-          }),
-        ]);
-        setProgress((prev) => prev + 100 / size);
+        pairCorrect();
+      } else {
+        pairWrong();
       }
       setFirstWord("");
       setSecondWord("");
+      setActualSide("");
     }
-    // console.log(leftWords, rightWords);
+  };
+
+  const pairCorrect = () => {
+    console.log("correct");
+    setLeftWords([
+      ...leftWords.map((item) => {
+        if (item._id === firstWord._id) {
+          return { ...item, correct: true };
+        } else return item;
+      }),
+    ]);
+
+    setRightWords([
+      ...rightWords.map((item) => {
+        if (item._id === secondWord._id) {
+          return { ...item, correct: true };
+        } else return item;
+      }),
+    ]);
+
+    setProgress((prev) => prev + 100 / size);
+    setTimeout(() => {
+      setLeftWords([
+        ...leftWords.map((item) => {
+          if (item._id === firstWord._id) {
+            return { ...item, correct: false, color: "base" };
+          } else return item;
+        }),
+      ]);
+      setRightWords([
+        ...rightWords.map((item) => {
+          if (item._id === secondWord._id) {
+            return { ...item, correct: false, color: "base" };
+          } else return item;
+        }),
+      ]);
+    }, 500);
+  };
+  const pairWrong = () => {
+    console.log("wrong");
+    setLeftWords([
+      ...leftWords.map((item) => {
+        if (item._id === firstWord._id) {
+          return { ...item, wrong: true };
+        } else return item;
+      }),
+    ]);
+
+    setRightWords([
+      ...rightWords.map((item) => {
+        if (item._id === secondWord._id) {
+          return { ...item, wrong: true };
+        } else return item;
+      }),
+    ]);
+
+    setProgress((prev) => prev + 100 / size);
+    setTimeout(() => {
+      setLeftWords([
+        ...leftWords.map((item) => {
+          if (item._id === firstWord._id) {
+            return { ...item, wrong: false };
+          } else return item;
+        }),
+      ]);
+      setRightWords([
+        ...rightWords.map((item) => {
+          if (item._id === secondWord._id) {
+            return { ...item, wrong: false };
+          } else return item;
+        }),
+      ]);
+    }, 500);
   };
 
   return (
@@ -73,9 +136,18 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
             key={word._id}
             onClick={() => {
               setFirstWord(word);
+              setActualSide("left");
             }}
           >
-            <PairBlock word={word.english} color={word.color} />
+            <PairBlock
+              data={word}
+              word={word.english}
+              color={word.color}
+              correct={word.correct}
+              wrong={word.wrong}
+              actualSelected={actualSelected}
+              actualSide={actualSide}
+            />
           </button>
         ))}
       </div>
@@ -85,9 +157,17 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
             key={word._id}
             onClick={() => {
               setSecondWord(word);
+              setActualSide("right");
             }}
           >
-            <PairBlock word={word.polish} color={word.color} />
+            <PairBlock
+              data={word}
+              word={word.polish}
+              color={word.color}
+              correct={word.correct}
+              actualSelected={actualSelected}
+              actualSide={actualSide}
+            />
           </button>
         ))}
       </div>

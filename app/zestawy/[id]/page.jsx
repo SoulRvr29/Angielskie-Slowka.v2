@@ -240,7 +240,7 @@ const Set = () => {
           <Link
             href={`${
               process.env.NEXT_PUBLIC_DOMAIN
-            }/zestawy/${id}/fiszki?type=${searchParams.get(
+            }/zestawy/${id}/gra?type=${searchParams.get(
               "type"
             )}&size=${size}&game=fiszki`}
             className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-r-1 border-primary w-full"
@@ -250,7 +250,7 @@ const Set = () => {
           <Link
             href={`${
               process.env.NEXT_PUBLIC_DOMAIN
-            }/zestawy/${id}/fiszki?type=${searchParams.get(
+            }/zestawy/${id}/gra?type=${searchParams.get(
               "type"
             )}&size=${size}&game=pary`}
             className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-l-1 border-primary w-full"

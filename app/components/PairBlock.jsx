@@ -1,19 +1,33 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const PairBlock = ({ word, color }) => {
-  const [isActive, setIsActive] = useState(false);
+const PairBlock = ({
+  data,
+  word,
+  color,
+  correct,
+  wrong,
+  actualSelected,
+  actualSide,
+}) => {
   return (
     <div
-      onClick={() => setIsActive(true)}
       className={
         "border-2 text-xl max-sm:text-base p-2 px-3 min-w-50 max-sm:min-w-auto max-sm:w-full rounded-lg transition-colors " +
-        (color === "primary"
-          ? " border-primary/50 bg-primary/20 hover:border-primary/80 hover:bg-primary/40"
+        (wrong === true
+          ? " border-error/50 bg-error/20"
+          : correct === true
+          ? " border-success/50 bg-success/20"
+          : color === "primary"
+          ? " border-primary/50 bg-primary/20"
           : color === "secondary"
-          ? " border-secondary/50 bg-secondary/20 hover:border-secondary/80 hover:bg-secondary/40"
-          : " border-base-300 bg-base-300/50 opacity-50") +
-        (isActive && " brightness-150")
+          ? " border-secondary/50 bg-secondary/20"
+          : color === "base"
+          ? " border-base-300 bg-base-300/50 opacity-50"
+          : "") +
+        (data._id === actualSelected._id && data.side === actualSide
+          ? " border-white"
+          : "")
       }
     >
       {word}

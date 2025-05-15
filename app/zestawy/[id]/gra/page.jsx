@@ -8,7 +8,7 @@ import ProgressBar from "@/app/components/ProgressBar";
 import FlashCards from "@/app/components/FlashCards";
 import Pairs from "@/app/components/Pairs";
 
-const FiszkiPage = () => {
+const GraPage = () => {
   const { id } = useParams();
   const searchParams = useSearchParams();
   const [wordsSet, setWordsSet] = useState(null);
@@ -350,4 +350,4 @@ const FiszkiPage = () => {
     </div>
   );
 };
-export default FiszkiPage;
+export default GraPage;
