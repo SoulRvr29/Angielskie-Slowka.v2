@@ -4,13 +4,13 @@ import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import SubNav from "@/app/components/SubNav";
-import FlashCards from "@/app/components/FlashCards";
 import ProgressBar from "@/app/components/ProgressBar";
+import FlashCards from "@/app/components/FlashCards";
+import Pairs from "@/app/components/Pairs";
 
 const FiszkiPage = () => {
   const { id } = useParams();
   const searchParams = useSearchParams();
-  const size = searchParams.get("size");
   const [wordsSet, setWordsSet] = useState(null);
   const [actualWords, setActualWords] = useState([]);
   const [wordIndex, setWordIndex] = useState(0);
@@ -20,6 +20,8 @@ const FiszkiPage = () => {
   const [saved, setSaved] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
   const { data: session } = useSession();
+  const gameType = searchParams.get("game");
+  const size = searchParams.get("size");
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
@@ -227,23 +229,36 @@ const FiszkiPage = () => {
           query: { type: searchParams.get("type") },
         }}
       />
+
       <ProgressBar progress={progress} />
       {!showResults && (
-        <FlashCards
-          actualWords={actualWords}
-          setActualWords={setActualWords}
-          wordIndex={wordIndex}
-          setWordIndex={setWordIndex}
-          progress={progress}
-          setProgress={setProgress}
-          setShowResults={setShowResults}
-          setSaved={setSaved}
-          setAutoSave={setAutoSave}
-          size={size}
-          randomize={randomize}
-          gameOver={gameOver}
-          setGameOver={setGameOver}
-        />
+        <>
+          {gameType === "fiszki" ? (
+            <FlashCards
+              actualWords={actualWords}
+              progress={progress}
+              size={size}
+              randomize={randomize}
+              wordIndex={wordIndex}
+              setActualWords={setActualWords}
+              gameOver={gameOver}
+              setWordIndex={setWordIndex}
+              setProgress={setProgress}
+              setShowResults={setShowResults}
+              setSaved={setSaved}
+              setAutoSave={setAutoSave}
+              setGameOver={setGameOver}
+            />
+          ) : (
+            <Pairs
+              actualWords={actualWords}
+              progress={progress}
+              setProgress={setProgress}
+              size={size}
+              randomize={randomize}
+            />
+          )}
+        </>
       )}
       <div className="flex flex-col gap-4 items-center">
         {/* Final results */}

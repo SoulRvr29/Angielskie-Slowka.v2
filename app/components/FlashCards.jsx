@@ -9,17 +9,17 @@ import { useEffect, useState } from "react";
 
 const FlashCard = ({
   actualWords,
-  setActualWords,
   wordIndex,
-  setWordIndex,
   progress,
+  size,
+  gameOver,
+  randomize,
+  setActualWords,
+  setWordIndex,
   setProgress,
   setShowResults,
   setSaved,
   setAutoSave,
-  size,
-  randomize,
-  gameOver,
   setGameOver,
 }) => {
   const [cardRotated, setCardRotated] = useState(false);
@@ -77,7 +77,6 @@ const FlashCard = ({
       if (e.code === "Space") {
         e.preventDefault();
         if (progress === 100) {
-          console.log(gameOver, progress);
           setAutoSave(JSON.parse(localStorage.getItem("autoSave") || false));
           setShowResults(true);
           if (JSON.parse(localStorage.getItem("autoSave"))) {
@@ -127,6 +126,7 @@ const FlashCard = ({
       }
     }
   }, [wordIndex]);
+
   return (
     <div className="flex flex-col items-center mx-4 perspective-normal">
       {/* Flash Card */}
