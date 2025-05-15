@@ -37,6 +37,16 @@ const FiszkiPage = () => {
     const handleKeyDown = (e) => {
       if (e.code === "Space") {
         e.preventDefault();
+        if (progress === 100) {
+          console.log(gameOver, progress);
+          setAutoSave(JSON.parse(localStorage.getItem("autoSave") || false));
+          setShowResults(true);
+          if (JSON.parse(localStorage.getItem("autoSave"))) {
+            updateSavedWords(actualWords);
+            setSaved(true);
+          }
+          return;
+        }
         if (!cardAnimation) {
           cardRotateHandler();
         }
@@ -435,8 +445,11 @@ const FiszkiPage = () => {
                     setSaved(true);
                   }
                 }}
-                className="btn btn-info w-full"
+                className="btn btn-info w-full relative group"
               >
+                <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px]">
+                  spacja
+                </div>
                 Przejdź do podsumowania
               </button>
             </div>

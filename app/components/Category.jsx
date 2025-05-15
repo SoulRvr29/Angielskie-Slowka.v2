@@ -39,6 +39,17 @@ const Category = ({
     setIsDeleting(false);
   }, [actualCategory]);
 
+  const countComplete = () => {
+    const complete = sets.reduce((sum, set) => {
+      return set.words.every((word) => {
+        return word.known === true;
+      }) === true
+        ? sum + 1
+        : sum;
+    }, 0);
+    return complete;
+  };
+
   return (
     <div
       className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${
@@ -61,7 +72,7 @@ const Category = ({
             if (isOpen) setActualCategory(null);
             else setActualCategory(category);
           }}
-          className="flex gap-2 pb-1 items-center"
+          className="flex gap-2 py-1 items-center"
         >
           {isEdit ? (
             <form
@@ -90,15 +101,21 @@ const Category = ({
             </form>
           ) : (
             <>
-              {sets.length > 0 &&
-                sets.every((set) =>
-                  set.words.every((word) => word.known === true)
-                ) && <FaCheckSquare className="checked" />}
+              {sets.length === countComplete() && (
+                <FaCheckSquare className="checked" />
+              )}
               <h3 className="font-semibold cursor-pointer">{category}</h3>
             </>
           )}
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
+          <div
+            className="text-base opacity-75 -mr-1 "
+            title="ukończone zestawy"
+          >
+            {countComplete()}/{sets.length}
+          </div>
+
           <div
             className="cursor-pointer"
             onClick={() => {
@@ -154,10 +171,10 @@ const Category = ({
       </div>
       {isOpen && (
         <div className="flex flex-col flex-wrap">
-          <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50 category-sub">
+          {/* <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50 category-sub">
             <div>Nazwa zestawu:</div>
             <div>{session ? "Znane słówka:" : "Słówka:"}</div>
-          </div>
+          </div> */}
           {sets.length > 0 ? (
             sets.map((item) => (
               <div
