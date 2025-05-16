@@ -161,7 +161,7 @@ const Navbar = () => {
                       <button
                         key={index}
                         className={`${
-                          pathname === "/prywatne_zestawy" && "btn-success"
+                          pathname === "/prywatne_zestawy" ? "btn-success" : ""
                         } border-b-2  border-b-info py-4 flex items-center justify-center gap-2 `}
                         onClick={() => {
                           signIn(provider.id);
@@ -176,7 +176,7 @@ const Navbar = () => {
               {/* Lista słówek Button */}
               <Link
                 className={`${
-                  pathname === "/zestawy" && "btn-success"
+                  pathname === "/zestawy" ? "btn-success" : ""
                 } border-b-2  border-b-info py-2 flex items-center justify-center gap-2`}
                 href={{ pathname: "/zestawy", query: { type: "public" } }}
               >
@@ -230,7 +230,7 @@ const Navbar = () => {
           </Link>
           <Link
             className={`${
-              type === "public" && "btn-success"
+              type === "public" ? "btn-success" : ""
             } btn btn-xs btn-soft`}
             href={{ pathname: "/zestawy", query: { type: "public" } }}
           >
@@ -242,10 +242,11 @@ const Navbar = () => {
               <button
                 onClick={() => setDropdownOpen((prev) => !prev)}
                 className={`btn btn-xs btn-soft pl-0 ml-2 ${
-                  (pathname === "/prywatne_zestawy" ||
-                    pathname === "/profil" ||
-                    type === "private") &&
-                  "btn-success"
+                  pathname === "/prywatne_zestawy" ||
+                  pathname === "/profil" ||
+                  type === "private"
+                    ? "btn-success"
+                    : ""
                 }`}
                 popoverTarget="popover-1"
                 style={{ anchorName: "--anchor-1" }}

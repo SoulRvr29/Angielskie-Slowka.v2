@@ -12,10 +12,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <Suspense>
-      <AuthProvider>
-        <html lang="en" data-theme="dark" className="bg-base-200">
-          <body className="relative max-w-6xl mx-auto flex flex-col bg-base-100">
+    <html lang="en" data-theme="dark" className="bg-base-200">
+      <body className="relative max-w-6xl mx-auto flex flex-col bg-base-100">
+        <AuthProvider>
+          <Suspense>
             <header className="sticky top-0 z-20">
               <Navbar />
             </header>
@@ -24,9 +24,9 @@ export default function RootLayout({ children }) {
             </main>
             <Footer />
             <div className="absolute w-full h-full top-0 left-0 bg-black -z-10 blur-3xl opacity-30"></div>
-          </body>
-        </html>
-      </AuthProvider>
-    </Suspense>
+          </Suspense>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

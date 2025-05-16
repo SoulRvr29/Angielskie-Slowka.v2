@@ -16,7 +16,7 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
         actualWords.map((item) => ({
           ...item,
           side: "left",
-          color: "secondary",
+          color: "default",
         }))
       )
     );
@@ -25,7 +25,7 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
         actualWords.map((item) => ({
           ...item,
           side: "right",
-          color: "primary",
+          color: "default",
         }))
       )
     );
@@ -56,47 +56,23 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
   };
 
   const pairCorrect = () => {
-    console.log("correct");
-    setLeftWords([
-      ...leftWords.map((item) => {
-        if (item._id === firstWord._id) {
-          return { ...item, correct: true };
-        } else return item;
-      }),
-    ]);
-
-    setRightWords([
-      ...rightWords.map((item) => {
-        if (item._id === secondWord._id) {
-          return { ...item, correct: true };
-        } else return item;
-      }),
-    ]);
-
-    setProgress((prev) => prev + 100 / size);
+    changeColor("success");
     setTimeout(() => {
-      setLeftWords([
-        ...leftWords.map((item) => {
-          if (item._id === firstWord._id) {
-            return { ...item, correct: false, color: "base" };
-          } else return item;
-        }),
-      ]);
-      setRightWords([
-        ...rightWords.map((item) => {
-          if (item._id === secondWord._id) {
-            return { ...item, correct: false, color: "base" };
-          } else return item;
-        }),
-      ]);
+      changeColor("dimmed");
     }, 500);
   };
   const pairWrong = () => {
-    console.log("wrong");
+    changeColor("error");
+    setTimeout(() => {
+      changeColor("default");
+    }, 500);
+  };
+
+  const changeColor = (color) => {
     setLeftWords([
       ...leftWords.map((item) => {
         if (item._id === firstWord._id) {
-          return { ...item, wrong: true };
+          return { ...item, color: color };
         } else return item;
       }),
     ]);
@@ -104,32 +80,22 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
     setRightWords([
       ...rightWords.map((item) => {
         if (item._id === secondWord._id) {
-          return { ...item, wrong: true };
+          return { ...item, color: color };
         } else return item;
       }),
     ]);
-
-    setProgress((prev) => prev + 100 / size);
-    setTimeout(() => {
-      setLeftWords([
-        ...leftWords.map((item) => {
-          if (item._id === firstWord._id) {
-            return { ...item, wrong: false };
-          } else return item;
-        }),
-      ]);
-      setRightWords([
-        ...rightWords.map((item) => {
-          if (item._id === secondWord._id) {
-            return { ...item, wrong: false };
-          } else return item;
-        }),
-      ]);
-    }, 500);
   };
 
+  if (!leftWords || !rightWords) {
+    return (
+      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex justify-center gap-8 max-sm:gap-4 p-4 ">
+    <div className="pairs flex justify-center gap-8 max-sm:gap-4 p-4 ">
       <div className="flex flex-col gap-4 max-sm:w-full ">
         {leftWords.map((word) => (
           <button
@@ -141,10 +107,6 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
           >
             <PairBlock
               data={word}
-              word={word.english}
-              color={word.color}
-              correct={word.correct}
-              wrong={word.wrong}
               actualSelected={actualSelected}
               actualSide={actualSide}
             />
@@ -162,9 +124,6 @@ const Pairs = ({ actualWords, progress, setProgress, size, randomize }) => {
           >
             <PairBlock
               data={word}
-              word={word.polish}
-              color={word.color}
-              correct={word.correct}
               actualSelected={actualSelected}
               actualSide={actualSide}
             />
