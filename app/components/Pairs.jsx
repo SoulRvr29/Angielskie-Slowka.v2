@@ -97,8 +97,10 @@ const Pairs = ({
 
   useEffect(() => {
     if (completeCount == size) {
-      setGameOver(true);
-      setProgress(100);
+      setTimeout(() => {
+        setGameOver(true);
+        setProgress(100);
+      }, 500);
     }
   }, [completeCount]);
 
@@ -150,7 +152,7 @@ const Pairs = ({
             <button
               className={`${
                 word.color === "dimmed" ? "pointer-events-none" : ""
-              }`}
+              } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
               key={word._id}
               onClick={() => {
                 setFirstWord(word);
@@ -174,7 +176,7 @@ const Pairs = ({
                 word.color === "error"
                   ? "pointer-events-none"
                   : ""
-              }`}
+              } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
               key={word._id}
               onClick={() => {
                 setSecondWord(word);
@@ -192,7 +194,10 @@ const Pairs = ({
       </div>
 
       {gameOver && (
-        <div className="flex gap-4 max-w-100 px-4 w-full justify-between summary-btn">
+        <div className="flex flex-col  gap-4 max-w-100 px-4 w-full justify-between summary-btn">
+          <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50">
+            Koniec
+          </p>
           <button
             onClick={() => {
               setAutoSave(
