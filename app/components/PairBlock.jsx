@@ -1,5 +1,4 @@
 "use client";
-import "@/assets/styles/pairs.css";
 import { useState, useEffect } from "react";
 
 const PairBlock = ({ data, actualSelected, actualSide }) => {

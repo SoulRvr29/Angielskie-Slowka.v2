@@ -230,7 +230,9 @@ const GraPage = () => {
         }}
       />
 
-      <ProgressBar progress={progress} />
+      <div className="sticky top-12 max-md:top-21 max-sm:top-11 bg-base-100 pt-2">
+        <ProgressBar progress={progress} />
+      </div>
       {!showResults && (
         <>
           {gameType === "fiszki" ? (
@@ -256,6 +258,11 @@ const GraPage = () => {
               setProgress={setProgress}
               size={size}
               randomize={randomize}
+              gameOver={gameOver}
+              setGameOver={setGameOver}
+              setActualWords={setActualWords}
+              setAutoSave={setAutoSave}
+              setShowResults={setShowResults}
             />
           )}
         </>
