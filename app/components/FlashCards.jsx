@@ -21,6 +21,7 @@ const FlashCard = ({
   setSaved,
   setAutoSave,
   setGameOver,
+  updateSavedWords,
 }) => {
   const [cardRotated, setCardRotated] = useState(false);
   const [actualCardSide, setActualCardSide] = useState(false);

@@ -250,6 +250,7 @@ const GraPage = () => {
               setSaved={setSaved}
               setAutoSave={setAutoSave}
               setGameOver={setGameOver}
+              updateSavedWords={updateSavedWords}
             />
           ) : (
             <Pairs
@@ -261,8 +262,10 @@ const GraPage = () => {
               gameOver={gameOver}
               setGameOver={setGameOver}
               setActualWords={setActualWords}
+              setSaved={setSaved}
               setAutoSave={setAutoSave}
               setShowResults={setShowResults}
+              updateSavedWords={updateSavedWords}
             />
           )}
         </>

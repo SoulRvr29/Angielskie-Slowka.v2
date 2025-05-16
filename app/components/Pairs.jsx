@@ -12,6 +12,8 @@ const Pairs = ({
   randomize,
   setAutoSave,
   setActualWords,
+  updateSavedWords,
+  setSaved,
 }) => {
   const [firstWord, setFirstWord] = useState("");
   const [secondWord, setSecondWord] = useState("");
