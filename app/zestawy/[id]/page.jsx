@@ -13,7 +13,7 @@ const Set = () => {
   const { data: session } = useSession();
   const [admin, setAdmin] = useState(false);
   const searchParams = useSearchParams();
-  // const [actualUnknown, setActualUnknown] = useState([]);
+  const [onlyUnknown, setOnlyUnknown] = useState(false);
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
@@ -80,54 +80,66 @@ const Set = () => {
   };
 
   useEffect(() => {
+    if (onlyUnknown) {
+      setWordsSet((prev) => {
+        return {
+          ...prev,
+          words: prev.words.filter((item) => item.known !== true),
+        };
+      });
+    } else {
+      fetchWords();
+    }
+  }, [onlyUnknown]);
+
+  useEffect(() => {
+    setSize(wordsSet?.words?.length);
+  }, [wordsSet]);
+
+  useEffect(() => {
     if (id === "zapisane") {
       fetchWordsToLearn();
-      // setWordsSet({
-      //   category: "Zapisane słówka",
-      //   words: JSON.parse(localStorage.getItem("nieZnaneSlowka")),
-      // });
-      // setSize(JSON.parse(localStorage.getItem("nieZnaneSlowka")).length);
       return;
     }
-
-    const fetchWords = async (id) => {
-      if (!id) return;
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
-        );
-        if (!res.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        const data = await res.json();
-        setSize(data.words.length);
-        setWordsSet(data);
-        if (session) {
-          const actualUnknown = await fetchWordsToLearnOld();
-          const actualKnown = await fetchWordsKnownOld();
-          const wordsMapped = data.words.map((word) => {
-            const isKnown = actualKnown.some((known) => known._id === word._id);
-            const isUnknown = actualUnknown.some(
-              (unknown) => unknown._id === word._id
-            );
-            return isKnown
-              ? { ...word, known: true }
-              : isUnknown
-              ? { ...word, known: false }
-              : word;
-          });
-          setWordsSet({ ...data, words: wordsMapped });
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    };
 
     if (session) {
       fetchWordsToLearnOld();
     }
-    fetchWords(id);
+    fetchWords();
   }, []);
+
+  const fetchWords = async () => {
+    if (!id) return;
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
+      );
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
+      setSize(data.words.length);
+      setWordsSet(data);
+      if (session) {
+        const actualUnknown = await fetchWordsToLearnOld();
+        const actualKnown = await fetchWordsKnownOld();
+        const wordsMapped = data.words.map((word) => {
+          const isKnown = actualKnown.some((known) => known._id === word._id);
+          const isUnknown = actualUnknown.some(
+            (unknown) => unknown._id === word._id
+          );
+          return isKnown
+            ? { ...word, known: true }
+            : isUnknown
+            ? { ...word, known: false }
+            : word;
+        });
+        setWordsSet({ ...data, words: wordsMapped });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     if (root !== "zestawy") {
@@ -184,38 +196,62 @@ const Set = () => {
       <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-t-md border-primary/50 bg-primary/10">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 max-sm:py-2 py-1 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
-          <div className="flex gap-1 items-center">
-            <div>słówek:</div>
-            <input
-              type="text"
-              pattern="[0-9]*"
-              onChange={(e) => {
-                const input = e.target.value;
-                if (/^\d{0,2}$/.test(input)) {
-                  if (parseInt(input) > wordsSet.words.length) {
-                    setSize(wordsSet.words.length);
-                  } else if (parseInt(input) > 0 || input === "") {
-                    setSize(input === "" ? "" : parseInt(input));
+          <div className="flex gap-2 text-sm">
+            {id !== "zapisane" && (
+              <div className="flex gap-1 items-center border border-neutral/30 px-2 rounded-md">
+                <input
+                  type="checkbox"
+                  className="checkbox checkbox-xs"
+                  onChange={() => {
+                    setOnlyUnknown((prev) => !prev);
+                  }}
+                />
+                <div>ukryj znane</div>
+              </div>
+            )}
+            <div className="flex gap-1 items-center border border-neutral/30 px-2 rounded-md">
+              <input
+                type="text"
+                pattern="[0-9]*"
+                onChange={(e) => {
+                  const input = e.target.value;
+                  if (/^\d{0,2}$/.test(input)) {
+                    if (parseInt(input) > wordsSet.words.length) {
+                      setSize(wordsSet.words.length);
+                    } else if (parseInt(input) > 0 || input === "") {
+                      setSize(input === "" ? "" : parseInt(input));
+                    }
                   }
-                }
-              }}
-              onFocus={() => setSize("")}
-              onBlur={() => {
-                if (size === "") {
-                  setSize(wordsSet.words.length);
-                }
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.target.blur();
-                }
-              }}
-              className="input input-xs text-base px-1 w-7 "
-              value={size}
-              min={1}
-              max={wordsSet.words.length}
-              maxLength={2}
-            />
+                }}
+                onFocus={() => setSize("")}
+                onBlur={() => {
+                  if (size === "") {
+                    setSize(wordsSet.words.length);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.target.blur();
+                  }
+                }}
+                className="input input-xs text-base px-1 w-7 "
+                value={size}
+                min={1}
+                max={wordsSet.words.length}
+                maxLength={2}
+              />{" "}
+              <div>
+                {size === 1
+                  ? "słówko"
+                  : size > 1 && size < 5
+                  ? "słówka"
+                  : size > 20 &&
+                    size.toString().slice(-1) < 5 &&
+                    size % 10 !== 0
+                  ? "słówka"
+                  : "słówek"}
+              </div>
+            </div>
           </div>
         </div>
         <div className="px-4 py-2 font-semibold">
@@ -236,28 +272,34 @@ const Set = () => {
             </div>
           ))}
         </div>
-        <div className="flex w-full upp">
-          <Link
-            href={`${
-              process.env.NEXT_PUBLIC_DOMAIN
-            }/zestawy/${id}/gra?type=${searchParams.get(
-              "type"
-            )}&size=${size}&game=fiszki`}
-            className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-r-1 border-primary w-full"
-          >
-            Uruchom fiszki
-          </Link>
-          <Link
-            href={`${
-              process.env.NEXT_PUBLIC_DOMAIN
-            }/zestawy/${id}/gra?type=${searchParams.get(
-              "type"
-            )}&size=${size}&game=pary`}
-            className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-l-1 border-primary w-full"
-          >
-            Uruchom pary
-          </Link>
-        </div>
+        {size > 0 ? (
+          <div className="flex w-full">
+            <Link
+              href={`${
+                process.env.NEXT_PUBLIC_DOMAIN
+              }/zestawy/${id}/gra?type=${searchParams.get(
+                "type"
+              )}&size=${size}&game=fiszki&unknown=${onlyUnknown}`}
+              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-r-1 border-primary w-full"
+            >
+              Uruchom fiszki
+            </Link>
+            <Link
+              href={`${
+                process.env.NEXT_PUBLIC_DOMAIN
+              }/zestawy/${id}/gra?type=${searchParams.get(
+                "type"
+              )}&size=${size}&game=pary&unknown=${onlyUnknown}`}
+              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-l-1 border-primary w-full"
+            >
+              Uruchom pary
+            </Link>
+          </div>
+        ) : (
+          <div className="px-4 py-2 font-semibold opacity-75 -mt-4">
+            Lista pusta
+          </div>
+        )}
       </div>
       {id !== "zapisane" && (
         <>

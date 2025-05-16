@@ -22,6 +22,7 @@ const GraPage = () => {
   const { data: session } = useSession();
   const gameType = searchParams.get("game");
   const size = searchParams.get("size");
+  const unknownOnly = searchParams.get("unknown");
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
@@ -42,13 +43,26 @@ const GraPage = () => {
         throw new Error("Failed to fetch data");
       }
       const data = await res.json();
-      setWordsSet(data);
-      setActualWords(
-        randomize(data.words.map((item) => ({ ...item, known: false }))).slice(
-          0,
-          size
-        )
-      );
+      if (unknownOnly === "true") {
+        const wordsKnown = await fetchWordsKnownOld();
+        const filtered = data.words.filter(
+          (item) => !wordsKnown.some((known) => known._id === item._id)
+        );
+        const newSet = { ...data, words: filtered };
+        setWordsSet(newSet);
+        setActualWords(
+          randomize(
+            newSet.words.map((item) => ({ ...item, known: false }))
+          ).slice(0, size)
+        );
+      } else {
+        setWordsSet(data);
+        setActualWords(
+          randomize(
+            data.words.map((item) => ({ ...item, known: false }))
+          ).slice(0, size)
+        );
+      }
     } catch (error) {
       console.error(error);
     }
