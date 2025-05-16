@@ -146,7 +146,7 @@ const Pairs = ({
 
   return (
     <div className="flex flex-col items-center">
-      <div className="pairs flex justify-center gap-8 max-sm:gap-4 p-4 py-8 ">
+      <div className="pairs flex justify-center gap-8 max-sm:gap-4 p-4 py-8 w-full ">
         <div className="flex flex-col gap-4 max-sm:w-full ">
           {leftWords.map((word) => (
             <button
