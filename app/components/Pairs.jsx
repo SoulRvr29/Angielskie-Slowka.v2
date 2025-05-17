@@ -1,6 +1,7 @@
 "use client";
 import PairBlock from "./PairBlock";
 import { useEffect, useState } from "react";
+import { speechHandler } from "@/utils/speechHandler";
 
 const Pairs = ({
   actualWords,
@@ -22,6 +23,7 @@ const Pairs = ({
   const [actualSelected, setActualSelected] = useState("");
   const [actualSide, setActualSide] = useState("");
   const [completeCount, setCompleteCount] = useState(0);
+  const [mute, setMute] = useState(false);
 
   useEffect(() => {
     setLeftWords(
@@ -42,6 +44,10 @@ const Pairs = ({
         }))
       )
     );
+    const muteCheck = localStorage.getItem("mute");
+    if (muteCheck) {
+      setMute(JSON.parse(muteCheck));
+    }
   }, []);
 
   useEffect(() => {
@@ -155,6 +161,7 @@ const Pairs = ({
               } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
               key={word._id}
               onClick={() => {
+                speechHandler(word.english);
                 setFirstWord(word);
                 setActualSide("left");
               }}

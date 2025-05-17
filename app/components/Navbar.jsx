@@ -8,11 +8,12 @@ import {
   FaAdjust,
   FaUser,
   FaGoogle,
+  FaVolumeUp,
+  FaVolumeMute,
 } from "react-icons/fa";
-import { FaGear } from "react-icons/fa6";
 import ThemeChange from "./ThemeChange";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Image from "next/image";
 
@@ -25,6 +26,8 @@ const Navbar = () => {
   const [mobileTheme, setMobileTheme] = useState();
   const [providers, setProviders] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mute, setMute] = useState(false);
+
   const searchParams = useSearchParams();
   const type = searchParams.get("type");
 
@@ -36,7 +39,15 @@ const Navbar = () => {
       setProviders(res);
     };
     setAuthProviders();
+    const muteCheck = localStorage.getItem("mute");
+    if (muteCheck) {
+      setMute(JSON.parse(muteCheck));
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem("mute", JSON.stringify(mute));
+  }, [mute]);
 
   useEffect(() => {
     if (!isMobileMenuOpen) setIsChecked(false);
@@ -200,6 +211,25 @@ const Navbar = () => {
                 <FaAdjust />
                 kolorystyka
               </div>
+              <button
+                className="btn-success border-b-2 border-info py-2 w-screen bg-base-100 text-xl text-center  flex items-center justify-center gap-2"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setMute((prev) => !prev);
+                }}
+              >
+                {!mute ? (
+                  <div className="flex gap-2 items-center">
+                    <FaVolumeUp size={22} />
+                    dźwięk
+                  </div>
+                ) : (
+                  <div className="flex gap-2 items-center">
+                    <FaVolumeMute size={22} />
+                    dźwięk
+                  </div>
+                )}
+              </button>
 
               {/* Ustawienia Button */}
               {/* <Link
@@ -327,6 +357,13 @@ const Navbar = () => {
           </Link> */}
         </div>
         <div className="flex gap-3 items-center">
+          <button
+            onClick={() => {
+              setMute((prev) => !prev);
+            }}
+          >
+            {!mute ? <FaVolumeUp size={18} /> : <FaVolumeMute size={18} />}
+          </button>
           <ThemeChange />
           {/* <Link
             href="/ustawienia"

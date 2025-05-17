@@ -6,6 +6,7 @@ import {
   FaArrowDown,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { speechHandler } from "@/utils/speechHandler";
 
 const FlashCard = ({
   actualWords,
@@ -127,6 +128,15 @@ const FlashCard = ({
       }
     }
   }, [wordIndex]);
+
+  useEffect(() => {
+    if (actualWords[wordIndex]) {
+      if (!actualCardSide) {
+        const word = actualWords[wordIndex].english;
+        speechHandler(word);
+      }
+    }
+  }, [actualCardSide, actualWords, wordIndex]);
 
   return (
     <div className="flex flex-col items-center mx-4 perspective-normal">
