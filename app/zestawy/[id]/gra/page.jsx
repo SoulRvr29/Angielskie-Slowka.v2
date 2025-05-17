@@ -244,7 +244,7 @@ const GraPage = () => {
         }}
       />
 
-      <div className="sticky top-12 max-md:top-21 max-sm:top-11 bg-base-100 pt-2">
+      <div className="sticky top-12 max-md:top-21 max-sm:top-11 bg-base-100 pt-2 z-10">
         <ProgressBar progress={progress} />
       </div>
       {!showResults && (

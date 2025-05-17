@@ -7,6 +7,8 @@ import {
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { speechHandler } from "@/utils/speechHandler";
+import { FaInfoCircle } from "react-icons/fa";
+import WordDetails from "./WordDetails";
 
 const FlashCard = ({
   actualWords,
@@ -29,6 +31,7 @@ const FlashCard = ({
   const [defaultCardSide, setDefaultCardSide] = useState(false);
   const [cardAnimation, setCardAnimation] = useState(false);
   const [actualUnknown, setActualUnknown] = useState([]);
+  const [showDetails, setShowDetails] = useState(false);
 
   const cardRotateHandler = () => {
     setCardRotated(true);
@@ -169,6 +172,16 @@ const FlashCard = ({
                 ? actualWords[wordIndex]?.english
                 : actualWords[wordIndex]?.polish}
             </p>
+            {!actualCardSide && (
+              <FaInfoCircle
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDetails(true);
+                }}
+                className="absolute angpl-btn right-3 top-3 opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100"
+                size={18}
+              />
+            )}
             <div className="absolute bottom-2 right-3 flex gap-2">
               <button
                 onClick={(e) => {
@@ -176,7 +189,7 @@ const FlashCard = ({
                   setDefaultCardSide((prev) => !prev);
                 }}
                 title="kolejność"
-                className="angpl-btn opacity-0 pointer-events-none text-md max-sm:text-sm font-bold"
+                className="angpl-btn opacity-0 max-sm:opacity-30 pointer-events-none text-md max-sm:text-sm font-bold"
               >
                 {defaultCardSide ? "pl/eng" : "eng/pl"}
               </button>
@@ -188,7 +201,7 @@ const FlashCard = ({
       </div>
       {/* Known yes/not controls */}
       {!gameOver ? (
-        <div className="max-w-100 w-full">
+        <div className="max-w-100 w-full pb-6">
           {!cardRotated ? (
             <div className="flex gap-4 max-w-100 px-4 w-full justify-between">
               <button
@@ -209,6 +222,8 @@ const FlashCard = ({
               <button
                 onClick={() => {
                   wordCheckHandler(true);
+                  speechHandler("", false);
+                  setShowDetails(false);
                 }}
                 className="btn btn-success w-45 max-sm:w-[38vw] group relative"
               >
@@ -223,6 +238,8 @@ const FlashCard = ({
               <button
                 onClick={() => {
                   wordCheckHandler(false);
+                  speechHandler("", false);
+                  setShowDetails(false);
                 }}
                 className="btn btn-error w-45 max-sm:w-[38vw] relative group "
               >
@@ -263,7 +280,7 @@ const FlashCard = ({
         <button
           title="Cofnij"
           onClick={backwardHandler}
-          className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline my-6 relative group"
+          className="btn btn-sm btn-info opacity-50 hover:opacity-100 btn-outline mb-4 relative group"
         >
           <div
             title="klawisz &darr;"
@@ -273,6 +290,20 @@ const FlashCard = ({
           </div>
           <FaBackward size={20} />
         </button>
+      )}
+      {showDetails && (
+        <div
+          className=""
+          onClick={() => {
+            speechHandler("", false);
+            setShowDetails(false);
+          }}
+        >
+          <WordDetails
+            word={actualWords[wordIndex].english}
+            setShowDetails={setShowDetails}
+          />
+        </div>
       )}
     </div>
   );

@@ -2,6 +2,8 @@
 import PairBlock from "./PairBlock";
 import { useEffect, useState } from "react";
 import { speechHandler } from "@/utils/speechHandler";
+import { FaInfoCircle } from "react-icons/fa";
+import WordDetails from "./WordDetails";
 
 const Pairs = ({
   actualWords,
@@ -18,12 +20,13 @@ const Pairs = ({
 }) => {
   const [firstWord, setFirstWord] = useState("");
   const [secondWord, setSecondWord] = useState("");
+  const [actualWord, setActualWord] = useState("");
   const [leftWords, setLeftWords] = useState([]);
   const [rightWords, setRightWords] = useState([]);
   const [actualSelected, setActualSelected] = useState("");
   const [actualSide, setActualSide] = useState("");
   const [completeCount, setCompleteCount] = useState(0);
-  const [mute, setMute] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
 
   useEffect(() => {
     setLeftWords(
@@ -44,10 +47,6 @@ const Pairs = ({
         }))
       )
     );
-    const muteCheck = localStorage.getItem("mute");
-    if (muteCheck) {
-      setMute(JSON.parse(muteCheck));
-    }
   }, []);
 
   useEffect(() => {
@@ -152,11 +151,22 @@ const Pairs = ({
 
   return (
     <div className="flex flex-col items-center">
+      {showDetails && (
+        <div
+          className="fixed top-0 left-0 size-full bg-[rgba(0,00,0,0.5)] z-10 grid place-content-center "
+          onClick={() => {
+            speechHandler("", false);
+            setShowDetails(false);
+          }}
+        >
+          <WordDetails word={actualWord} setShowDetails={setShowDetails} />
+        </div>
+      )}
       <div className="pairs flex justify-center gap-8 max-sm:gap-4 p-4 py-8 w-full ">
         <div className="flex flex-col gap-4 max-sm:w-full ">
           {leftWords.map((word) => (
             <button
-              className={`${
+              className={`flex items-center relative group ${
                 word.color === "dimmed" ? "pointer-events-none" : ""
               } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
               key={word._id}
@@ -166,6 +176,15 @@ const Pairs = ({
                 setActualSide("left");
               }}
             >
+              <FaInfoCircle
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDetails(true);
+                  setActualWord(word.english);
+                }}
+                className="absolute right-3 opacity-50 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100"
+                size={18}
+              />
               <PairBlock
                 data={word}
                 actualSelected={actualSelected}

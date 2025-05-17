@@ -80,15 +80,17 @@ const Set = () => {
   };
 
   useEffect(() => {
-    if (onlyUnknown) {
-      setWordsSet((prev) => {
-        return {
-          ...prev,
-          words: prev.words.filter((item) => item.known !== true),
-        };
-      });
-    } else {
-      fetchWords();
+    if (id !== "zapisane") {
+      if (onlyUnknown) {
+        setWordsSet((prev) => {
+          return {
+            ...prev,
+            words: prev.words.filter((item) => item.known !== true),
+          };
+        });
+      } else {
+        fetchWords();
+      }
     }
   }, [onlyUnknown]);
 

@@ -1,4 +1,4 @@
-export const speechHandler = (word) => {
+export const speechHandler = (text, play, onEndCallback) => {
   if (
     typeof window !== "undefined" &&
     "speechSynthesis" in window &&
@@ -9,8 +9,12 @@ export const speechHandler = (word) => {
 
     if (!muteState) {
       window.speechSynthesis.cancel();
-      const utterance = new window.SpeechSynthesisUtterance(word);
+      if (play) return;
+      const utterance = new window.SpeechSynthesisUtterance(text);
       utterance.lang = "en-US";
+      utterance.onend = () => {
+        if (onEndCallback) onEndCallback();
+      };
       window.speechSynthesis.speak(utterance);
     }
   }
