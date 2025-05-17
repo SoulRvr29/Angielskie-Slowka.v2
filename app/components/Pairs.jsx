@@ -141,6 +141,8 @@ const Pairs = ({
     ]);
   };
 
+  const infoBtnHandler = () => {};
+
   if (!leftWords || !rightWords) {
     return (
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
@@ -176,19 +178,13 @@ const Pairs = ({
                 setActualSide("left");
               }}
             >
-              <FaInfoCircle
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDetails(true);
-                  setActualWord(word.english);
-                }}
-                className="absolute right-3 opacity-50 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100"
-                size={18}
-              />
               <PairBlock
+                infoBtnHandler={infoBtnHandler}
                 data={word}
                 actualSelected={actualSelected}
                 actualSide={actualSide}
+                setShowDetails={setShowDetails}
+                setActualWord={setActualWord}
               />
             </button>
           ))}

@@ -1,11 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
+import { FaInfoCircle } from "react-icons/fa";
 
-const PairBlock = ({ data, actualSelected, actualSide }) => {
+const PairBlock = ({
+  data,
+  actualSelected,
+  actualSide,
+  infoBtnHandler,
+  setShowDetails,
+  setActualWord,
+}) => {
   return (
     <div
       className={
-        "border-2 text-xl max-sm:text-base p-2 px-3 min-w-50 max-sm:min-w-auto max-sm:w-full rounded-lg transition-colors " +
+        "flex justify-between gap-2 items-center border-2 text-xl max-sm:text-base p-2 px-3 min-w-50 w-full max-sm:min-w-auto max-sm:w-full rounded-lg transition-colors " +
         (data._id === actualSelected._id &&
         data.side === actualSide &&
         data.side === "left"
@@ -28,6 +36,18 @@ const PairBlock = ({ data, actualSelected, actualSide }) => {
       }
     >
       {data.side === "left" ? data.english : data.polish}
+      {infoBtnHandler && (
+        <FaInfoCircle
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDetails(true);
+            setActualWord(data.english);
+            console.log(data.english);
+          }}
+          className="opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100 transition-opacity duration-300"
+          size={18}
+        />
+      )}
     </div>
   );
 };
