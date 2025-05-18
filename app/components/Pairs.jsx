@@ -3,7 +3,8 @@ import PairBlock from "./PairBlock";
 import { useEffect, useState } from "react";
 import { speechHandler } from "@/utils/speechHandler";
 import WordDetails from "./WordDetails";
-import { AnimatePresence, delay, motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import ConfettiEffect from "./ConfettiEffect";
 
 const Pairs = ({
   actualWords,
@@ -240,9 +241,19 @@ const Pairs = ({
 
       {gameOver && (
         <div className="flex flex-col  gap-4 max-w-100 px-4 w-full justify-between summary-btn">
-          <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50 ">
-            Koniec
-          </p>
+          {actualWords.every((item) => item.known) ? (
+            <>
+              <ConfettiEffect />
+              <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50 ">
+                Idealnie
+              </p>
+            </>
+          ) : (
+            <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50 ">
+              Koniec
+            </p>
+          )}
+
           <button
             onClick={() => {
               setAutoSave(

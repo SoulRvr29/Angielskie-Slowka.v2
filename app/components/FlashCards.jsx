@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { speechHandler } from "@/utils/speechHandler";
 import { FaInfoCircle } from "react-icons/fa";
 import WordDetails from "./WordDetails";
+import ConfettiEffect from "./ConfettiEffect";
 
 const FlashCard = ({
   actualWords,
@@ -206,7 +207,16 @@ const FlashCard = ({
             </div>
           </>
         ) : (
-          <p className="font-semibold">Koniec</p>
+          <>
+            {actualWords.every((item) => item.known) ? (
+              <>
+                <ConfettiEffect />
+                <p className="font-semibold">Idealnie</p>
+              </>
+            ) : (
+              <p className="font-semibold">Koniec</p>
+            )}
+          </>
         )}
       </div>
       {/* Known yes/not controls */}
