@@ -4,6 +4,7 @@ import {
   FaArrowLeft,
   FaArrowRight,
   FaArrowDown,
+  FaPlay,
 } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { speechHandler } from "@/utils/speechHandler";
@@ -172,16 +173,25 @@ const FlashCard = ({
                 ? actualWords[wordIndex]?.english
                 : actualWords[wordIndex]?.polish}
             </p>
-            {!actualCardSide && (
-              <FaInfoCircle
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowDetails(true);
-                }}
-                className="absolute angpl-btn right-3 top-3 opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100"
-                size={18}
-              />
-            )}
+
+            <FaInfoCircle
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowDetails(true);
+              }}
+              className="absolute angpl-btn right-3 top-3 opacity-0 max-sm:opacity-20 group-hover:opacity-50 hover:opacity-100"
+              size={18}
+            />
+
+            <FaPlay
+              onClick={(e) => {
+                e.stopPropagation();
+                const word = actualWords[wordIndex].english;
+                speechHandler(word);
+              }}
+              className="absolute angpl-btn left-3 bottom-3 opacity-0 max-sm:opacity-20 group-hover:opacity-50 hover:opacity-100"
+              size={18}
+            />
             <div className="absolute bottom-2 right-3 flex gap-2">
               <button
                 onClick={(e) => {
@@ -189,7 +199,7 @@ const FlashCard = ({
                   setDefaultCardSide((prev) => !prev);
                 }}
                 title="kolejność"
-                className="angpl-btn opacity-0 max-sm:opacity-30 pointer-events-none text-md max-sm:text-sm font-bold"
+                className="angpl-btn opacity-0 max-sm:opacity-20 pointer-events-none text-md max-sm:text-sm font-bold"
               >
                 {defaultCardSide ? "pl/eng" : "eng/pl"}
               </button>

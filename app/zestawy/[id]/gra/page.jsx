@@ -19,6 +19,7 @@ const GraPage = () => {
   const [showResults, setShowResults] = useState(false);
   const [saved, setSaved] = useState(false);
   const [autoSave, setAutoSave] = useState(false);
+  const [saveInProgress, setSaveInProgress] = useState(false);
   const { data: session } = useSession();
   const gameType = searchParams.get("game");
   const size = searchParams.get("size");
@@ -159,6 +160,7 @@ const GraPage = () => {
 
   const updateSavedWords = async (arr) => {
     if (session) {
+      setSaveInProgress(true);
       const newWordsToLearn = arr.filter((item) => item.known === false);
       const newKnown = arr.filter((item) => item.known === true);
       const knownIds = new Set(newKnown.map((item) => item._id));
@@ -205,6 +207,7 @@ const GraPage = () => {
 
       const updatedData = await res.json();
       console.log("Update successful:", updatedData);
+      setSaveInProgress(false);
     } catch (error) {
       console.error(error);
     }
@@ -337,7 +340,7 @@ const GraPage = () => {
                           autoSave && "btn-success"
                         }`}
                       >
-                        Autozapis
+                        {saveInProgress ? "Zapisuję..." : "Autozapis"}
                       </div>
                     ) : (
                       <>
@@ -347,7 +350,7 @@ const GraPage = () => {
                               saved && "btn-success"
                             }`}
                           >
-                            Zapisano
+                            {saveInProgress ? "Zapisuję..." : "Zapisano"}
                           </button>
                         ) : (
                           <button

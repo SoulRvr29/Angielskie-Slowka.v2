@@ -110,6 +110,10 @@ const Set = () => {
     fetchWords();
   }, []);
 
+  useEffect(() => {
+    fetchWords();
+  }, [session]);
+
   const fetchWords = async () => {
     if (!id) return;
     try {

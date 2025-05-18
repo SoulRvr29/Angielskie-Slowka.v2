@@ -12,6 +12,7 @@ export const speechHandler = (text, play, onEndCallback) => {
       if (play) return;
       const utterance = new window.SpeechSynthesisUtterance(text);
       utterance.lang = "en-US";
+      utterance.rate = 0.8;
       utterance.onend = () => {
         if (onEndCallback) onEndCallback();
       };
