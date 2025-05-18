@@ -6,7 +6,6 @@ const PairBlock = ({
   data,
   actualSelected,
   actualSide,
-  infoBtnHandler,
   setShowDetails,
   setActualWord,
 }) => {
@@ -17,11 +16,11 @@ const PairBlock = ({
         (data._id === actualSelected._id &&
         data.side === actualSide &&
         data.side === "left"
-          ? " border-base-content bg-secondary/20 "
+          ? " border-warning bg-secondary/20 "
           : data._id === actualSelected._id &&
             data.side === actualSide &&
             data.side === "right"
-          ? " border-base-content bg-primary/20 "
+          ? " border-warning bg-primary/20 "
           : data.color === "default" && data.side === "left"
           ? " border-secondary/50 bg-secondary/20"
           : data.color === "default" && data.side === "right"
@@ -36,18 +35,17 @@ const PairBlock = ({
       }
     >
       {data.side === "left" ? data.english : data.polish}
-      {infoBtnHandler && (
-        <FaInfoCircle
-          onClick={(e) => {
-            e.stopPropagation();
-            setShowDetails(true);
-            setActualWord(data.english);
-            console.log(data.english);
-          }}
-          className="opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100 transition-opacity duration-300"
-          size={18}
-        />
-      )}
+
+      <FaInfoCircle
+        onClick={(e) => {
+          e.stopPropagation();
+          setShowDetails(true);
+          setActualWord(data.english);
+          console.log(data.english);
+        }}
+        className="opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100 transition-opacity duration-300"
+        size={18}
+      />
     </div>
   );
 };

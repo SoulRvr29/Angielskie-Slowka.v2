@@ -2,8 +2,8 @@
 import PairBlock from "./PairBlock";
 import { useEffect, useState } from "react";
 import { speechHandler } from "@/utils/speechHandler";
-import { FaInfoCircle } from "react-icons/fa";
 import WordDetails from "./WordDetails";
+import { AnimatePresence, delay, motion } from "framer-motion";
 
 const Pairs = ({
   actualWords,
@@ -95,9 +95,11 @@ const Pairs = ({
           : item;
       })
     );
+
     setTimeout(() => {
-      changeColor("dimmed");
-    }, 500);
+      setLeftWords((prev) => prev.filter((item) => item.color !== "success"));
+      setRightWords((prev) => prev.filter((item) => item.color !== "success"));
+    }, 300);
   };
 
   useEffect(() => {
@@ -141,8 +143,6 @@ const Pairs = ({
     ]);
   };
 
-  const infoBtnHandler = () => {};
-
   if (!leftWords || !rightWords) {
     return (
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
@@ -165,59 +165,82 @@ const Pairs = ({
         </div>
       )}
       <div className="pairs flex justify-center gap-8 max-sm:gap-4 p-4 py-8 w-full ">
-        <div className="flex flex-col gap-4 max-sm:w-full ">
-          {leftWords.map((word) => (
-            <button
-              className={`flex items-center relative group ${
-                word.color === "dimmed" ? "pointer-events-none" : ""
-              } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
-              key={word._id}
-              onClick={() => {
-                speechHandler(word.english);
-                setFirstWord(word);
-                setActualSide("left");
-              }}
-            >
-              <PairBlock
-                infoBtnHandler={infoBtnHandler}
-                data={word}
-                actualSelected={actualSelected}
-                actualSide={actualSide}
-                setShowDetails={setShowDetails}
-                setActualWord={setActualWord}
-              />
-            </button>
-          ))}
+        <div className="flex flex-col max-sm:w-full ">
+          <AnimatePresence>
+            {leftWords.map((word) => (
+              <motion.button
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{
+                  opacity: { duration: 0.3 },
+                  height: {
+                    duration: 0.3,
+                    delay: 0.15,
+                  },
+                  marginBottom: { duration: 0.3, delay: 0.15 },
+                }}
+                className={`mb-4 overflow-hidden flex items-center relative group ${
+                  word.color === "dimmed" ? "pointer-events-none" : ""
+                } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
+                key={word._id}
+                onClick={() => {
+                  speechHandler(word.english);
+                  setFirstWord(word);
+                  setActualSide("left");
+                }}
+              >
+                <PairBlock
+                  data={word}
+                  actualSelected={actualSelected}
+                  actualSide={actualSide}
+                  setShowDetails={setShowDetails}
+                  setActualWord={setActualWord}
+                />
+              </motion.button>
+            ))}
+          </AnimatePresence>
         </div>
-        <div className="flex flex-col gap-4 max-sm:w-full">
-          {rightWords.map((word) => (
-            <button
-              className={`${
-                word.color === "dimmed" ||
-                word.color === "success" ||
-                word.color === "error"
-                  ? "pointer-events-none"
-                  : ""
-              } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
-              key={word._id}
-              onClick={() => {
-                setSecondWord(word);
-                setActualSide("right");
-              }}
-            >
-              <PairBlock
-                data={word}
-                actualSelected={actualSelected}
-                actualSide={actualSide}
-              />
-            </button>
-          ))}
+        <div className="flex flex-col max-sm:w-full">
+          <AnimatePresence>
+            {rightWords.map((word) => (
+              <motion.button
+                exit={{ opacity: 0, height: 0, marginBottom: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                transition={{
+                  opacity: { duration: 0.3 },
+                  height: {
+                    duration: 0.3,
+                    delay: 0.15,
+                  },
+                  marginBottom: { duration: 0.3, delay: 0.15 },
+                }}
+                className={`mb-4 overflow-hidden flex items-center relative${
+                  word.color === "dimmed" ||
+                  word.color === "success" ||
+                  word.color === "error"
+                    ? "pointer-events-none"
+                    : ""
+                } ${word.color === "dimmed" ? " hidden transition-all" : ""}`}
+                key={word._id}
+                onClick={() => {
+                  setSecondWord(word);
+                  setActualSide("right");
+                }}
+              >
+                <PairBlock
+                  data={word}
+                  actualSelected={actualSelected}
+                  actualSide={actualSide}
+                />
+              </motion.button>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
 
       {gameOver && (
         <div className="flex flex-col  gap-4 max-w-100 px-4 w-full justify-between summary-btn">
-          <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50">
+          <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50 ">
             Koniec
           </p>
           <button
