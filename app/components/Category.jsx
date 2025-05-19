@@ -13,7 +13,7 @@ import { useState, useEffect } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { AnimatePresence, delay, motion } from "framer-motion";
+import { AnimatePresence, delay, easeInOut, motion } from "framer-motion";
 
 const Category = ({
   category,
@@ -170,78 +170,85 @@ const Category = ({
           </div>
         </div>
       </div>
-      {isOpen && (
-        <motion.div
-          initial={{ height: 0, opacity: 0 }}
-          animate={{ height: "auto", opacity: 1 }}
-          transition={{ height: { duration: 0.3 }, opacity: { delay: 0.3 } }}
-          className=" flex flex-col flex-wrap"
-        >
-          {/* <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50 category-sub">
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "auto" }}
+            exit={{ height: 0 }}
+            transition={{
+              height: { duration: 0.3 },
+            }}
+            className=" flex flex-col flex-wrap"
+          >
+            <div>
+              {/* <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50 category-sub">
             <div>Nazwa zestawu:</div>
             <div>{session ? "Znane słówka:" : "Słówka:"}</div>
           </div> */}
-          {sets.length > 0 ? (
-            sets.map((item) => (
-              <motion.div
-                transition={{ duration: 2 }}
-                key={item.name}
-                className="overflow-hidden flex justify-between items-center max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20 set-line"
-              >
-                {item.words.reduce(
-                  (sum, word) => (word.known === true ? sum + 1 : sum),
-                  0
-                ) === item.words.length && (
-                  <FaCheckSquare
-                    className="mr-2 text-success checked"
-                    size={20}
-                  />
-                )}
-                <Link
-                  href={`${pathname}/${item["_id"]}?type=${type}`}
-                  className="flex gap-2  justify-between w-full py-1"
-                >
-                  {item.name}
-                </Link>
+              {sets.length > 0 ? (
+                sets.map((item) => (
+                  <motion.div
+                    transition={{ duration: 2 }}
+                    key={item.name}
+                    className="overflow-hidden flex justify-between items-center max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20 set-line"
+                  >
+                    {item.words.reduce(
+                      (sum, word) => (word.known === true ? sum + 1 : sum),
+                      0
+                    ) === item.words.length && (
+                      <FaCheckSquare
+                        className="mr-2 text-success checked"
+                        size={20}
+                      />
+                    )}
+                    <Link
+                      href={`${pathname}/${item["_id"]}?type=${type}`}
+                      className="flex gap-2  justify-between w-full py-1"
+                    >
+                      {item.name}
+                    </Link>
 
-                <div className="flex items-center gap-1">
-                  {session && (
-                    <>
-                      <div>
-                        {
-                          (item.words.length,
-                          item.words.reduce(
-                            (sum, word) =>
-                              word.known === true ? sum + 1 : sum,
-                            0
-                          ))
-                        }
-                      </div>
-                      /
-                    </>
-                  )}
-                  <div>{item.words.length}</div>
+                    <div className="flex items-center gap-1">
+                      {session && (
+                        <>
+                          <div>
+                            {
+                              (item.words.length,
+                              item.words.reduce(
+                                (sum, word) =>
+                                  word.known === true ? sum + 1 : sum,
+                                0
+                              ))
+                            }
+                          </div>
+                          /
+                        </>
+                      )}
+                      <div>{item.words.length}</div>
+                    </div>
+                  </motion.div>
+                ))
+              ) : (
+                <div className="px-2 opacity-50 py-1 max-sm:py-2">
+                  Brak zestawów
                 </div>
-              </motion.div>
-            ))
-          ) : (
-            <div className="px-2 opacity-50 py-1 max-sm:py-2">
-              Brak zestawów
+              )}
+              {admin && (
+                <Link
+                  className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2 add-new-set"
+                  href={{
+                    pathname: `${pathname}/nowy`,
+                    query: { category: category, type: type },
+                  }}
+                >
+                  <FaPlusSquare title="dodaj zestaw" /> <p>Dodaj nowy zestaw</p>
+                </Link>
+              )}
             </div>
-          )}
-          {admin && (
-            <Link
-              className="flex justify-center items-center gap-2 border-t-2 border-secondary/50 py-1 bg-secondary/20 hover:bg-secondary/50 max-sm:py-2 add-new-set"
-              href={{
-                pathname: `${pathname}/nowy`,
-                query: { category: category, type: type },
-              }}
-            >
-              <FaPlusSquare title="dodaj zestaw" /> <p>Dodaj nowy zestaw</p>
-            </Link>
-          )}
-        </motion.div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

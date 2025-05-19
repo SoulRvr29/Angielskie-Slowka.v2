@@ -88,6 +88,12 @@ const Pairs = ({
   };
 
   const pairCorrect = () => {
+    if (localStorage.getItem("mute") !== "true") {
+      const audio = new Audio("/sounds/success.mp3");
+      audio.volume = 0.7;
+      audio.play();
+    }
+
     setProgress((prev) => prev + 100 / size);
     setCompleteCount((prev) => prev + 1);
     changeColor("success");
@@ -104,17 +110,13 @@ const Pairs = ({
       setRightWords((prev) => prev.filter((item) => item.color !== "success"));
     }, 300);
   };
-
-  useEffect(() => {
-    if (completeCount == size) {
-      setTimeout(() => {
-        setGameOver(true);
-        setProgress(100);
-      }, 500);
-    }
-  }, [completeCount]);
-
   const pairWrong = () => {
+    if (localStorage.getItem("mute") !== "true") {
+      const audio = new Audio("/sounds/error.mp3");
+      audio.volume = 0.8;
+      audio.play();
+    }
+
     setActualWords((prev) =>
       prev.map((item) => {
         return item._id === firstWord._id
@@ -127,6 +129,26 @@ const Pairs = ({
       changeColor("default");
     }, 500);
   };
+
+  useEffect(() => {
+    if (completeCount == size) {
+      setTimeout(() => {
+        if (localStorage.getItem("mute") !== "true") {
+          if (actualWords.every((item) => item.known)) {
+            const audio = new Audio("/sounds/perfect.mp3");
+            audio.volume = 0.75;
+            audio.play();
+          } else {
+            const audio = new Audio("/sounds/finish.mp3");
+            audio.volume = 0.5;
+            audio.play();
+          }
+        }
+        setGameOver(true);
+        setProgress(100);
+      }, 500);
+    }
+  }, [completeCount]);
 
   const changeColor = (color) => {
     setLeftWords([

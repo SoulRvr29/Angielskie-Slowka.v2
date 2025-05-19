@@ -56,8 +56,18 @@ const FlashCard = ({
         )
       );
       if (!isKnown) {
+        if (localStorage.getItem("mute") !== "true") {
+          const audio = new Audio("/sounds/card-unknown.mp3");
+          audio.volume = 0.6;
+          audio.play();
+        }
         setActualUnknown((prev) => [...prev, actualWords[wordIndex]]);
       } else {
+        if (localStorage.getItem("mute") !== "true") {
+          const audio = new Audio("/sounds/card-known.mp3");
+          audio.volume = 0.4;
+          audio.play();
+        }
         setProgress((prev) => prev + 100 / size);
       }
     }
@@ -124,6 +134,17 @@ const FlashCard = ({
   useEffect(() => {
     if (actualWords.length === wordIndex && actualWords.length !== 0) {
       if (actualUnknown.length === 0) {
+        if (localStorage.getItem("mute") !== "true") {
+          if (actualWords.every((item) => item.known)) {
+            const audio = new Audio("/sounds/perfect.mp3");
+            audio.volume = 0.75;
+            audio.play();
+          } else {
+            const audio = new Audio("/sounds/finish.mp3");
+            audio.volume = 0.5;
+            audio.play();
+          }
+        }
         setGameOver(true);
         setProgress(100);
         setActualWords(actualWords.slice(0, size));
