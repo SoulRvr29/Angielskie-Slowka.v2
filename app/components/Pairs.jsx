@@ -28,8 +28,10 @@ const Pairs = ({
   const [actualSide, setActualSide] = useState("");
   const [completeCount, setCompleteCount] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    setHydrated(true);
     setLeftWords(
       randomize(
         actualWords.map((item) => ({
@@ -144,7 +146,7 @@ const Pairs = ({
     ]);
   };
 
-  if (!leftWords || !rightWords) {
+  if (!hydrated || !leftWords || !rightWords) {
     return (
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
         <span className="loader"></span>
@@ -244,7 +246,7 @@ const Pairs = ({
           {actualWords.every((item) => item.known) ? (
             <>
               <ConfettiEffect />
-              <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50 ">
+              <p className="text-center text-3xl text-success mb-10 w-fit mx-auto px-6 pb-3 py-2 rounded-xl border-2 border-dotted border-success/50 animate-bounce ">
                 Idealnie
               </p>
             </>

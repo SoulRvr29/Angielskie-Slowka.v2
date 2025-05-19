@@ -13,6 +13,7 @@ import { useState, useEffect } from "react";
 import { LuLoaderCircle } from "react-icons/lu";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { AnimatePresence, delay, motion } from "framer-motion";
 
 const Category = ({
   category,
@@ -170,16 +171,22 @@ const Category = ({
         </div>
       </div>
       {isOpen && (
-        <div className="flex flex-col flex-wrap">
+        <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          transition={{ height: { duration: 0.3 }, opacity: { delay: 0.3 } }}
+          className=" flex flex-col flex-wrap"
+        >
           {/* <div className="flex justify-between bg-secondary/30 px-3 border-b-2 border-secondary/50 category-sub">
             <div>Nazwa zestawu:</div>
             <div>{session ? "Znane słówka:" : "Słówka:"}</div>
           </div> */}
           {sets.length > 0 ? (
             sets.map((item) => (
-              <div
+              <motion.div
+                transition={{ duration: 2 }}
                 key={item.name}
-                className="flex justify-between items-center max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20 set-line"
+                className="overflow-hidden flex justify-between items-center max-sm:py-1 border-b border-secondary/30 last-of-type:border-none px-3 hover:bg-secondary/20 set-line"
               >
                 {item.words.reduce(
                   (sum, word) => (word.known === true ? sum + 1 : sum),
@@ -215,7 +222,7 @@ const Category = ({
                   )}
                   <div>{item.words.length}</div>
                 </div>
-              </div>
+              </motion.div>
             ))
           ) : (
             <div className="px-2 opacity-50 py-1 max-sm:py-2">
@@ -233,7 +240,7 @@ const Category = ({
               <FaPlusSquare title="dodaj zestaw" /> <p>Dodaj nowy zestaw</p>
             </Link>
           )}
-        </div>
+        </motion.div>
       )}
     </div>
   );

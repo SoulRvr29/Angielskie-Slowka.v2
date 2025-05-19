@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import AuthProvider from "./components/AuthProvider";
 import { Suspense } from "react";
+import BackToTop from "./components/ScrollToTop";
 
 export const metadata = {
   title: "Angielskie-Słówka.v2",
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
             </header>
             <main className="flex-grow flex flex-col px-4 py-2 max-sm:px-0">
               {children}
+              <BackToTop />
             </main>
             <Footer />
             <div className="absolute w-full h-full top-0 left-0 bg-black -z-10 blur-3xl opacity-30"></div>

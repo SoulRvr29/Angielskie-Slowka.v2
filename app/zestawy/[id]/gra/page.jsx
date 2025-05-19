@@ -312,7 +312,7 @@ const GraPage = () => {
               ))}
             </ul>
             <div className="flex justify-center max-sm:px-4 gap-4 max-sm:flex-col max-sm:gap-2 py-4">
-              <button onClick={resetGame} className="btn btn-sm max-sm:btn-lg ">
+              <button onClick={resetGame} className="btn btn-md max-sm:btn-lg ">
                 Restartuj
               </button>
               <>
@@ -336,21 +336,33 @@ const GraPage = () => {
                     />
                     {autoSave ? (
                       <div
-                        className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                        className={`btn btn-md w-34 h-9 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
                           autoSave && "btn-success"
-                        }`}
+                        } `}
                       >
-                        {saveInProgress ? "Zapisuję..." : "Autozapis"}
+                        {saveInProgress ? (
+                          <span className="animate-pulse ml-[5px]">
+                            Zapisuję...
+                          </span>
+                        ) : (
+                          "Zapisano"
+                        )}
                       </div>
                     ) : (
                       <>
                         {saved ? (
                           <button
-                            className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                            className={`btn btn-md w-34 h-9 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
                               saved && "btn-success"
-                            }`}
+                            } `}
                           >
-                            {saveInProgress ? "Zapisuję..." : "Zapisano"}
+                            {saveInProgress ? (
+                              <span className="animate-pulse ml-[5px]">
+                                Zapisuję...
+                              </span>
+                            ) : (
+                              "Zapisano"
+                            )}
                           </button>
                         ) : (
                           <button
@@ -358,7 +370,7 @@ const GraPage = () => {
                               updateSavedWords(actualWords);
                               setSaved(true);
                             }}
-                            className={`btn btn-sm w-31 h-8 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
+                            className={`btn btn-md w-34 h-9 pl-8 max-sm:w-full max-sm:h-12 max-sm:text-lg ${
                               autoSave && "btn-success"
                             }`}
                           >

@@ -7,12 +7,14 @@ import Loader from "../components/Loader";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
+import { AnimatePresence, delay, motion } from "framer-motion";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
   const [categoriesList, setCategoriesList] = useState();
   const [actualCategory, setActualCategory] = useState(null);
   const [savedWordSets, setSavedWordSets] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
   const [admin, setAdmin] = useState(false);
   const { data: session } = useSession();
   const searchParams = useSearchParams();
@@ -48,6 +50,7 @@ const WordSetsPage = () => {
         setCategoriesList(data.wordSets.map((item) => item.category));
         setWordSets(data.wordSets);
       }
+
       // }
     } catch (error) {
       console.error(error);
@@ -126,6 +129,7 @@ const WordSetsPage = () => {
     } catch (error) {
       console.error(error);
     }
+    setIsFetching(false);
   };
 
   const fetchWordsToLearnOld = async () => {
@@ -182,6 +186,7 @@ const WordSetsPage = () => {
     fetchWords();
     if (session) {
       mapKnownWords();
+      setIsFetching(true);
     }
   }, []);
 
@@ -199,6 +204,9 @@ const WordSetsPage = () => {
 
   if (!wordSets) {
     return <Loader message="Pobieranie zestawów" />;
+  }
+  if (isFetching) {
+    return <Loader message="Pobieranie wyników" />;
   }
 
   const addCategoryHandler = (name) => {
@@ -292,7 +300,12 @@ const WordSetsPage = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: 0.5 }}
+      className="flex flex-col gap-2"
+    >
       <SubNav title="Lista słówek" />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
         {savedWordSets.length > 0 && (
@@ -307,9 +320,9 @@ const WordSetsPage = () => {
           </Link>
         )}
         {wordSets.length > 0 ? (
-          wordSets.map((item, index) => (
+          wordSets.map((item) => (
             <Category
-              key={index}
+              key={item._id}
               category={item.category}
               sets={item.sets}
               actualCategory={actualCategory}
@@ -330,7 +343,7 @@ const WordSetsPage = () => {
           />
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 export default WordSetsPage;

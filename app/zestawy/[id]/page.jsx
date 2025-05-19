@@ -111,7 +111,9 @@ const Set = () => {
   }, []);
 
   useEffect(() => {
-    fetchWords();
+    if (id !== "zapisane") {
+      fetchWords();
+    }
   }, [session]);
 
   const fetchWords = async () => {
@@ -203,7 +205,7 @@ const Set = () => {
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 max-sm:py-2 py-1 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
           <div className="flex gap-2 text-sm">
-            {id !== "zapisane" && (
+            {id !== "zapisane" && session && (
               <div className="flex gap-1 items-center border border-neutral/30 px-2 rounded-md">
                 <input
                   type="checkbox"
@@ -286,7 +288,7 @@ const Set = () => {
               }/zestawy/${id}/gra?type=${searchParams.get(
                 "type"
               )}&size=${size}&game=fiszki&unknown=${onlyUnknown}`}
-              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-r-1 border-primary w-full"
+              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-secondary/70 p-2 border-2 border-r-1 border-primary w-full"
             >
               Uruchom fiszki
             </Link>
@@ -296,7 +298,7 @@ const Set = () => {
               }/zestawy/${id}/gra?type=${searchParams.get(
                 "type"
               )}&size=${size}&game=pary&unknown=${onlyUnknown}`}
-              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-primary p-2 border-2 border-l-1 border-primary w-full"
+              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-secondary/70 p-2 border-2 border-l-1 border-primary w-full"
             >
               Uruchom pary
             </Link>
