@@ -215,7 +215,7 @@ const Pairs = ({
                   },
                   marginBottom: { duration: 0.3, delay: 0.15 },
                 }}
-                className={`mb-4 overflow-hidden flex items-center relative${
+                className={`mb-4 overflow-hidden flex items-center relative ${
                   word.color === "dimmed" ||
                   word.color === "success" ||
                   word.color === "error"

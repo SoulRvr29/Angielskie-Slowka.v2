@@ -36,16 +36,18 @@ const PairBlock = ({
     >
       {data.side === "left" ? data.english : data.polish}
 
-      <FaInfoCircle
-        onClick={(e) => {
-          e.stopPropagation();
-          setShowDetails(true);
-          setActualWord(data.english);
-          console.log(data.english);
-        }}
-        className="opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100 transition-opacity duration-300"
-        size={18}
-      />
+      {data.side === "left" && (
+        <FaInfoCircle
+          onClick={(e) => {
+            e.stopPropagation();
+            setShowDetails(true);
+            setActualWord(data.english);
+            console.log(data.english);
+          }}
+          className="opacity-0 max-sm:opacity-25 group-hover:opacity-50 hover:opacity-100 transition-opacity duration-300"
+          size={18}
+        />
+      )}
     </div>
   );
 };
