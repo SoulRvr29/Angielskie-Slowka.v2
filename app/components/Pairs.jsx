@@ -70,9 +70,19 @@ const Pairs = ({
   const wordsCheckHandler = () => {
     if ((firstWord !== "") & (secondWord === "")) {
       setActualSelected(firstWord);
+      if (localStorage.getItem("mute") !== "true") {
+        const audio = new Audio("/sounds/tap.mp3");
+        audio.volume = 0.75;
+        audio.play();
+      }
     }
     if ((firstWord === "") & (secondWord !== "")) {
       setActualSelected(secondWord);
+      if (localStorage.getItem("mute") !== "true") {
+        const audio = new Audio("/sounds/tap.mp3");
+        audio.volume = 0.75;
+        audio.play();
+      }
     }
 
     if ((firstWord !== "") & (secondWord !== "")) {
@@ -136,7 +146,8 @@ const Pairs = ({
         if (localStorage.getItem("mute") !== "true") {
           if (actualWords.every((item) => item.known)) {
             const audio = new Audio("/sounds/perfect.mp3");
-            audio.volume = 0.75;
+            const audio2 = new Audio("/sounds/fireworks.mp3");
+            audio2.play();
             audio.play();
           } else {
             const audio = new Audio("/sounds/finish.mp3");

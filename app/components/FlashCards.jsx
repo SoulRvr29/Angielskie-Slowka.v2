@@ -36,6 +36,11 @@ const FlashCard = ({
   const [showDetails, setShowDetails] = useState(false);
 
   const cardRotateHandler = () => {
+    if (localStorage.getItem("mute") !== "true") {
+      const audio = new Audio("/sounds/card-rotate.mp3");
+      audio.volume = 0.6;
+      audio.play();
+    }
     setCardRotated(true);
     setCardAnimation(true);
     setTimeout(() => {
@@ -75,6 +80,11 @@ const FlashCard = ({
 
   const backwardHandler = () => {
     if (wordIndex > 0) {
+      if (localStorage.getItem("mute") !== "true") {
+        const audio2 = new Audio("/sounds/go-back.mp3");
+        audio2.volume = 0.3;
+        audio2.play();
+      }
       if (actualWords[wordIndex - 1].known) {
         setProgress((prev) => prev - 100 / size);
       }
@@ -137,7 +147,9 @@ const FlashCard = ({
         if (localStorage.getItem("mute") !== "true") {
           if (actualWords.every((item) => item.known)) {
             const audio = new Audio("/sounds/perfect.mp3");
+            const audio2 = new Audio("/sounds/fireworks.mp3");
             audio.volume = 0.75;
+            audio2.play();
             audio.play();
           } else {
             const audio = new Audio("/sounds/finish.mp3");

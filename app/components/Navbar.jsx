@@ -192,7 +192,7 @@ const Navbar = () => {
                 href={{ pathname: "/zestawy", query: { type: "public" } }}
               >
                 <FaList />
-                lista słówek
+                baza słówek
               </Link>
               {/* Kolorystyka Button */}
               <div
@@ -264,7 +264,7 @@ const Navbar = () => {
             } btn btn-xs btn-soft`}
             href={{ pathname: "/zestawy", query: { type: "public" } }}
           >
-            lista słówek
+            baza słówek
           </Link>
 
           {session ? (
