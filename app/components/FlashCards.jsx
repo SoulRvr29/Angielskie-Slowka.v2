@@ -38,7 +38,7 @@ const FlashCard = ({
   const cardRotateHandler = () => {
     if (localStorage.getItem("mute") !== "true") {
       const audio = new Audio("/sounds/card-rotate.mp3");
-      audio.volume = 0.6;
+      audio.volume = 0.3;
       audio.play();
     }
     setCardRotated(true);
