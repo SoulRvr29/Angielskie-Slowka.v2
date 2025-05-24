@@ -19,6 +19,7 @@ const FlashCard = ({
   size,
   gameOver,
   randomize,
+  saveInProgress,
   setActualWords,
   setWordIndex,
   setProgress,
@@ -52,6 +53,7 @@ const FlashCard = ({
   };
   const wordCheckHandler = (isKnown) => {
     if (!gameOver) {
+      setShowDetails(false);
       setActualCardSide(defaultCardSide);
       setCardRotated(false);
       setWordIndex((wordIndex) => wordIndex + 1);
@@ -160,6 +162,11 @@ const FlashCard = ({
         setGameOver(true);
         setProgress(100);
         setActualWords(actualWords.slice(0, size));
+        setAutoSave(JSON.parse(localStorage.getItem("autoSave") || false));
+        if (JSON.parse(localStorage.getItem("autoSave"))) {
+          updateSavedWords(actualWords.slice(0, size));
+          setSaved(true);
+        }
       } else {
         setActualWords((prev) => [...prev, ...randomize(actualUnknown)]);
         setActualUnknown([]);
@@ -276,7 +283,6 @@ const FlashCard = ({
                 onClick={() => {
                   wordCheckHandler(true);
                   speechHandler("", false);
-                  setShowDetails(false);
                 }}
                 className="btn btn-success w-45 max-sm:w-[38vw] group relative"
               >
@@ -292,7 +298,6 @@ const FlashCard = ({
                 onClick={() => {
                   wordCheckHandler(false);
                   speechHandler("", false);
-                  setShowDetails(false);
                 }}
                 className="btn btn-error w-45 max-sm:w-[38vw] relative group "
               >
@@ -309,24 +314,23 @@ const FlashCard = ({
         </div>
       ) : (
         <div className="flex gap-4 max-w-100 px-4 w-full justify-between">
-          <button
-            onClick={() => {
-              setAutoSave(
-                JSON.parse(localStorage.getItem("autoSave") || false)
-              );
-              setShowResults(true);
-              if (JSON.parse(localStorage.getItem("autoSave"))) {
-                updateSavedWords(actualWords);
-                setSaved(true);
-              }
-            }}
-            className="btn btn-info w-full relative group"
-          >
-            <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px]">
-              spacja
-            </div>
-            Przejdź do podsumowania
-          </button>
+          {saveInProgress ? (
+            <button className="btn btn-success w-full relative group animate-pulse ">
+              Trwa zapisywanie...
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setShowResults(true);
+              }}
+              className="btn btn-info w-full relative group"
+            >
+              <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px]">
+                spacja
+              </div>
+              Przejdź do podsumowania
+            </button>
+          )}
         </div>
       )}
       {wordIndex > 0 && !gameOver && actualWords.length <= size && (

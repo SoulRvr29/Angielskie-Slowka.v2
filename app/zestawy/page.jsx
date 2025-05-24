@@ -7,7 +7,7 @@ import Loader from "../components/Loader";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
-import { AnimatePresence, delay, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 const WordSetsPage = () => {
   const [wordSets, setWordSets] = useState(null);
@@ -40,9 +40,6 @@ const WordSetsPage = () => {
       }
       const data = await res.json();
 
-      // if (session) {
-
-      // } else {
       if (Array.isArray(data)) {
         setCategoriesList(data.map((item) => item.category));
         setWordSets(data);
@@ -50,8 +47,6 @@ const WordSetsPage = () => {
         setCategoriesList(data.wordSets.map((item) => item.category));
         setWordSets(data.wordSets);
       }
-
-      // }
     } catch (error) {
       console.error(error);
     }

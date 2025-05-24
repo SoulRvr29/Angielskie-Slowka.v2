@@ -14,6 +14,7 @@ const Pairs = ({
   size,
   gameOver,
   randomize,
+  saveInProgress,
   setAutoSave,
   setActualWords,
   updateSavedWords,
@@ -147,6 +148,11 @@ const Pairs = ({
         }
         setGameOver(true);
         setProgress(100);
+        setAutoSave(JSON.parse(localStorage.getItem("autoSave") || false));
+        if (JSON.parse(localStorage.getItem("autoSave"))) {
+          updateSavedWords(actualWords.slice(0, size));
+          setSaved(true);
+        }
       }, 500);
     }
   }, [completeCount]);
@@ -279,24 +285,30 @@ const Pairs = ({
             </p>
           )}
 
-          <button
-            onClick={() => {
-              setAutoSave(
-                JSON.parse(localStorage.getItem("autoSave") || false)
-              );
-              setShowResults(true);
-              if (JSON.parse(localStorage.getItem("autoSave"))) {
-                updateSavedWords(actualWords);
-                setSaved(true);
-              }
-            }}
-            className="btn btn-info w-full relative group "
-          >
-            <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px]">
-              spacja
-            </div>
-            Przejdź do podsumowania
-          </button>
+          {saveInProgress ? (
+            <button className="btn btn-success w-full relative group animate-pulse ">
+              Trwa zapisywanie...
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                setAutoSave(
+                  JSON.parse(localStorage.getItem("autoSave") || false)
+                );
+                setShowResults(true);
+                if (JSON.parse(localStorage.getItem("autoSave"))) {
+                  updateSavedWords(actualWords);
+                  setSaved(true);
+                }
+              }}
+              className="btn btn-info w-full relative group "
+            >
+              <div className="absolute right-3 opacity-0 group-hover:opacity-30 text-black border border-black rounded-sm px-2 pb-[1px]">
+                spacja
+              </div>
+              Przejdź do podsumowania
+            </button>
+          )}
         </div>
       )}
     </div>

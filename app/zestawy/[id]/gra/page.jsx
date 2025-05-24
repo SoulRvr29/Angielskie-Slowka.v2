@@ -159,6 +159,7 @@ const GraPage = () => {
   };
 
   const updateSavedWords = async (arr) => {
+    console.log(arr);
     if (session) {
       setSaveInProgress(true);
       const newWordsToLearn = arr.filter((item) => item.known === false);
@@ -261,6 +262,7 @@ const GraPage = () => {
               wordIndex={wordIndex}
               setActualWords={setActualWords}
               gameOver={gameOver}
+              saveInProgress={saveInProgress}
               setWordIndex={setWordIndex}
               setProgress={setProgress}
               setShowResults={setShowResults}
@@ -277,6 +279,7 @@ const GraPage = () => {
               size={size}
               randomize={randomize}
               gameOver={gameOver}
+              saveInProgress={saveInProgress}
               setGameOver={setGameOver}
               setActualWords={setActualWords}
               setSaved={setSaved}
@@ -340,13 +343,7 @@ const GraPage = () => {
                           autoSave && "btn-success"
                         } `}
                       >
-                        {saveInProgress ? (
-                          <span className="animate-pulse ml-[5px]">
-                            Zapisuję...
-                          </span>
-                        ) : (
-                          "Zapisano"
-                        )}
+                        Autozapis
                       </div>
                     ) : (
                       <>

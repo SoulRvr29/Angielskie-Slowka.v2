@@ -1,12 +1,9 @@
 "use client";
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-import { usePathname } from "next/navigation";
+import { signIn, useSession, getProviders } from "next-auth/react";
 
 const LoginBtn = () => {
   const [providers, setProviders] = useState(null);
-  const pathname = usePathname();
   const { data: session } = useSession();
 
   useEffect(() => {
