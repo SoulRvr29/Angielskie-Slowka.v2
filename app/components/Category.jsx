@@ -53,7 +53,7 @@ const Category = ({
 
   return (
     <div
-      className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col ${
+      className={`bg-primary/10 border-2 overflow-clip rounded-md max-sm:rounded-none flex flex-col shadow-lg ${
         sets.length > 0 &&
         sets.every((set) => set.words.every((word) => word.known === true)) &&
         "category-checked"

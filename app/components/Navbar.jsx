@@ -58,7 +58,7 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-20">
+    <nav className="flex justify-between w-full max-md:flex-col bg-base-300 border-b-2 border-b-primary/50 z-20 shadow-lg">
       <Link href="/">
         <h1 className="absolute top-1 max-md:top-0 max-md:pb-2 max-md:relative text-center left-1/2 transform -translate-x-1/2 text-2xl font-bold mt-1">
           Angielskie Słówka<span className="text-sm text-primary">.v2</span>
