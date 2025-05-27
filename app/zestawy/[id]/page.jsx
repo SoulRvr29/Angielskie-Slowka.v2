@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import SubNav from "@/app/components/SubNav";
 import { useSession } from "next-auth/react";
+import { FaArrowLeft } from "react-icons/fa";
 
 const Set = () => {
   const [wordsSet, setWordsSet] = useState(null);
@@ -12,6 +13,7 @@ const Set = () => {
   const [size, setSize] = useState(0);
   const { data: session } = useSession();
   const [admin, setAdmin] = useState(false);
+  const [generateForm, setGenerateForm] = useState(false);
   const searchParams = useSearchParams();
   const [onlyUnknown, setOnlyUnknown] = useState(false);
   const root =
@@ -80,7 +82,7 @@ const Set = () => {
   };
 
   useEffect(() => {
-    if (id !== "zapisane") {
+    if (id !== "zapisane" && id !== "losowy") {
       if (onlyUnknown) {
         setWordsSet((prev) => {
           return {
@@ -103,6 +105,11 @@ const Set = () => {
       fetchWordsToLearn();
       return;
     }
+    if (id === "losowy") {
+      setGenerateForm(true);
+      setSize("");
+      return;
+    }
 
     if (session) {
       fetchWordsToLearnOld();
@@ -111,7 +118,7 @@ const Set = () => {
   }, []);
 
   useEffect(() => {
-    if (id !== "zapisane") {
+    if (id !== "zapisane" && id !== "losowy") {
       fetchWords();
     }
   }, [session]);
@@ -148,25 +155,63 @@ const Set = () => {
       console.error(error);
     }
   };
+  const fetchFromAllSets = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/losowy`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const data = await res.json();
 
-  useEffect(() => {
-    if (root !== "zestawy") {
-      setAdmin(true);
-    } else {
-      setAdmin(false);
-    }
-    if (session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-      setAdmin(true);
-    }
-  }, [root]);
+      const allWords = data
+        .map((category) => {
+          return category.sets.map((set) => {
+            return set.words;
+          });
+        })
+        .flat(Infinity);
+      const randomizedWords = randomize(allWords).slice(0, size);
+      localStorage.setItem("losowyZestaw", JSON.stringify(randomizedWords));
 
-  if (!wordsSet) {
-    return (
-      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
-        <span className="loader"></span>
-      </div>
-    );
-  }
+      if (session) {
+        const actualUnknown = await fetchWordsToLearnOld();
+        const actualKnown = await fetchWordsKnownOld();
+        const wordsMapped = randomizedWords.map((word) => {
+          const isKnown = actualKnown.some((known) => known._id === word._id);
+          const isUnknown = actualUnknown.some(
+            (unknown) => unknown._id === word._id
+          );
+          return isKnown
+            ? { ...word, known: true }
+            : isUnknown
+            ? { ...word, known: false }
+            : word;
+        });
+        setWordsSet({ ...randomizedWords, words: wordsMapped });
+      } else {
+        setWordsSet({
+          category: "Losowy zestaw",
+          words: randomizedWords,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const generateWordsSet = async () => {
+    fetchFromAllSets();
+    setGenerateForm(false);
+  };
+
+  const randomize = (arr) => {
+    const indexes = arr.map((_, i) => i);
+    for (let i = indexes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indexes[i], indexes[j]] = [indexes[j], indexes[i]];
+    }
+    return indexes.map((i) => arr[i]);
+  };
 
   const deleteHandler = async () => {
     const result = confirm("Potwierdź usunięcie");
@@ -188,24 +233,116 @@ const Set = () => {
     }
   };
 
+  useEffect(() => {
+    if (root !== "zestawy") {
+      setAdmin(true);
+    } else {
+      setAdmin(false);
+    }
+    if (session?.user?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      setAdmin(true);
+    }
+  }, [root]);
+
+  if (generateForm) {
+    return (
+      <div>
+        <div className="w-full">
+          <SubNav
+            title="Generator zestawów"
+            text="wróć do listy"
+            link={{
+              pathname: "/zestawy",
+              query: { type: searchParams.get("type") },
+            }}
+          />
+        </div>
+        <form
+          className="flex flex-col gap-4 items-center mt-8"
+          onSubmit={(e) => {
+            e.preventDefault();
+            generateWordsSet();
+          }}
+        >
+          <div className="flex items-center gap-4">
+            <p className="text-xl">Wpisz liczbę słówek: </p>
+            <input
+              className="input text-xl px-1 input-sm w-9 text-center pb-[4px] border-info"
+              type="text"
+              pattern="[0-9]*"
+              onChange={(e) => {
+                const input = e.target.value;
+                if (/^\d{0,2}$/.test(input)) {
+                  if (parseInt(input) > 0 || input === "") {
+                    setSize(input === "" ? "" : parseInt(input));
+                  }
+                }
+              }}
+              onFocus={() => setSize("")}
+              onBlur={() => {
+                if (size === "") {
+                  setSize("");
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.target.blur();
+                }
+              }}
+              value={size}
+              min={1}
+              max={99}
+              maxLength={2}
+              required
+            />
+          </div>
+          <button className="btn btn-info" type="submit">
+            Wygeneruj zestaw
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  if (!wordsSet) {
+    return (
+      <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-base-300/30">
+        <span className="loader"></span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col gap-4 items-center justify-center">
       <div className="w-full">
-        <SubNav
-          title={wordsSet.category}
-          text="wróć do listy"
-          link={{
-            pathname: "/zestawy",
-            query: { type: searchParams.get("type") },
-          }}
-        />
+        {id === "losowy" ? (
+          <div className="relative">
+            <SubNav title="Losowy zestaw" text="wróć do generatora" />
+            <button
+              className="absolute right-0 top-0 max-sm:mb-0 gap-2 btn btn-sm"
+              onClick={() => setGenerateForm(true)}
+            >
+              <FaArrowLeft /> wróć do generatora
+            </button>
+          </div>
+        ) : (
+          <SubNav
+            title={wordsSet.category}
+            text="wróć do listy"
+            link={{
+              pathname: "/zestawy",
+              query: { type: searchParams.get("type") },
+            }}
+          />
+        )}
       </div>
 
       <div className="flex flex-col border max-sm:border-none max-sm:rounded-none w-fit overflow-hidden min-w-lg max-sm:min-w-auto max-sm:w-full rounded-t-md border-primary/50 bg-primary/10 shadow-xl ">
         <div className="bg-primary/50 w-full font-semibold text-lg px-2 max-sm:py-2 py-1 flex flex-wrap gap-2 justify-between">
           <div>{wordsSet.name}</div>
           <div className="flex gap-2 text-sm">
-            {id !== "zapisane" && session && (
+            {id !== "zapisane" && id !== "losowy" && session && (
+              // {id !== "zapisane" && id !== "losowy" && session && (
               <div className="flex gap-1 items-center border border-neutral/30 px-2 rounded-md">
                 <input
                   type="checkbox"
@@ -247,6 +384,7 @@ const Set = () => {
                 min={1}
                 max={wordsSet.words.length}
                 maxLength={2}
+                disabled={id === "losowy" ? true : false}
               />{" "}
               <div>
                 {size === 1
@@ -309,7 +447,7 @@ const Set = () => {
           </div>
         )}
       </div>
-      {id !== "zapisane" && (
+      {id !== "zapisane" && id !== "losowy" && (
         <>
           {admin && (
             <div className="flex gap-4">

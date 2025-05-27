@@ -314,6 +314,15 @@ const WordSetsPage = () => {
             Słówka do powtórki
           </Link>
         )}
+        <Link
+          className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-accent bg-primary/10"
+          href={{
+            pathname: `/zestawy/losowy`,
+            query: { type: searchParams.get("type") },
+          }}
+        >
+          Losowy zestaw
+        </Link>
         {wordSets.length > 0 ? (
           wordSets.map((item) => (
             <Category

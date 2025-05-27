@@ -30,6 +30,13 @@ const GraPage = () => {
   useEffect(() => {
     if (id === "zapisane") {
       fetchWordsToLearn();
+    } else if (id === "losowy") {
+      const data = {
+        name: "Losowy zestaw",
+        words: JSON.parse(localStorage.getItem("losowyZestaw")) || [],
+      };
+      setWordsSet(data);
+      setActualWords(data.words);
     } else fetchWords();
   }, []);
 
@@ -159,7 +166,6 @@ const GraPage = () => {
   };
 
   const updateSavedWords = async (arr) => {
-    console.log(arr);
     if (session) {
       setSaveInProgress(true);
       const newWordsToLearn = arr.filter((item) => item.known === false);
