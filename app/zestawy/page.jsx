@@ -29,6 +29,9 @@ const WordSetsPage = () => {
 
       fetchWordsToLearn();
       mapKnownWords();
+      setIsFetching(true);
+    } else {
+      fetchWords();
     }
   }, [session, root]);
 
@@ -177,16 +180,17 @@ const WordSetsPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchWords();
-    if (session) {
-      mapKnownWords();
-      setIsFetching(true);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (session) {
+  //     // mapKnownWords();
+  //     // setIsFetching(true);
+  //   } else {
+  //     fetchWords();
+  //   }
+  // }, []);
 
   useEffect(() => {
-    fetchWords();
+    // fetchWords();
     if (root !== "zestawy") {
       setAdmin(true);
     } else {

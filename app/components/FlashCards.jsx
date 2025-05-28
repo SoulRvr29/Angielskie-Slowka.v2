@@ -150,7 +150,10 @@ const FlashCard = ({
           if (actualWords.every((item) => item.known)) {
             const audio = new Audio("/sounds/perfect.mp3");
             audio.volume = 0.85;
+            const audio2 = new Audio("/sounds/fireworks.mp3");
+            audio2.volume = 0.4;
             audio.play();
+            audio2.play();
           } else {
             const audio = new Audio("/sounds/finish.mp3");
             audio.volume = 0.5;

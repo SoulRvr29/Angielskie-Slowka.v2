@@ -25,9 +25,6 @@ export default function ConfettiEffect() {
     }
 
     const angle = isMobile ? 90 : x === 0 ? 60 : 120;
-    const audio2 = new Audio("/sounds/fireworks.mp3");
-    audio2.volume = 0.4;
-    audio2.play();
 
     fire(0.25, {
       spread: 26,

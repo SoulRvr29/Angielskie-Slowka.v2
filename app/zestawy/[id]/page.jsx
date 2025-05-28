@@ -134,7 +134,7 @@ const Set = () => {
       }
       const data = await res.json();
       setSize(data.words.length);
-      setWordsSet(data);
+
       if (session) {
         const actualUnknown = await fetchWordsToLearnOld();
         const actualKnown = await fetchWordsKnownOld();
@@ -150,6 +150,8 @@ const Set = () => {
             : word;
         });
         setWordsSet({ ...data, words: wordsMapped });
+      } else {
+        setWordsSet(data);
       }
     } catch (error) {
       console.error(error);
@@ -170,7 +172,11 @@ const Set = () => {
           });
         })
         .flat(Infinity);
-      const randomizedWords = randomize(allWords).slice(0, size);
+      const allWordsUnique = Array.from(
+        new Map(allWords.map((item) => [item.english, item])).values()
+      );
+
+      const randomizedWords = randomize(allWordsUnique).slice(0, size);
       localStorage.setItem("losowyZestaw", JSON.stringify(randomizedWords));
 
       if (session) {
