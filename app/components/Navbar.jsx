@@ -13,7 +13,7 @@ import {
 } from "react-icons/fa";
 import ThemeChange from "./ThemeChange";
 import { usePathname, useSearchParams } from "next/navigation";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 import Image from "next/image";
 

@@ -125,6 +125,7 @@ const Set = () => {
 
   const fetchWords = async () => {
     if (!id) return;
+    setWordsSet(null);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
@@ -273,12 +274,12 @@ const Set = () => {
           <div className="flex items-center gap-4">
             <p className="text-xl">Wpisz liczbę słówek: </p>
             <input
-              className="input text-xl px-1 input-sm w-9 text-center pb-[4px] border-info"
+              className="input text-xl px-1 input-sm w-11 text-center pb-[4px] border-info"
               type="text"
               pattern="[0-9]*"
               onChange={(e) => {
                 const input = e.target.value;
-                if (/^\d{0,2}$/.test(input)) {
+                if (/^\d{0,3}$/.test(input)) {
                   if (parseInt(input) > 0 || input === "") {
                     setSize(input === "" ? "" : parseInt(input));
                   }
@@ -297,8 +298,8 @@ const Set = () => {
               }}
               value={size}
               min={1}
-              max={99}
-              maxLength={2}
+              max={999}
+              maxLength={3}
               required
             />
           </div>
@@ -348,7 +349,6 @@ const Set = () => {
           <div>{wordsSet.name}</div>
           <div className="flex gap-2 text-sm">
             {id !== "zapisane" && id !== "losowy" && session && (
-              // {id !== "zapisane" && id !== "losowy" && session && (
               <div className="flex gap-1 items-center border border-neutral/30 px-2 rounded-md">
                 <input
                   type="checkbox"
@@ -366,7 +366,7 @@ const Set = () => {
                 pattern="[0-9]*"
                 onChange={(e) => {
                   const input = e.target.value;
-                  if (/^\d{0,2}$/.test(input)) {
+                  if (/^\d{0,3}$/.test(input)) {
                     if (parseInt(input) > wordsSet.words.length) {
                       setSize(wordsSet.words.length);
                     } else if (parseInt(input) > 0 || input === "") {
@@ -385,11 +385,11 @@ const Set = () => {
                     e.target.blur();
                   }
                 }}
-                className="input input-xs text-base px-1 w-7 "
+                className="input input-xs text-base px-1 w-10 text-center"
                 value={size}
                 min={1}
                 max={wordsSet.words.length}
-                maxLength={2}
+                maxLength={3}
                 disabled={id === "losowy" ? true : false}
               />{" "}
               <div>
