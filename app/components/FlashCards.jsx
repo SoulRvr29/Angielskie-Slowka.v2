@@ -105,7 +105,7 @@ const FlashCard = ({
     const handleKeyDown = (e) => {
       if (e.code === "Space") {
         e.preventDefault();
-        if (progress === 100) {
+        if (progress === 100 && !saveInProgress) {
           setAutoSave(JSON.parse(localStorage.getItem("autoSave") || false));
           setShowResults(true);
           if (JSON.parse(localStorage.getItem("autoSave"))) {
@@ -149,9 +149,7 @@ const FlashCard = ({
         if (localStorage.getItem("mute") !== "true") {
           if (actualWords.every((item) => item.known)) {
             const audio = new Audio("/sounds/perfect.mp3");
-            const audio2 = new Audio("/sounds/fireworks.mp3");
-            audio.volume = 0.75;
-            audio2.play();
+            audio.volume = 0.85;
             audio.play();
           } else {
             const audio = new Audio("/sounds/finish.mp3");

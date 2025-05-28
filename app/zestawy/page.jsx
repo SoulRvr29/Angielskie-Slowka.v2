@@ -303,39 +303,61 @@ const WordSetsPage = () => {
     >
       <SubNav title="Lista kategorii" />
       <div className="flex flex-col gap-4 max-sm:gap-2 max-w-2xl mx-auto w-full">
-        {savedWordSets.length > 0 && (
+        <div className="flex max-sm:flex-col w-full justify-center gap-4 max-sm:gap-2">
+          {savedWordSets.length > 0 && (
+            <Link
+              className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-secondary bg-primary/10 w-full text-center hover:text-secondary transition-colors"
+              href={{
+                pathname: `/zestawy/zapisane`,
+                query: { type: searchParams.get("type") },
+              }}
+            >
+              Słówka do powtórki
+            </Link>
+          )}
           <Link
-            className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-secondary bg-primary/10"
+            className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-accent bg-primary/10 w-full text-center hover:text-accent transition-colors"
             href={{
-              pathname: `/zestawy/zapisane`,
+              pathname: `/zestawy/losowy`,
               query: { type: searchParams.get("type") },
             }}
           >
-            Słówka do powtórki
+            Losowy zestaw
           </Link>
-        )}
-        <Link
-          className="text-lg rounded-md gap-2 px-4 max-sm:py-1 max-sm:rounded-none font-semibold max-sm:text-lg cursor-pointer  border border-accent bg-primary/10"
-          href={{
-            pathname: `/zestawy/losowy`,
-            query: { type: searchParams.get("type") },
-          }}
-        >
-          Losowy zestaw
-        </Link>
+        </div>
         {wordSets.length > 0 ? (
-          wordSets.map((item) => (
-            <Category
-              key={item._id}
-              category={item.category}
-              sets={item.sets}
-              actualCategory={actualCategory}
-              setActualCategory={setActualCategory}
-              deleteCategoryHandler={deleteCategoryHandler}
-              editCategoryHandler={editCategoryHandler}
-              admin={admin}
-              type={searchParams.get("type")}
-            />
+          wordSets.map((item, index) => (
+            <div key={item._id}>
+              {root === "zestawy" && (
+                <>
+                  {index === 0 && (
+                    <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
+                      Poziom początkujący
+                    </div>
+                  )}
+                  {index === 6 && (
+                    <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
+                      Poziom podstawowy
+                    </div>
+                  )}
+                  {index === 13 && (
+                    <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
+                      Poziom średnio zaawansowany
+                    </div>
+                  )}
+                </>
+              )}
+              <Category
+                category={item.category}
+                sets={item.sets}
+                actualCategory={actualCategory}
+                setActualCategory={setActualCategory}
+                deleteCategoryHandler={deleteCategoryHandler}
+                editCategoryHandler={editCategoryHandler}
+                admin={admin}
+                type={searchParams.get("type")}
+              />
+            </div>
           ))
         ) : (
           <div>Brak kategorii</div>

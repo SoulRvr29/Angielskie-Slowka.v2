@@ -219,6 +219,12 @@ const Pairs = ({
                   speechHandler(word.english);
                   setFirstWord(word);
                   setActualSide("left");
+                  if (word === actualSelected) {
+                    setFirstWord("");
+                    setSecondWord("");
+                    setActualSide("");
+                    setActualSelected("");
+                  }
                 }}
               >
                 <PairBlock
@@ -257,6 +263,12 @@ const Pairs = ({
                 onClick={() => {
                   setSecondWord(word);
                   setActualSide("right");
+                  if (word === actualSelected) {
+                    setFirstWord("");
+                    setSecondWord("");
+                    setActualSide("");
+                    setActualSelected("");
+                  }
                 }}
               >
                 <PairBlock

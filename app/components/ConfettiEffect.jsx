@@ -1,7 +1,9 @@
 "use client";
 import confetti from "canvas-confetti";
+import { useState } from "react";
 
 export default function ConfettiEffect() {
+  const [fired, setFired] = useState(false);
   const isMobile = window.innerWidth <= 768;
   const count = isMobile ? 50 : 100;
 
@@ -12,6 +14,7 @@ export default function ConfettiEffect() {
   };
 
   function fireCorner(x) {
+    setFired(true);
     function fire(particleRatio, opts) {
       confetti(
         Object.assign({}, defaults, opts, {
@@ -22,6 +25,9 @@ export default function ConfettiEffect() {
     }
 
     const angle = isMobile ? 90 : x === 0 ? 60 : 120;
+    const audio2 = new Audio("/sounds/fireworks.mp3");
+    audio2.volume = 0.4;
+    audio2.play();
 
     fire(0.25, {
       spread: 26,
@@ -52,6 +58,8 @@ export default function ConfettiEffect() {
     });
   }
 
-  fireCorner(0); // lewy dolny róg
-  fireCorner(1); // prawy dolny róg
+  if (!fired) {
+    fireCorner(0); // lewy dolny róg
+    fireCorner(1); // prawy dolny róg
+  }
 }
