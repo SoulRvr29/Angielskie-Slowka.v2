@@ -29,7 +29,7 @@ const WordSetsPage = () => {
 
       fetchWordsToLearn();
       mapKnownWords();
-      setIsFetching(true);
+      // setIsFetching(true);
     } else {
       fetchWords();
     }

@@ -16,6 +16,7 @@ const Set = () => {
   const [generateForm, setGenerateForm] = useState(false);
   const searchParams = useSearchParams();
   const [onlyUnknown, setOnlyUnknown] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
@@ -125,7 +126,8 @@ const Set = () => {
 
   const fetchWords = async () => {
     if (!id) return;
-    setWordsSet(null);
+    // setWordsSet(null);
+    setIsFetching(true);
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_DOMAIN}/${root}/${id}`
@@ -154,6 +156,7 @@ const Set = () => {
       } else {
         setWordsSet(data);
       }
+      setIsFetching(false);
     } catch (error) {
       console.error(error);
     }
@@ -352,6 +355,7 @@ const Set = () => {
               <div className="flex gap-1 items-center border border-neutral/30 px-2 rounded-md">
                 <input
                   type="checkbox"
+                  disabled={isFetching ? true : false}
                   className="checkbox checkbox-xs"
                   onChange={() => {
                     setOnlyUnknown((prev) => !prev);
