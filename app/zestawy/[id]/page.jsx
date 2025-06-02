@@ -119,10 +119,74 @@ const Set = () => {
   }, []);
 
   useEffect(() => {
+    if (admin) {
+      logDuplicatesForCurrentSet();
+    }
+  }, [admin]);
+
+  useEffect(() => {
     if (id !== "zapisane" && id !== "losowy") {
       fetchWords();
     }
   }, [session]);
+
+  const logDuplicatesForCurrentSet = async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_DOMAIN}/zestawy`);
+      const allSets = await res.json();
+
+      // Find the current set by id and its category
+      let currentSet = null;
+      let currentCategory = null;
+      allSets.forEach((category) => {
+        category.sets.forEach((set) => {
+          if (set._id === id) {
+            currentSet = set;
+            currentCategory = category.category;
+          }
+        });
+      });
+
+      if (!currentSet) {
+        console.warn("Current set not found");
+        return;
+      }
+
+      // Build a map: word (english) -> array of { setName, setId, categoryName }
+      const wordMap = {};
+      allSets.forEach((category) => {
+        category.sets.forEach((set) => {
+          set.words.forEach((word) => {
+            if (!wordMap[word.english]) {
+              wordMap[word.english] = [];
+            }
+            wordMap[word.english].push({
+              setName: set.name,
+              setId: set._id,
+              categoryName: category.category,
+            });
+          });
+        });
+      });
+
+      // For each word in the current set, log if it appears in other sets
+      currentSet.words.forEach((word) => {
+        const appearances = wordMap[word.english] || [];
+        // Filter out the current set itself
+        const inOtherSets = appearances.filter((entry) => entry.setId !== id);
+        if (inOtherSets.length > 0) {
+          console.log(
+            `"${word.english}" występuje też w: ` +
+              inOtherSets
+                .map((entry) => `${entry.categoryName} - ${entry.setName}`)
+                .join(", ")
+          );
+        }
+      });
+    } catch (error) {
+      console.error("Error fetching sets or logging duplicates:", error);
+    }
+  };
 
   const fetchWords = async () => {
     if (!id) return;
