@@ -336,17 +336,17 @@ const WordSetsPage = () => {
                 <>
                   {index === 0 && (
                     <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
-                      Poziom początkujący
-                    </div>
-                  )}
-                  {index === 6 && (
-                    <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
                       Poziom podstawowy
                     </div>
                   )}
-                  {index === 13 && (
+                  {index === 7 && (
                     <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
-                      Poziom średnio zaawansowany
+                      Poziom średni
+                    </div>
+                  )}
+                  {index === 15 && (
+                    <div className="text-success text-xl border-b border-dotted mb-4 block max-sm:px-2">
+                      Poziom zaawansowany
                     </div>
                   )}
                 </>

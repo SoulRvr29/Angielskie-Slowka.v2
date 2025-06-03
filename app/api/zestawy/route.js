@@ -8,7 +8,7 @@ export const GET = async (request) => {
 
     console.log("Connected to MongoDB");
 
-    const zestawy = await WordSets.find({});
+    const zestawy = await WordSets.find({}).sort({ order: 1 });
     console.log("Fetched word sets");
 
     return new Response(JSON.stringify(zestawy), { status: 200 });
