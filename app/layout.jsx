@@ -18,11 +18,18 @@ export const metadata = {
     apple: "/apple-icon.png",
   },
   manifest: "/manifest.json",
+  "apple-mobile-web-app-title": "Angielskie-Słówka.v2",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" data-theme="dark" className="bg-base-200">
+      <head>
+        <meta
+          name="apple-mobile-web-app-title"
+          content="Angielskie-Słówka.v2"
+        />
+      </head>
       <body className="relative max-w-6xl mx-auto flex flex-col bg-base-100">
         <AuthProvider>
           <Suspense>
