@@ -60,12 +60,13 @@ const NowyZestawPage = () => {
     const lines = text.split("\n");
     const parsedText = lines
       .map((line) => line.trim())
-      .filter((line) => line.length > 0 && line.includes("-"))
+      .filter((line) => line.length > 0 && /[-–—]/.test(line))
       .map((line) => {
-        const [english, polish] = line.split("-").map((part) => part.trim());
+        const [english, polish] = line
+          .split(/[-–—]/)
+          .map((part) => part.trim());
         return { english, polish };
       });
-
     return parsedText;
   };
 

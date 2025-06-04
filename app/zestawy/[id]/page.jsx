@@ -16,7 +16,7 @@ const Set = () => {
   const [generateForm, setGenerateForm] = useState(false);
   const searchParams = useSearchParams();
   const [onlyUnknown, setOnlyUnknown] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(true);
   const root =
     searchParams.get("type") === "public" ? "zestawy" : "prywatne_zestawy";
 
@@ -81,21 +81,6 @@ const Set = () => {
       console.error(error);
     }
   };
-
-  useEffect(() => {
-    if (id !== "zapisane" && id !== "losowy") {
-      if (onlyUnknown) {
-        setWordsSet((prev) => {
-          return {
-            ...prev,
-            words: prev.words.filter((item) => item.known !== true),
-          };
-        });
-      } else {
-        fetchWords();
-      }
-    }
-  }, [onlyUnknown]);
 
   useEffect(() => {
     setSize(wordsSet?.words?.length);
@@ -425,6 +410,20 @@ const Set = () => {
                   disabled={isFetching ? true : false}
                   className="checkbox checkbox-xs"
                   onChange={() => {
+                    if (id !== "zapisane" && id !== "losowy") {
+                      if (!onlyUnknown) {
+                        setWordsSet((prev) => {
+                          return {
+                            ...prev,
+                            words: prev.words.filter(
+                              (item) => item.known !== true
+                            ),
+                          };
+                        });
+                      } else {
+                        fetchWords();
+                      }
+                    }
                     setOnlyUnknown((prev) => !prev);
                   }}
                 />

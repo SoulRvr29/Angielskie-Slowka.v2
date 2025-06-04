@@ -1,13 +1,12 @@
 "use client";
-import { useSession } from "next-auth/react";
+
 import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 const ProfilPage = () => {
-  const { data: session } = useSession();
-
+  const [autoSave, setAutoSave] = useState(false);
   const [profileData, setProfileData] = useState(null);
 
   const fetchProfile = async () => {
@@ -25,6 +24,7 @@ const ProfilPage = () => {
 
   useEffect(() => {
     fetchProfile();
+    setAutoSave(JSON.parse(localStorage.getItem("autoSave")) || false);
   }, []);
 
   const {
@@ -110,6 +110,21 @@ const ProfilPage = () => {
         </div>
       )}
       <div className="flex flex-col items-center gap-4">
+        <div className="flex items-center gap-2">
+          <input
+            className="checkbox checkbox-sm max-sm:checkbox-lg"
+            type="checkbox"
+            defaultChecked={autoSave}
+            onChange={(e) => {
+              setAutoSave(e.target.checked);
+              localStorage.setItem(
+                "autoSave",
+                JSON.stringify(e.target.checked)
+              );
+            }}
+          />
+          Autozapis
+        </div>
         <Link
           className="btn btn-info btn-lg "
           href={{
