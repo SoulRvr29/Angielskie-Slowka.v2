@@ -91,7 +91,7 @@ const Pairs = ({
   const pairCorrect = () => {
     if (localStorage.getItem("mute") !== "true") {
       const audio = new Audio("/sounds/success.mp3");
-      audio.volume = 0.7;
+      audio.volume = 0.5;
       audio.play();
     }
 
@@ -114,7 +114,7 @@ const Pairs = ({
   const pairWrong = () => {
     if (localStorage.getItem("mute") !== "true") {
       const audio = new Audio("/sounds/error.mp3");
-      audio.volume = 0.7;
+      audio.volume = 0.6;
       audio.play();
     }
 
@@ -138,11 +138,13 @@ const Pairs = ({
           if (actualWords.every((item) => item.known)) {
             const audio = new Audio("/sounds/perfect.mp3");
             const audio2 = new Audio("/sounds/fireworks.mp3");
+            audio.volume = 0.8;
+            audio2.volume = 0.5;
             audio2.play();
             audio.play();
           } else {
             const audio = new Audio("/sounds/finish.mp3");
-            audio.volume = 0.5;
+            audio.volume = 0.3;
             audio.play();
           }
         }

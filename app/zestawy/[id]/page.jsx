@@ -236,10 +236,13 @@ const Set = () => {
       const allWords = data
         .map((category) => {
           return category.sets.map((set) => {
-            return set.words;
+            return set.words.map((word) => {
+              return { ...word, category: category.category, name: set.name };
+            });
           });
         })
         .flat(Infinity);
+
       const allWordsUnique = Array.from(
         new Map(allWords.map((item) => [item.english, item])).values()
       );

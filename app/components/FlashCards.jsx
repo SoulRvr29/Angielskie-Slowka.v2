@@ -39,7 +39,7 @@ const FlashCard = ({
   const cardRotateHandler = () => {
     if (localStorage.getItem("mute") !== "true") {
       const audio = new Audio("/sounds/card-rotate.mp3");
-      audio.volume = 0.3;
+      audio.volume = 0.25;
       audio.play();
     }
     setCardRotated(true);
@@ -65,7 +65,7 @@ const FlashCard = ({
       if (!isKnown) {
         if (localStorage.getItem("mute") !== "true") {
           const audio = new Audio("/sounds/card-unknown.mp3");
-          audio.volume = 0.6;
+          audio.volume = 0.5;
           audio.play();
         }
         setActualUnknown((prev) => [...prev, actualWords[wordIndex]]);
@@ -149,14 +149,14 @@ const FlashCard = ({
         if (localStorage.getItem("mute") !== "true") {
           if (actualWords.every((item) => item.known)) {
             const audio = new Audio("/sounds/perfect.mp3");
-            audio.volume = 0.85;
+            audio.volume = 0.75;
             const audio2 = new Audio("/sounds/fireworks.mp3");
-            audio2.volume = 0.4;
+            audio2.volume = 0.3;
             audio.play();
             audio2.play();
           } else {
             const audio = new Audio("/sounds/finish.mp3");
-            audio.volume = 0.5;
+            audio.volume = 0.35;
             audio.play();
           }
         }
@@ -186,6 +186,11 @@ const FlashCard = ({
 
   return (
     <div className="flex flex-col items-center mx-4 perspective-normal">
+      {actualWords[wordIndex]?.name && (
+        <div className="text-info font-semibold pt-4 -mb-4 text-center">
+          {`${actualWords[wordIndex]?.category} - ${actualWords[wordIndex]?.name}`}
+        </div>
+      )}
       {/* Flash Card */}
       <div
         onClick={() => {
@@ -260,6 +265,7 @@ const FlashCard = ({
           </>
         )}
       </div>
+
       {/* Known yes/not controls */}
       {!gameOver ? (
         <div className="max-w-100 w-full pb-6">
