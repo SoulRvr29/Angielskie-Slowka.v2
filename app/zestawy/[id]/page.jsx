@@ -504,7 +504,7 @@ const Set = () => {
               )}&size=${size}&game=fiszki&unknown=${onlyUnknown}`}
               className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-secondary/70 p-2 border-2 border-r-1 border-primary w-full"
             >
-              Uruchom fiszki
+              Fiszki
             </Link>
             <Link
               href={`${
@@ -512,9 +512,19 @@ const Set = () => {
               }/zestawy/${id}/gra?type=${searchParams.get(
                 "type"
               )}&size=${size}&game=pary&unknown=${onlyUnknown}`}
+              className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-secondary/70 p-2 border-2 border-x-1 border-primary w-full"
+            >
+              Pary
+            </Link>
+            <Link
+              href={`${
+                process.env.NEXT_PUBLIC_DOMAIN
+              }/zestawy/${id}/gra?type=${searchParams.get(
+                "type"
+              )}&size=${size}&game=wpisywanie&unknown=${onlyUnknown}`}
               className="bg-primary/50 flex justify-center font-semibold text-xl hover:bg-secondary/70 p-2 border-2 border-l-1 border-primary w-full"
             >
-              Uruchom pary
+              Wpisywanie
             </Link>
           </div>
         ) : (

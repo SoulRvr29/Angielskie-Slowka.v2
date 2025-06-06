@@ -132,3 +132,19 @@ button {
   border-top: 2px solid rgba(0, 255, 136, 0.2);
   background-color: rgba(0, 255, 136, 0.05);
 }
+
+.underline-active {
+  animation: underline-pulse 0.75s infinite;
+}
+
+@keyframes underline-pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

@@ -6,6 +6,7 @@ import { useSession } from "next-auth/react";
 import SubNav from "@/app/components/SubNav";
 import ProgressBar from "@/app/components/ProgressBar";
 import FlashCards from "@/app/components/FlashCards";
+import Typing from "@/app/components/Typing";
 import Pairs from "@/app/components/Pairs";
 
 const GraPage = () => {
@@ -277,7 +278,7 @@ const GraPage = () => {
               setGameOver={setGameOver}
               updateSavedWords={updateSavedWords}
             />
-          ) : (
+          ) : gameType === "pary" ? (
             <Pairs
               actualWords={actualWords}
               progress={progress}
@@ -291,6 +292,22 @@ const GraPage = () => {
               setSaved={setSaved}
               setAutoSave={setAutoSave}
               setShowResults={setShowResults}
+              updateSavedWords={updateSavedWords}
+            />
+          ) : (
+            <Typing
+              actualWords={actualWords}
+              size={size}
+              wordIndex={wordIndex}
+              setActualWords={setActualWords}
+              gameOver={gameOver}
+              saveInProgress={saveInProgress}
+              setWordIndex={setWordIndex}
+              setProgress={setProgress}
+              setShowResults={setShowResults}
+              setSaved={setSaved}
+              setAutoSave={setAutoSave}
+              setGameOver={setGameOver}
               updateSavedWords={updateSavedWords}
             />
           )}
