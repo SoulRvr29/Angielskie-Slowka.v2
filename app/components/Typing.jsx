@@ -174,31 +174,25 @@ const Typing = ({
   return (
     <>
       {!gameOver ? (
-        <div className="flex flex-col justify-center items-center mt-20 gap-8">
-          <input
-            type="text"
-            value={inputText}
-            onChange={(e) => {
-              if (/^[a-zA-Z]$/.test(e.key)) {
-                addLetter(e.target.value);
-              }
-            }}
-            style={{
-              position: "absolute",
-              opacity: 0,
-              pointerEvents: "none",
-              height: 0,
-              width: 0,
-            }}
-            autoFocus
-            inputMode="text"
-            autoComplete="off"
-            spellCheck={false}
-          />
+        <div className="relative flex flex-col justify-center items-center mt-20 gap-8">
           <p className=" text-2xl p-3 pb-4 px-5 border-2 border-primary rounded-xl ">
             {actualWords[wordIndex]?.polish}
           </p>
-          <div className="flex gap-1 ">
+          <div className="relative flex gap-1 ">
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => {
+                if (/^[a-zA-Z]$/.test(e.target.value)) {
+                  addLetter(e.target.value);
+                }
+              }}
+              className="absolute border top-2 input-primary w-full  text-3xl opacity-0"
+              autoFocus
+              inputMode="text"
+              autoComplete="off"
+              spellCheck={false}
+            />
             {actualWords[wordIndex]?.english.split("").map((letter, index) => (
               <span
                 className={`text-3xl w-8 h-10 text-center px-1 ${
