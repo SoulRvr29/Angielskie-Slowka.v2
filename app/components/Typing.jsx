@@ -41,21 +41,7 @@ const Typing = ({
         } else if (e.key === "Control") {
           hintsHandler();
         } else if (/^[a-zA-Z]$/.test(e.key)) {
-          let nextIndex = inputText.length;
-          // If next letter is a space, skip it
-          if (currentWord[nextIndex] === " ") {
-            setInputText((prev) => prev + " ");
-            setActiveLetterIndex((prev) => prev + 1);
-            nextIndex++;
-          }
-          if (inputText.length < currentWord.length) {
-            setInputText((prev) => prev + e.key);
-            setActiveLetterIndex((prev) => prev + 1);
-            if (currentWord[nextIndex + 1] === " ") {
-              setInputText((prev) => prev + " ");
-              setActiveLetterIndex((prev) => prev + 1);
-            }
-          }
+          addLetter(e.key);
         }
       } else if (e.key === " " || e.key === "Enter") {
         setShowResults(true);
@@ -68,6 +54,25 @@ const Typing = ({
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [inputText, actualWords, wordIndex]);
+
+  const addLetter = (letter) => {
+    const currentWord = actualWords[wordIndex].english;
+    let nextIndex = inputText.length;
+    // If next letter is a space, skip it
+    if (currentWord[nextIndex] === " ") {
+      setInputText((prev) => prev + " ");
+      setActiveLetterIndex((prev) => prev + 1);
+      nextIndex++;
+    }
+    if (inputText.length < currentWord.length) {
+      setInputText((prev) => prev + letter);
+      setActiveLetterIndex((prev) => prev + 1);
+      if (currentWord[nextIndex + 1] === " ") {
+        setInputText((prev) => prev + " ");
+        setActiveLetterIndex((prev) => prev + 1);
+      }
+    }
+  };
 
   const wordCheck = () => {
     if (actualWords.length !== wordIndex) {
@@ -170,6 +175,26 @@ const Typing = ({
     <>
       {!gameOver ? (
         <div className="flex flex-col justify-center items-center mt-20 gap-8">
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => {
+              if (/^[a-zA-Z]$/.test(e.key)) {
+                addLetter(e.target.value);
+              }
+            }}
+            style={{
+              position: "absolute",
+              opacity: 0,
+              pointerEvents: "none",
+              height: 0,
+              width: 0,
+            }}
+            autoFocus
+            inputMode="text"
+            autoComplete="off"
+            spellCheck={false}
+          />
           <p className=" text-2xl p-3 pb-4 px-5 border-2 border-primary rounded-xl ">
             {actualWords[wordIndex]?.polish}
           </p>
