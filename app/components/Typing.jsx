@@ -187,7 +187,7 @@ const Typing = ({
                   addLetter(e.target.value);
                 }
               }}
-              className="absolute border top-2 input-primary w-full  text-3xl opacity-0"
+              className="absolute border top-2 input-primary w-full  text-3xl opacity-[0.01] pointer-events-auto"
               autoFocus
               inputMode="text"
               autoComplete="off"
