@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import ConfettiEffect from "./ConfettiEffect";
 
 const Typing = ({
@@ -21,6 +21,18 @@ const Typing = ({
   const [activeLetterIndex, setActiveLetterIndex] = useState(0);
   const [hints, setHints] = useState(3);
   const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef(null);
+
+  const moveCursorToEnd = () => {
+    const input = inputRef.current;
+    if (input) {
+      const length = input.value.length;
+      // Delay to ensure browser sets focus before moving cursor
+      setTimeout(() => {
+        input.setSelectionRange(length, length);
+      }, 0);
+    }
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -181,12 +193,16 @@ const Typing = ({
           </p>
           <div className="relative flex gap-1 ">
             <input
+              ref={inputRef}
               type="text"
               value={inputText}
               onChange={(e) => {
                 updateText(e.target.value.toLowerCase());
               }}
-              onFocus={() => setIsFocused(true)}
+              onFocus={() => {
+                setIsFocused(true);
+                moveCursorToEnd();
+              }}
               onBlur={() => setIsFocused(false)}
               className="absolute border  input-primary w-full px-2 tracking-[20px] text-3xl opacity-0 pointer-events-auto"
               autoFocus
