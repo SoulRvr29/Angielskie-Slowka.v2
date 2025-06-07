@@ -28,21 +28,24 @@ const Typing = ({
 
         if (e.key === "Enter") {
           wordCheck();
-        } else if (e.key === "Backspace") {
-          if (inputText.length > 0) {
-            // If previous letter is a space, skip it
-            let newIndex = inputText.length - 1;
-            if (currentWord[newIndex] === " " && newIndex > 0) {
-              newIndex--;
-            }
-            setInputText((prev) => prev.slice(0, newIndex));
-            setActiveLetterIndex(newIndex);
-          }
-        } else if (e.key === "Control") {
-          hintsHandler();
-        } else if (/^[a-zA-Z]$/.test(e.key)) {
-          addLetter(e.key);
         }
+        // else if (e.key === "Backspace") {
+        //   if (inputText.length > 0) {
+        //     // If previous letter is a space, skip it
+        //     let newIndex = inputText.length - 1;
+        //     if (currentWord[newIndex] === " " && newIndex > 0) {
+        //       newIndex--;
+        //     }
+        //     setInputText((prev) => prev.slice(0, newIndex));
+        //     setActiveLetterIndex(newIndex);
+        //   }
+        // }
+        else if (e.key === "Control") {
+          hintsHandler();
+        }
+        // else if (/^[a-zA-Z]$/.test(e.key)) {
+        //   updateText(e.key);
+        // }
       } else if (e.key === " " || e.key === "Enter") {
         setShowResults(true);
       }
@@ -55,22 +58,24 @@ const Typing = ({
     };
   }, [inputText, actualWords, wordIndex]);
 
-  const addLetter = (letter) => {
+  const updateText = (inputText) => {
     const currentWord = actualWords[wordIndex].english;
+
     let nextIndex = inputText.length;
     // If next letter is a space, skip it
-    if (currentWord[nextIndex] === " ") {
-      setInputText((prev) => prev + " ");
-      setActiveLetterIndex((prev) => prev + 1);
-      nextIndex++;
-    }
-    if (inputText.length < currentWord.length) {
-      setInputText((prev) => prev + letter);
-      setActiveLetterIndex((prev) => prev + 1);
-      if (currentWord[nextIndex + 1] === " ") {
-        setInputText((prev) => prev + " ");
-        setActiveLetterIndex((prev) => prev + 1);
-      }
+    // if (currentWord[nextIndex] === " ") {
+    //   setInputText((prev) => prev + " ");
+    //   setActiveLetterIndex((prev) => prev + 1);
+    //   nextIndex++;
+    // }
+    setActiveLetterIndex(inputText.length);
+    if (inputText.length <= currentWord.length) {
+      setInputText(inputText);
+      // setActiveLetterIndex((prev) => prev + 1);
+      // if (currentWord[nextIndex + 1] === " ") {
+      // setInputText((prev) => prev + " ");
+      // setActiveLetterIndex((prev) => prev + 1);
+      // }
     }
   };
 
@@ -168,6 +173,10 @@ const Typing = ({
         setInputText(newInput);
         setActiveLetterIndex(newInput.length);
         setHints((prev) => prev - 1);
+        const inputEl = document.querySelector('input[type="text"]');
+        if (inputEl) {
+          inputEl.focus();
+        }
         if (currentWord[nextLetterIndex + 1] === " ") {
           setInputText((prev) => prev + " ");
           setActiveLetterIndex((prev) => prev + 1);
@@ -187,12 +196,9 @@ const Typing = ({
               type="text"
               value={inputText}
               onChange={(e) => {
-                const currentWord = e.target.value.at(-1).toLowerCase();
-                if (/^[a-z]$/.test(currentWord)) {
-                  addLetter(currentWord);
-                }
+                updateText(e.target.value.toLowerCase());
               }}
-              className="absolute border top-2 input-primary w-full  text-3xl opacity-0 pointer-events-auto"
+              className="absolute border -top-8 input-primary w-full px-2 tracking-[20px] text-3xl opacity-100 pointer-events-auto"
               autoFocus
               inputMode="text"
               autoComplete="off"
