@@ -20,6 +20,7 @@ const Typing = ({
   const [inputText, setInputText] = useState("");
   const [activeLetterIndex, setActiveLetterIndex] = useState(0);
   const [hints, setHints] = useState(3);
+  const [isFocused, setIsFocused] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -60,22 +61,9 @@ const Typing = ({
 
   const updateText = (inputText) => {
     const currentWord = actualWords[wordIndex].english;
-
-    let nextIndex = inputText.length;
-    // If next letter is a space, skip it
-    // if (currentWord[nextIndex] === " ") {
-    //   setInputText((prev) => prev + " ");
-    //   setActiveLetterIndex((prev) => prev + 1);
-    //   nextIndex++;
-    // }
     setActiveLetterIndex(inputText.length);
     if (inputText.length <= currentWord.length) {
       setInputText(inputText);
-      // setActiveLetterIndex((prev) => prev + 1);
-      // if (currentWord[nextIndex + 1] === " ") {
-      // setInputText((prev) => prev + " ");
-      // setActiveLetterIndex((prev) => prev + 1);
-      // }
     }
   };
 
@@ -198,7 +186,9 @@ const Typing = ({
               onChange={(e) => {
                 updateText(e.target.value.toLowerCase());
               }}
-              className="absolute border -top-8 input-primary w-full px-2 tracking-[20px] text-3xl opacity-100 pointer-events-auto"
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              className="absolute border  input-primary w-full px-2 tracking-[20px] text-3xl opacity-0 pointer-events-auto"
               autoFocus
               inputMode="text"
               autoComplete="off"
@@ -211,7 +201,7 @@ const Typing = ({
                     ? "border-b-2 border-base-content"
                     : "border-b-2 border-base-content/20"
                 } ${
-                  index === activeLetterIndex
+                  index === activeLetterIndex && isFocused
                     ? "border-secondary underline-active"
                     : ""
                 } ${
