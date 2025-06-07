@@ -98,6 +98,11 @@ const Typing = ({
       setInputText("");
       setActiveLetterIndex(0);
       setHints(3);
+      // Focus the input after checking the word
+      const inputEl = document.querySelector('input[type="text"]');
+      if (inputEl) {
+        inputEl.focus();
+      }
     }
     if (inputText === actualWords[wordIndex].english) {
       setActualWords((prev) =>
@@ -105,7 +110,6 @@ const Typing = ({
           index === wordIndex ? { ...item, known: true } : item
         )
       );
-    } else {
     }
   };
 
@@ -183,11 +187,12 @@ const Typing = ({
               type="text"
               value={inputText}
               onChange={(e) => {
-                if (/^[a-zA-Z]$/.test(e.target.value)) {
-                  addLetter(e.target.value);
+                const currentWord = e.target.value.at(-1).toLowerCase();
+                if (/^[a-z]$/.test(currentWord)) {
+                  addLetter(currentWord);
                 }
               }}
-              className="absolute border top-2 input-primary w-full  text-3xl opacity-[0.01] pointer-events-auto"
+              className="absolute border top-2 input-primary w-full  text-3xl opacity-0 pointer-events-auto"
               autoFocus
               inputMode="text"
               autoComplete="off"
