@@ -64,17 +64,32 @@ const Typing = ({
     }
   };
 
+  // Use refs to always get the latest inputText and wordIndex values
+  const inputTextRef = useRef(inputText);
+  const wordIndexRef = useRef(wordIndex);
+
+  useEffect(() => {
+    inputTextRef.current = inputText;
+  }, [inputText]);
+
+  useEffect(() => {
+    wordIndexRef.current = wordIndex;
+  }, [wordIndex]);
+
   const wordCheck = () => {
-    if (actualWords.length !== wordIndex) {
+    const currentWordIndex = wordIndexRef.current;
+    const currentInputText = inputTextRef.current;
+    if (actualWords.length !== currentWordIndex) {
       if (
-        actualWords[wordIndex].english.toLowerCase() === inputText.toLowerCase()
+        actualWords[currentWordIndex].english.toLowerCase() ===
+        currentInputText.toLowerCase()
       ) {
         if (localStorage.getItem("mute") !== "true") {
           const audio = new Audio("/sounds/success.mp3");
           audio.volume = 0.5;
           audio.play();
         }
-        speechHandler(actualWords[wordIndex].english);
+        speechHandler(actualWords[currentWordIndex].english);
         setSuccess(true);
       } else {
         if (localStorage.getItem("mute") !== "true") {
@@ -82,10 +97,10 @@ const Typing = ({
           audio.volume = 0.6;
           audio.play();
         }
-        speechHandler(actualWords[wordIndex].english);
+        speechHandler(actualWords[currentWordIndex].english);
         setError(true);
-        setInputText(actualWords[wordIndex].english);
-        setActiveLetterIndex(actualWords[wordIndex].english.length);
+        setInputText(actualWords[currentWordIndex].english);
+        setActiveLetterIndex(actualWords[currentWordIndex].english.length);
       }
       setTimeout(() => {
         setSuccess(false);
@@ -103,11 +118,12 @@ const Typing = ({
       }, 1000);
     }
     if (
-      inputText.toLowerCase() === actualWords[wordIndex].english.toLowerCase()
+      currentInputText.toLowerCase() ===
+      actualWords[currentWordIndex].english.toLowerCase()
     ) {
       setActualWords((prev) =>
         prev.map((item, index) =>
-          index === wordIndex ? { ...item, known: true } : item
+          index === currentWordIndex ? { ...item, known: true } : item
         )
       );
     }
