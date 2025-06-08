@@ -92,8 +92,8 @@ const Set = () => {
       return;
     }
     if (id === "losowy") {
+      setSize(JSON.parse(localStorage.getItem("generatorSize")) || "");
       setGenerateForm(true);
-      setSize("");
       return;
     }
 
@@ -262,6 +262,7 @@ const Set = () => {
   };
 
   const generateWordsSet = async () => {
+    localStorage.setItem("generatorSize", size);
     fetchFromAllSets();
     setGenerateForm(false);
   };
@@ -349,6 +350,7 @@ const Set = () => {
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   e.target.blur();
+                  generateWordsSet();
                 }
               }}
               value={size}

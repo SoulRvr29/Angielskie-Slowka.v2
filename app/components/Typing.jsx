@@ -40,7 +40,7 @@ const Typing = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (actualWords.length !== wordIndex) {
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !success && !error) {
           wordCheck();
         } else if (e.key === "Control") {
           hintsHandler();
@@ -65,7 +65,7 @@ const Typing = ({
   };
 
   const wordCheck = () => {
-    if (actualWords.length !== wordIndex) {
+    if (actualWords.length !== wordIndex && !success && !error) {
       if (
         actualWords[wordIndex].english.toLowerCase() === inputText.toLowerCase()
       ) {
@@ -74,7 +74,9 @@ const Typing = ({
           audio.volume = 0.5;
           audio.play();
         }
-        speechHandler(actualWords[wordIndex].english);
+        setTimeout(() => {
+          speechHandler(actualWords[wordIndex].english);
+        }, 200);
         setSuccess(true);
       } else {
         if (localStorage.getItem("mute") !== "true") {
@@ -82,7 +84,9 @@ const Typing = ({
           audio.volume = 0.6;
           audio.play();
         }
-        speechHandler(actualWords[wordIndex].english);
+        setTimeout(() => {
+          speechHandler(actualWords[wordIndex].english);
+        }, 200);
         setError(true);
         setInputText(actualWords[wordIndex].english);
         setActiveLetterIndex(actualWords[wordIndex].english.length);
@@ -100,7 +104,7 @@ const Typing = ({
         if (inputEl) {
           inputEl.focus();
         }
-      }, 1000);
+      }, 1200);
     }
     if (
       inputText.toLowerCase() === actualWords[wordIndex].english.toLowerCase()
@@ -140,7 +144,7 @@ const Typing = ({
   }, [wordIndex]);
 
   const hintsHandler = () => {
-    if (hints > 0) {
+    if (hints > 0 && !success && !error) {
       const currentWord = actualWords[wordIndex]?.english;
       // Find the first wrong letter index
       let nextLetterIndex = 0;
