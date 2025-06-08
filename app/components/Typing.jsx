@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useRef, act } from "react";
+import { useState, useEffect, useRef } from "react";
 import ConfettiEffect from "./ConfettiEffect";
+import { speechHandler } from "@/utils/speechHandler";
 
 const Typing = ({
   actualWords,
@@ -73,6 +74,7 @@ const Typing = ({
           audio.volume = 0.5;
           audio.play();
         }
+        speechHandler(actualWords[wordIndex].english);
         setSuccess(true);
       } else {
         if (localStorage.getItem("mute") !== "true") {
@@ -80,6 +82,7 @@ const Typing = ({
           audio.volume = 0.6;
           audio.play();
         }
+        speechHandler(actualWords[wordIndex].english);
         setError(true);
         setInputText(actualWords[wordIndex].english);
         setActiveLetterIndex(actualWords[wordIndex].english.length);
@@ -143,7 +146,8 @@ const Typing = ({
       let nextLetterIndex = 0;
       while (
         nextLetterIndex < inputText.length &&
-        inputText[nextLetterIndex] === currentWord[nextLetterIndex]
+        inputText[nextLetterIndex].toLowerCase() ===
+          currentWord[nextLetterIndex].toLowerCase()
       ) {
         nextLetterIndex++;
       }
@@ -163,6 +167,10 @@ const Typing = ({
         }
 
         setInputText(newInput);
+        // Update input with newInput
+        if (inputRef.current) {
+          inputRef.current.value = newInput;
+        }
         setActiveLetterIndex(newInput.length);
         setHints((prev) => prev - 1);
         const inputEl = document.querySelector('input[type="text"]');
@@ -184,9 +192,9 @@ const Typing = ({
             {actualWords[wordIndex]?.polish}
           </p>
           <div
-            className={`relative flex gap-1 border-2 border-transparent ${
-              success && "bg-success/20 border-success"
-            } ${error && "bg-error/20 border-error"}  rounded-lg`}
+            className={`relative flex gap-1 border-2 border-base-100 ${
+              success && " bg-success/20 border-success"
+            } ${error && " bg-error/20 border-error"}  rounded-lg`}
           >
             <input
               ref={inputRef}
@@ -234,7 +242,7 @@ const Typing = ({
           </div>
           <div className="flex gap-4 mt-2 max-w-100 w-full justify-center">
             <button
-              className="relative group btn btn-warning btn-sm w-45"
+              className="relative group btn btn-warning btn-sm w-45 drop-shadow-md"
               onClick={() => hintsHandler()}
             >
               dodaj literkę{" "}
@@ -246,7 +254,7 @@ const Typing = ({
               </div>
             </button>
             <button
-              className="relative group btn btn-success btn-sm w-45"
+              className="relative group btn btn-success btn-sm w-45 drop-shadow-md"
               onClick={() => wordCheck()}
             >
               przejdź dalej
