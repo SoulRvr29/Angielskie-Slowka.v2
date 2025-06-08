@@ -64,32 +64,17 @@ const Typing = ({
     }
   };
 
-  // Use refs to always get the latest inputText and wordIndex values
-  const inputTextRef = useRef(inputText);
-  const wordIndexRef = useRef(wordIndex);
-
-  useEffect(() => {
-    inputTextRef.current = inputText;
-  }, [inputText]);
-
-  useEffect(() => {
-    wordIndexRef.current = wordIndex;
-  }, [wordIndex]);
-
   const wordCheck = () => {
-    const currentWordIndex = wordIndexRef.current;
-    const currentInputText = inputTextRef.current;
-    if (actualWords.length !== currentWordIndex) {
+    if (actualWords.length !== wordIndex) {
       if (
-        actualWords[currentWordIndex].english.toLowerCase() ===
-        currentInputText.toLowerCase()
+        actualWords[wordIndex].english.toLowerCase() === inputText.toLowerCase()
       ) {
         if (localStorage.getItem("mute") !== "true") {
           const audio = new Audio("/sounds/success.mp3");
           audio.volume = 0.5;
           audio.play();
         }
-        speechHandler(actualWords[currentWordIndex].english);
+        speechHandler(actualWords[wordIndex].english);
         setSuccess(true);
       } else {
         if (localStorage.getItem("mute") !== "true") {
@@ -97,10 +82,10 @@ const Typing = ({
           audio.volume = 0.6;
           audio.play();
         }
-        speechHandler(actualWords[currentWordIndex].english);
+        speechHandler(actualWords[wordIndex].english);
         setError(true);
-        setInputText(actualWords[currentWordIndex].english);
-        setActiveLetterIndex(actualWords[currentWordIndex].english.length);
+        setInputText(actualWords[wordIndex].english);
+        setActiveLetterIndex(actualWords[wordIndex].english.length);
       }
       setTimeout(() => {
         setSuccess(false);
@@ -118,12 +103,11 @@ const Typing = ({
       }, 1000);
     }
     if (
-      currentInputText.toLowerCase() ===
-      actualWords[currentWordIndex].english.toLowerCase()
+      inputText.toLowerCase() === actualWords[wordIndex].english.toLowerCase()
     ) {
       setActualWords((prev) =>
         prev.map((item, index) =>
-          index === currentWordIndex ? { ...item, known: true } : item
+          index === wordIndex ? { ...item, known: true } : item
         )
       );
     }
@@ -208,7 +192,7 @@ const Typing = ({
             {actualWords[wordIndex]?.polish}
           </p>
           <div
-            className={`relative flex gap-1 border-2 border-base-100 ${
+            className={`relative max-w-screen flex gap-1 border-2 border-base-100 ${
               success && " bg-success/20 border-success"
             } ${error && " bg-error/20 border-error"}  rounded-lg`}
           >
@@ -224,11 +208,19 @@ const Typing = ({
                 moveCursorToEnd();
               }}
               onBlur={() => setIsFocused(false)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                }
+              }}
               className="absolute border  input-primary w-full px-2 tracking-[20px] text-3xl opacity-0 pointer-events-auto"
               autoFocus
               inputMode="text"
               autoComplete="off"
               spellCheck={false}
+              autoCapitalize="off"
+              name="no_autofill"
+              id="input-no-autofill"
             />
             {actualWords[wordIndex]?.english.split("").map((letter, index) => (
               <span
