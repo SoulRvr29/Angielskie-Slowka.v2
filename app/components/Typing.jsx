@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, act } from "react";
 import ConfettiEffect from "./ConfettiEffect";
 
 const Typing = ({
@@ -22,6 +22,8 @@ const Typing = ({
   const [hints, setHints] = useState(3);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef(null);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   const moveCursorToEnd = () => {
     const input = inputRef.current;
@@ -37,32 +39,14 @@ const Typing = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (actualWords.length !== wordIndex) {
-        const currentWord = actualWords[wordIndex].english;
-
         if (e.key === "Enter") {
           wordCheck();
-        }
-        // else if (e.key === "Backspace") {
-        //   if (inputText.length > 0) {
-        //     // If previous letter is a space, skip it
-        //     let newIndex = inputText.length - 1;
-        //     if (currentWord[newIndex] === " " && newIndex > 0) {
-        //       newIndex--;
-        //     }
-        //     setInputText((prev) => prev.slice(0, newIndex));
-        //     setActiveLetterIndex(newIndex);
-        //   }
-        // }
-        else if (e.key === "Control") {
+        } else if (e.key === "Control") {
           hintsHandler();
         }
-        // else if (/^[a-zA-Z]$/.test(e.key)) {
-        //   updateText(e.key);
-        // }
       } else if (e.key === " " || e.key === "Enter") {
         setShowResults(true);
       }
-      console.log(e.key);
     };
     window.addEventListener("keydown", handleKeyDown);
 
@@ -81,35 +65,43 @@ const Typing = ({
 
   const wordCheck = () => {
     if (actualWords.length !== wordIndex) {
-      if (actualWords[wordIndex].english === inputText) {
+      if (
+        actualWords[wordIndex].english.toLowerCase() === inputText.toLowerCase()
+      ) {
         if (localStorage.getItem("mute") !== "true") {
-          const audio = new Audio("/sounds/card-known.mp3");
-          audio.volume = 0.4;
-          audio.play();
-        }
-      } else {
-        if (localStorage.getItem("mute") !== "true") {
-          const audio = new Audio("/sounds/card-unknown.mp3");
+          const audio = new Audio("/sounds/success.mp3");
           audio.volume = 0.5;
           audio.play();
         }
-      }
-      if (actualWords[wordIndex].english[inputText.length] === " ") {
-        setWordIndex((prev) => prev + 2);
+        setSuccess(true);
       } else {
+        if (localStorage.getItem("mute") !== "true") {
+          const audio = new Audio("/sounds/error.mp3");
+          audio.volume = 0.6;
+          audio.play();
+        }
+        setError(true);
+        setInputText(actualWords[wordIndex].english);
+        setActiveLetterIndex(actualWords[wordIndex].english.length);
+      }
+      setTimeout(() => {
+        setSuccess(false);
+        setError(false);
         setWordIndex((prev) => prev + 1);
-      }
-      setProgress((prev) => prev + 100 / size);
-      setInputText("");
-      setActiveLetterIndex(0);
-      setHints(3);
-      // Focus the input after checking the word
-      const inputEl = document.querySelector('input[type="text"]');
-      if (inputEl) {
-        inputEl.focus();
-      }
+        setProgress((prev) => prev + 100 / size);
+        setInputText("");
+        setActiveLetterIndex(0);
+        setHints(3);
+        // Focus the input after checking the word
+        const inputEl = document.querySelector('input[type="text"]');
+        if (inputEl) {
+          inputEl.focus();
+        }
+      }, 1000);
     }
-    if (inputText === actualWords[wordIndex].english) {
+    if (
+      inputText.toLowerCase() === actualWords[wordIndex].english.toLowerCase()
+    ) {
       setActualWords((prev) =>
         prev.map((item, index) =>
           index === wordIndex ? { ...item, known: true } : item
@@ -191,13 +183,17 @@ const Typing = ({
           <p className=" text-2xl p-3 pb-4 px-5 border-2 border-primary rounded-xl ">
             {actualWords[wordIndex]?.polish}
           </p>
-          <div className="relative flex gap-1 ">
+          <div
+            className={`relative flex gap-1 border-2 border-transparent ${
+              success && "bg-success/20 border-success"
+            } ${error && "bg-error/20 border-error"}  rounded-lg`}
+          >
             <input
               ref={inputRef}
               type="text"
               value={inputText}
               onChange={(e) => {
-                updateText(e.target.value.toLowerCase());
+                updateText(e.target.value);
               }}
               onFocus={() => {
                 setIsFocused(true);
@@ -212,17 +208,24 @@ const Typing = ({
             />
             {actualWords[wordIndex]?.english.split("").map((letter, index) => (
               <span
-                className={`text-3xl w-8 h-10 text-center px-1 ${
-                  letter !== " "
-                    ? "border-b-2 border-base-content"
-                    : "border-b-2 border-base-content/20"
-                } ${
+                className={`text-3xl w-8 h-10 text-center px-1
+                  ${!success && !error && " border-b-2"}
+                  ${
+                    letter !== " "
+                      ? " border-base-content"
+                      : " border-base-content/20"
+                  } ${
                   index === activeLetterIndex && isFocused
                     ? "border-secondary underline-active"
                     : ""
                 } ${
-                  letter === inputText[index] ? "text-success" : "text-error"
-                }`}
+                  letter.toLowerCase() === inputText[index]?.toLowerCase() &&
+                  !error
+                    ? "text-success"
+                    : "text-error"
+                }
+                
+`}
                 key={index}
               >
                 {inputText[index] || ""}
