@@ -67,7 +67,8 @@ const Typing = ({
   const wordCheck = () => {
     if (actualWords.length !== wordIndex && !success && !error) {
       if (
-        actualWords[wordIndex].english.toLowerCase() === inputText.toLowerCase()
+        actualWords[wordIndex].english.toLowerCase().replaceAll("-", " ") ===
+        inputText.toLowerCase().replaceAll("-", " ")
       ) {
         if (localStorage.getItem("mute") !== "true") {
           const audio = new Audio("/sounds/success.mp3");
@@ -192,6 +193,11 @@ const Typing = ({
     <>
       {!gameOver ? (
         <div className="relative flex flex-col justify-center items-center mt-20 gap-8">
+          {actualWords[wordIndex]?.name && (
+            <div className="text-info font-semibold -mb-4 text-center">
+              {`${actualWords[wordIndex]?.category} - ${actualWords[wordIndex]?.name}`}
+            </div>
+          )}
           <p className=" text-2xl p-3 pb-4 px-5 border-2 border-primary rounded-xl ">
             {actualWords[wordIndex]?.polish}
           </p>
@@ -231,9 +237,9 @@ const Typing = ({
                 className={`text-3xl w-8 h-10 text-center px-1
                   ${!success && !error && " border-b-2"}
                   ${
-                    letter !== " "
-                      ? " border-base-content"
-                      : " border-base-content/20"
+                    letter === " "
+                      ? " border-base-content/10"
+                      : " border-base-content"
                   } ${
                   index === activeLetterIndex && isFocused
                     ? "border-secondary underline-active"

@@ -296,7 +296,10 @@ const GraPage = () => {
             />
           ) : (
             <Typing
-              actualWords={actualWords}
+              actualWords={actualWords.map((item) => ({
+                ...item,
+                english: item.english.trim(),
+              }))}
               size={size}
               wordIndex={wordIndex}
               setActualWords={setActualWords}
