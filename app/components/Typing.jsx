@@ -40,7 +40,7 @@ const Typing = ({
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (actualWords.length !== wordIndex) {
-        if (e.key === "Enter" && !success && !error) {
+        if (e.key === "Enter" && !success && !error && inputText.length > 0) {
           wordCheck();
         } else if (e.key === "Control") {
           hintsHandler();
